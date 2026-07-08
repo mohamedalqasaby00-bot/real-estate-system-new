@@ -34,6 +34,9 @@ body { background: #f0f2f5; padding: 20px; direction: rtl; }
 .preview .thumb { width: 56px; height: 56px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; position: relative; }
 .preview .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .preview .thumb .vid-icon { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; font-size: 11px; }
+.preview .thumb .upload-progress { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 10px; line-height: 1.4; }
+.preview .thumb .upload-progress .bar { width: 40px; height: 4px; background: #555; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.preview .thumb .upload-progress .bar span { display: block; height: 100%; background: #25D366; transition: width .2s; }
 .btn { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; font-size: 13px; }
 .btn-primary { background: #1a3a5c; color: #fff; }
 .btn-primary:hover { background: #2d6a9f; }
@@ -398,24 +401,55 @@ async function loadData() {
   types.forEach(t => { renderTable(t, 'owners'); renderTable(t, 'customers'); });
 }
 
+function uploadWithProgress(file, key, idx) {
+  return new Promise((resolve, reject) => {
+    const ext = file.name.split('.').pop();
+    const fileName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', SUPABASE_URL + '/storage/v1/object/uploads/' + fileName);
+    xhr.setRequestHeader('apikey', SUPABASE_ANON);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + SUPABASE_ANON);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        const pct = Math.round(e.loaded / e.total * 100);
+        const el = document.querySelector('.pr-item-' + key + '-' + idx + ' .upload-progress p');
+        if (el) el.textContent = pct + '%';
+        const bar = document.querySelector('.pr-item-' + key + '-' + idx + ' .upload-progress .bar span');
+        if (bar) bar.style.width = pct + '%';
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const { data: { publicUrl } } = supabase.storage.from('uploads').getPublicUrl(fileName);
+        resolve({ type: file.type.startsWith('image/') ? 'image' : 'video', data: publicUrl, name: file.name });
+      } else {
+        reject(new Error(xhr.status + ' ' + xhr.statusText));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Network error'));
+    xhr.send(file);
+  });
+}
+
 async function handleUpload(input, type, cat) {
   const key = type + '-' + cat;
   if (!tempMedia[key]) tempMedia[key] = [];
   const files = input.files || input;
   if (!files || !files.length) return;
   for (const file of Array.from(files)) {
-    const ext = file.name.split('.').pop();
-    const fileName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
-    const { data, error } = await supabase.storage.from('uploads').upload(fileName, file);
-    if (error) { alert('Upload failed: ' + error.message); continue; }
-    const { data: { publicUrl } } = supabase.storage.from('uploads').getPublicUrl(fileName);
-    tempMedia[key].push({
-      type: file.type.startsWith('image/') ? 'image' : 'video',
-      data: publicUrl,
-      name: file.name
-    });
+    const idx = tempMedia[key].length;
+    const isVideo = file.type.startsWith('video/');
+    tempMedia[key].push({ type: isVideo ? 'video' : 'image', data: '', name: file.name, uploading: true });
+    showPreview(key);
+    try {
+      const result = await uploadWithProgress(file, key, idx);
+      tempMedia[key][idx] = result;
+    } catch (e) {
+      tempMedia[key][idx] = { type: file.type.startsWith('image/') ? 'image' : 'video', data: '', name: file.name, error: e.message };
+    }
+    showPreview(key);
   }
-  showPreview(key);
   if (input.files) input.value = '';
 }
 
@@ -425,11 +459,17 @@ function showPreview(key) {
   const s = cat === 'owner' ? 'o' : 'c';
   const el = document.getElementById('preview-' + l + s);
   if (!el) return;
-  el.innerHTML = (tempMedia[key]||[]).map((m,i) =>
-    m.type === 'image'
+  el.innerHTML = (tempMedia[key]||[]).map((m,i) => {
+    if (m.uploading) {
+      return '<div class="thumb pr-item-' + key + '-' + i + '"><div class="upload-progress"><p style="font-size:11px;font-weight:700;">0%</p><div class="bar"><span style="width:0%"></span></div></div></div>';
+    }
+    if (m.error) {
+      return '<div class="thumb" style="background:#ffe0e0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c00;">Failed</div>';
+    }
+    return m.type === 'image'
       ? '<div class="thumb"><img src="'+m.data+'" alt=""></div>'
-      : '<div class="thumb"><div class="vid-icon">🎬</div></div>'
-  ).join('');
+      : '<div class="thumb"><div class="vid-icon">🎬</div></div>';
+  }).join('');
 }
 
 // Drag & drop for upload
