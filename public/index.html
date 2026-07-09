@@ -74,6 +74,86 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 .modal-overlay img { max-width:90vw; max-height:90vh; border-radius:8px; }
 .modal-close { position:absolute; top:20px; left:20px; color:#fff; font-size:30px; cursor:pointer; background:rgba(0,0,0,.5); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; }
 .modal-share { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); padding:10px 24px; background:#25D366; color:#fff; border:none; border-radius:8px; font-size:15px; cursor:pointer; font-weight:600; }
+
+/* Mobile cards */
+.mobile-cards{display:none;}
+.mobile-card{
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.mobile-card .title{
+  font-weight:700;
+  color:#1a3a5c;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.mobile-card .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  font-size:13px;
+}
+.mobile-card .label{
+  color:#666;
+  min-width:70px;
+}
+.mobile-card .value{
+  font-weight:600;
+  text-align:left;
+  flex:1;
+}
+.mobile-card .actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+@media (max-width:768px){
+  body{padding:10px;}
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:16px;
+  }
+  .main-tabs{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    padding-bottom:6px;
+  }
+  .main-tab{
+    flex:0 0 auto;
+    padding:8px 16px;
+    font-size:13px;
+  }
+  .sub-tabs{
+    width:100%;
+    justify-content:space-between;
+  }
+  .sub-tab{
+    flex:1;
+    text-align:center;
+  }
+  .form-row{
+    flex-direction:column;
+  }
+  .table-wrap{
+    overflow:visible;
+  }
+  .table-wrap table{
+    display:none;
+  }
+  .mobile-cards{
+    display:block;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -81,6 +161,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 
 <div class="header">
   <div><h1>🏢 Real Estate Management</h1><div class="sub">Company — Staff Only</div></div>
+<div class="mobile-cards" id="cards-ao"></div>
   <div style="display:flex;align-items:center;gap:14px;">
     <span style="opacity:.7;font-size:13px;">Staff: Admin</span>
     <span style="background:#ffffff22;padding:5px 12px;border-radius:6px;font-size:13px;cursor:default;">Logout</span>
@@ -622,6 +703,44 @@ async function delEntry(type, cat, id) {
   renderTable(type, cat);
 }
 
+
+function renderMobileCards(type, cat, arr) {
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const container = document.getElementById('cards-' + l + s);
+  if (!container) return;
+  if (!arr.length) {
+    container.innerHTML = '<div class="mobile-card" style="text-align:center;color:#888;">No data</div>';
+    return;
+  }
+  container.innerHTML = arr.map((item, i) => {
+    const rows = [];
+    rows.push(`<div class="row"><span class="label">Name</span><span class="value">${item.name || '-'}</span></div>`);
+    rows.push(`<div class="row"><span class="label">Phone</span><span class="value">${item.phone || '-'}</span></div>`);
+    if (item.location) rows.push(`<div class="row"><span class="label">Location</span><span class="value">${item.location}</span></div>`);
+    if (cat === 'owners') {
+      if (item.price) rows.push(`<div class="row"><span class="label">Price</span><span class="value">${item.price}</span></div>`);
+      if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
+      if (item.details) rows.push(`<div class="row"><span class="label">Details</span><span class="value">${item.details}</span></div>`);
+    } else {
+      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}</span></div>`);
+      if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
+    }
+    const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'')}` : '#';
+    return `
+      <div class="mobile-card">
+        <div class="title">${i+1}. ${typeNames[type] || type}</div>
+        ${rows.join('')}
+        <div class="actions">
+          <button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button>
+          <a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a>
+          <button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 function renderTable(type, cat) {
   const arr = DATA[type][cat];
   const l = getLetter(type);
@@ -636,6 +755,7 @@ function renderTable(type, cat) {
   const fields = cat === 'owners'
     ? (type === 'shopsrent' ? ['name','phone','location','price','area','rent','details'] : ['name','phone','location','price','area','details'])
     : (type === 'shopsrent' ? ['name','phone','need','location','budget','area','rent'] : ['name','phone','need','location','budget','area']);
+  renderMobileCards(type, cat, arr);
   tbody.innerHTML = arr.map((item, i) => {
     const cells = fields.map(f => {
       let val = item[f] || '-';
@@ -886,7 +1006,87 @@ function generateReport() {
   const fromTs = fromDate ? new Date(fromDate).setHours(0,0,0,0) : 0;
   const toTs = toDate ? new Date(toDate).setHours(23,59,59,999) : Infinity;
 
-  let html = '<html><head><meta charset="utf-8"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:Arial;font-size:12px}th,td{border:1px solid #999;padding:6px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:Arial}</style></head><body>';
+  let html = '<html><head><meta charset="utf-8"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:Arial;font-size:12px}th,td{border:1px solid #999;padding:6px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:Arial}
+/* Mobile cards */
+.mobile-cards{display:none;}
+.mobile-card{
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.mobile-card .title{
+  font-weight:700;
+  color:#1a3a5c;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.mobile-card .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  font-size:13px;
+}
+.mobile-card .label{
+  color:#666;
+  min-width:70px;
+}
+.mobile-card .value{
+  font-weight:600;
+  text-align:left;
+  flex:1;
+}
+.mobile-card .actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+@media (max-width:768px){
+  body{padding:10px;}
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:16px;
+  }
+  .main-tabs{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    padding-bottom:6px;
+  }
+  .main-tab{
+    flex:0 0 auto;
+    padding:8px 16px;
+    font-size:13px;
+  }
+  .sub-tabs{
+    width:100%;
+    justify-content:space-between;
+  }
+  .sub-tab{
+    flex:1;
+    text-align:center;
+  }
+  .form-row{
+    flex-direction:column;
+  }
+  .table-wrap{
+    overflow:visible;
+  }
+  .table-wrap table{
+    display:none;
+  }
+  .mobile-cards{
+    display:block;
+  }
+}
+
+</style></head><body>';
   html += '<h1>Real Estate Management Report</h1>';
   html += '<p>Generated: ' + new Date().toLocaleString('en-EG') + '</p>';
   if (fromDate || toDate) html += '<p>Date range: ' + (fromDate || '∞') + ' → ' + (toDate || '∞') + '</p>';
