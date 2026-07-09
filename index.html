@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Management</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+body { background: #f0f2f5; padding: 20px; direction: rtl; }
+.container { max-width: 1200px; margin: auto; }
+.header { background: linear-gradient(135deg, #1a3a5c, #2d6a9f); color: #fff; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 24px; }
+.header .sub { font-size: 13px; opacity: .7; }
+.main-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.main-tab { padding: 10px 28px; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; color: #555; border: 1px solid #d0d5dd; transition: .2s; }
+.main-tab:hover { border-color: #2d6a9f; }
+.main-tab.active { background: #1a3a5c; color: #fff; border-color: #1a3a5c; }
+.sub-tabs { display: flex; gap: 0; margin-bottom: 18px; background: #e8edf2; border-radius: 8px; padding: 4px; width: fit-content; }
+.sub-tab { padding: 8px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; color: #555; transition: .2s; user-select: none; }
+.sub-tab.active { background: #fff; color: #1a3a5c; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow-wrap: break-word; word-break: break-word; }
+.card h3 { font-size: 16px; margin-bottom: 14px; color: #1a3a5c; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-weight: 600; font-size: 12px; color: #444; margin-bottom: 3px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 13px; outline: none; }
+.form-group input:focus, .form-group textarea:focus { border-color: #2d6a9f; }
+.form-group textarea { min-height: 70px; resize: vertical; }
+.form-row { display: flex; gap: 8px; }
+.form-row .form-group { flex: 1; }
+.upload-btn { border: 2px dashed #b0c4d9; border-radius: 6px; padding: 14px; text-align: center; color: #888; cursor: pointer; font-size: 13px; display:block; }
+.upload-btn:hover { border-color: #1a3a5c; background: #f8faff; }
+.upload-btn.dragover { border-color: #1a7a3c; background: #e6f9ed; }
+.preview { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.preview .thumb { width: 56px; height: 56px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; position: relative; }
+.preview .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.preview .thumb .vid-icon { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; font-size: 11px; }
+.preview .thumb .upload-progress { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 10px; line-height: 1.4; }
+.preview .thumb .upload-progress .bar { width: 40px; height: 4px; background: #555; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.preview .thumb .upload-progress .bar span { display: block; height: 100%; background: #25D366; transition: width .2s; }
+.btn { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; font-size: 13px; }
+.btn-primary { background: #1a3a5c; color: #fff; }
+.btn-primary:hover { background: #2d6a9f; }
+.btn-success { background: #1a7a3c; color: #fff; }
+.btn-success:hover { background: #249c4e; }
+.toggle-form-btn { display: block; width: 100%; padding: 12px; font-size: 15px; font-weight: 700; margin: 0; }
+.form-fields { margin-top: 14px; }
+.btn-sm { padding: 4px 10px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.btn-sm.edit { color: #2d6a9f; border-color: #2d6a9f; }
+.btn-sm.del { color: #c0392b; border-color: #c0392b; }
+.btn-sm.whatsapp { color: #25D366; border-color: #25D366; text-decoration: none; display: inline-block; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+th { background: #f7f9fc; padding: 8px 10px; text-align: right; color: #555; border-bottom: 2px solid #e8edf2; word-break: break-word; }
+td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word; white-space: normal; text-align: right; }
+.badge { display: inline-block; background: #e8f0fe; color: #1a3a5c; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.badge.match { background: #e6f9ed; color: #1a7a3c; }
+.badge.nomatch { background: #fef3e2; color: #b86b00; }
+.media-thumbs { display: flex; gap: 4px; flex-wrap: wrap; }
+.media-thumbs div { width: 36px; height: 36px; border-radius: 4px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid #ddd; }
+.search-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-row input { flex: 1; padding: 7px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 13px; }
+.table-wrap { max-height: 320px; overflow-y: auto; overflow-x: hidden; }
+.actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.count-badge { background: #1a3a5c; color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 12px; margin-right: 6px; }
+.hidden { display: none !important; }
+.page-content { }
+.match-card { border: 2px solid #25D366; border-radius: 10px; padding: 16px; margin-bottom: 14px; background: #f6fff9; }
+.match-card .header-match { display: flex; justify-content: space-between; align-items: center; }
+.match-detail { font-size: 13px; color: #555; margin-top: 6px; }
+.match-type { font-size: 12px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }
+.percent { font-weight: 700; color: #1a7a3c; }
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }
+.modal-overlay video { max-width:90vw; max-height:90vh; border-radius:8px; }
+.modal-overlay img { max-width:90vw; max-height:90vh; border-radius:8px; }
+.modal-close { position:absolute; top:20px; left:20px; color:#fff; font-size:30px; cursor:pointer; background:rgba(0,0,0,.5); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; }
+.modal-share { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); padding:10px 24px; background:#25D366; color:#fff; border:none; border-radius:8px; font-size:15px; cursor:pointer; font-weight:600; }
+
+/* Mobile cards */
+.mobile-cards{display:none;}
+.mobile-card{
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.mobile-card .title{
+  font-weight:700;
+  color:#1a3a5c;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.mobile-card .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  font-size:13px;
+}
+.mobile-card .label{
+  color:#666;
+  min-width:70px;
+}
+.mobile-card .value{
+  font-weight:600;
+  text-align:left;
+  flex:1;
+}
+.mobile-card .actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+@media (max-width:768px){
+  body{padding:10px;}
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:16px;
+  }
+  .main-tabs{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    padding-bottom:6px;
+  }
+  .main-tab{
+    flex:0 0 auto;
+    padding:8px 16px;
+    font-size:13px;
+  }
+  .sub-tabs{
+    width:100%;
+    justify-content:space-between;
+  }
+  .sub-tab{
+    flex:1;
+    text-align:center;
+  }
+  .form-row{
+    flex-direction:column;
+  }
+  .table-wrap{
+    overflow:visible;
+  }
+  .table-wrap table{
+    display:none;
+  }
+  .mobile-cards{
+    display:block;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="container" id="app">
+
+<div class="header">
+  <div><h1>🏢 Real Estate Management</h1><div class="sub">Company — Staff Only</div></div>
+<div class="mobile-cards" id="cards-ao"></div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span style="opacity:.7;font-size:13px;">Staff: Admin</span>
+    <span style="background:#ffffff22;padding:5px 12px;border-radius:6px;font-size:13px;cursor:default;">Logout</span>
+  </div>
+</div>
+
+<div class="main-tabs">
+  <div class="main-tab active" data-tab="apartments">🏢 Apartments</div>
+  <div class="main-tab" data-tab="houses">🏠 Houses</div>
+  <div class="main-tab" data-tab="lands">🗺️ Lands</div>
+  <div class="main-tab" data-tab="shops">🏪 Shops</div>
+  <div class="main-tab" data-tab="shopsrent">🏪 Shops for Rent</div>
+  <div class="main-tab" data-tab="matches" style="background:#25D366;color:#fff;border-color:#25D366;">🔄 Matches</div>
+  <div class="main-tab" data-tab="report">📄 Report</div>
+</div>
+
+<!-- ====================== APARTMENTS ====================== -->
+<div id="page-apartments" class="page-content">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-apartments-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Apartment)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ao-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ao-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ao-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-ao-price" placeholder="مثلاً 500,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ao-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-ao-details" placeholder="Property description (rooms, floor, finish...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="apartments" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'apartments','owner')"></label><div class="preview" id="preview-ao"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('apartments')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-ao">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search by name, phone or location..." oninput="filterTable('apartments','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ao"></tbody></table></div>
+    </div>
+  </div>
+  <div id="sub-apartments-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Apartment)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ac-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ac-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-ac-location" placeholder="City - District"></div></div>
+        <div class="form-group"><label>Budget</label><input class="f-ac-budget" placeholder="مثلاً 300,000 - 500,000 ج.م"></div>
+        <div class="form-group"><label>Required Area</label><input class="f-ac-area" placeholder="m²"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('apartments')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-ac">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search by name or phone..." oninput="filterTable('apartments','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-ac"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== HOUSES ====================== -->
+<div id="page-houses" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-houses-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (House)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ho-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ho-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ho-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-ho-price" placeholder="مثلاً 800,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ho-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-ho-details" placeholder="House description"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="houses" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'houses','owner')"></label><div class="preview" id="preview-ho"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('houses')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-ho">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('houses','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ho"></tbody></table></div>
+    </div>
+  </div>
+  <div id="sub-houses-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (House)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-hc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-hc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-hc-need" placeholder="e.g. 2-storey villa" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-hc-location" placeholder="City - District"></div></div>
+        <div class="form-group"><label>Budget</label><input class="f-hc-budget" placeholder="مثلاً 600,000 - 900,000 ج.م"></div>
+        <div class="form-group"><label>Required Area</label><input class="f-hc-area" placeholder="m²"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('houses')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-hc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('houses','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-hc"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== LANDS ====================== -->
+<div id="page-lands" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-lands-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Land)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lo-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lo-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-lo-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-lo-price" placeholder="مثلاً 200,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-lo-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-lo-details" placeholder="Land description (area, permit...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="lands" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'lands','owner')"></label><div class="preview" id="preview-lo"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('lands')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-lo">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('lands','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-lo"></tbody></table></div>
+    </div>
+  </div>
+  <div id="sub-lands-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Land)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-lc-need" placeholder="e.g. residential land 500m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-lc-location" placeholder="City - District"></div></div>
+        <div class="form-group"><label>Budget</label><input class="f-lc-budget" placeholder="مثلاً 250,000 - 400,000 ج.م"></div>
+        <div class="form-group"><label>Required Area</label><input class="f-lc-area" placeholder="m²"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('lands')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-lc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('lands','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-lc"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== SHOPS ====================== -->
+<div id="page-shops" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-shops-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Shop)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-so-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-so-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-so-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-so-price" placeholder="مثلاً 150,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-so-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-so-details" placeholder="Shop description (area, activity...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="shops" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'shops','owner')"></label><div class="preview" id="preview-so"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('shops')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-so">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shops','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:13%">Location</th><th style="width:11%">Price</th><th style="width:8%">Area</th><th style="width:15%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-so"></tbody></table></div>
+    </div>
+  </div>
+  <div id="sub-shops-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Shop)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-sc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-sc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-sc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-sc-location" placeholder="City - District"></div></div>
+        <div class="form-group"><label>Budget</label><input class="f-sc-budget" placeholder="مثلاً 100,000 - 200,000 ج.م"></div>
+        <div class="form-group"><label>Required Area</label><input class="f-sc-area" placeholder="m²"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shops')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-sc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shops','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-sc"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== SHOPS FOR RENT ====================== -->
+<div id="page-shopsrent" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-shopsrent-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Shop for Rent)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ro-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ro-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ro-location" placeholder="City - District"></div><div class="form-group"><label>Rent</label><input class="f-ro-price" placeholder="مثلاً 10,000 ج.م/شهر"></div><div class="form-group"><label>Area</label><input class="f-ro-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-ro-details" placeholder="Shop description (area, activity...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="shopsrent" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'shopsrent','owner')"></label><div class="preview" id="preview-ro"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('shopsrent')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-ro">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shopsrent','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:13%">Location</th><th style="width:11%">Rent</th><th style="width:8%">Area</th><th style="width:15%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ro"></tbody></table></div>
+    </div>
+  </div>
+  <div id="sub-shopsrent-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Shop for Rent)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-rc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-rc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-rc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-rc-location" placeholder="City - District"></div></div>
+        <div class="form-group"><label>Rent Budget</label><input class="f-rc-budget" placeholder="مثلاً 5,000 - 10,000 ج.م/شهر"></div>
+        <div class="form-group"><label>Required Area</label><input class="f-rc-area" placeholder="m²"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shopsrent')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-rc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shopsrent','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:14%">Rent Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-rc"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== MATCHES ====================== -->
+<div id="page-report" class="page-content hidden">
+  <div class="card">
+    <h3>📄 Export Word Report</h3>
+    <div class="form-row" style="align-items:end;">
+      <div class="form-group"><label>Property Type</label>
+        <select id="report-type">
+          <option value="all">All Types</option>
+          <option value="apartments">🏢 Apartments</option>
+          <option value="houses">🏠 Houses</option>
+          <option value="lands">🗺️ Lands</option>
+          <option value="shops">🏪 Shops</option>
+          <option value="shopsrent">🏪 Shops for Rent</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Section</label>
+        <select id="report-cat">
+          <option value="all">All (Owners + Clients)</option>
+          <option value="owners">👤 Owners</option>
+          <option value="customers">🤝 Clients</option>
+        </select>
+      </div>
+      <div class="form-group"><label>From Date</label><input type="date" id="report-from"></div>
+      <div class="form-group"><label>To Date</label><input type="date" id="report-to"></div>
+      <div>
+        <button class="btn btn-primary" onclick="generateReport()" style="font-size:14px;padding:10px 30px;">📥 Download Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-matches" class="page-content hidden">
+  <div class="card">
+    <h3>🔄 Smart Matching</h3>
+    <p style="font-size:13px;color:#555;margin-bottom:14px;">The system automatically matches owners with clients based on:
+      <strong>Same property type + Same location + Price vs Budget</strong>
+    </p>
+    <div class="form-row" style="align-items:end;">
+      <div class="form-group"><label>Filter by Type</label>
+        <select id="match-filter" onchange="renderMatches()">
+          <option value="all">All Types</option>
+          <option value="apartments">🏢 Apartments</option>
+          <option value="houses">🏠 Houses</option>
+          <option value="lands">🗺️ Lands</option>
+          <option value="shops">🏪 Shops</option>
+          <option value="shopsrent">🏪 Shops for Rent</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Price Tolerance</label>
+        <select id="match-tolerance" onchange="renderMatches()">
+          <option value="10">± 10%</option>
+          <option value="20" selected>± 20%</option>
+          <option value="30">± 30%</option>
+          <option value="50">± 50%</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-success" onclick="renderMatches()">🔄 Find Matches</button>
+      </div>
+    </div>
+  </div>
+  <div id="matches-results"></div>
+</div>
+
+</div>
+
+<script src="supabase.min.js"></script>
+<script>
+if (window.location.protocol === 'file:') {
+  document.body.innerHTML = '<div style="padding:40px;text-align:center;font-size:20px;">⚠️ افتح الصفحة عن طريق <b>http://localhost:3000</b> مش كـ file<br><br>شغّل السيرفر first: <b>node server.js</b></div>';
+  throw new Error('Page must be served via localhost');
+}
+const SUPABASE_URL = 'https://omdbdtyysgwcznskrlsa.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tZGJkdHl5c2d3Y3puc2tybHNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxODk3ODksImV4cCI6MjA5ODc2NTc4OX0.YUta5414ktWx1N2nD6Wk_UZvJNXyc3jWMsRxe_XC-h0';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const types = ['apartments','houses','lands','shops','shopsrent'];
+const typeNames = { apartments:'Apartments', houses:'Houses', lands:'Lands', shops:'Shops', shopsrent:'Shops for Rent' };
+const typeLetters = { apartments:'a', houses:'h', lands:'l', shops:'s', shopsrent:'r' };
+const DATA = {};
+types.forEach(t => { DATA[t] = { owners: [], customers: [] }; });
+
+const tempMedia = {};
+
+async function loadData() {
+  const { data: owners } = await supabase.from('owners').select('*');
+  const { data: customers } = await supabase.from('customers').select('*');
+  types.forEach(t => {
+    DATA[t].owners = (owners||[]).filter(x => x.type === t);
+    DATA[t].customers = (customers||[]).filter(x => x.type === t);
+  });
+  types.forEach(t => { renderTable(t, 'owners'); renderTable(t, 'customers'); });
+}
+
+function uploadWithProgress(file, key, idx) {
+  return new Promise((resolve, reject) => {
+    const ext = file.name.split('.').pop();
+    const fileName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', SUPABASE_URL + '/storage/v1/object/uploads/' + fileName);
+    xhr.setRequestHeader('apikey', SUPABASE_ANON);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + SUPABASE_ANON);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        const pct = Math.round(e.loaded / e.total * 100);
+        const el = document.querySelector('.pr-item-' + key + '-' + idx + ' .upload-progress p');
+        if (el) el.textContent = pct + '%';
+        const bar = document.querySelector('.pr-item-' + key + '-' + idx + ' .upload-progress .bar span');
+        if (bar) bar.style.width = pct + '%';
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const { data: { publicUrl } } = supabase.storage.from('uploads').getPublicUrl(fileName);
+        resolve({ type: file.type.startsWith('image/') ? 'image' : 'video', data: publicUrl, name: file.name });
+      } else {
+        reject(new Error(xhr.status + ' ' + xhr.statusText));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Network error'));
+    xhr.send(file);
+  });
+}
+
+async function handleUpload(input, type, cat) {
+  const key = type + '-' + cat;
+  if (!tempMedia[key]) tempMedia[key] = [];
+  const files = input.files || input;
+  if (!files || !files.length) return;
+  for (const file of Array.from(files)) {
+    const idx = tempMedia[key].length;
+    const isVideo = file.type.startsWith('video/');
+    tempMedia[key].push({ type: isVideo ? 'video' : 'image', data: '', name: file.name, uploading: true });
+    showPreview(key);
+    try {
+      const result = await uploadWithProgress(file, key, idx);
+      tempMedia[key][idx] = result;
+    } catch (e) {
+      tempMedia[key][idx] = { type: file.type.startsWith('image/') ? 'image' : 'video', data: '', name: file.name, error: e.message };
+    }
+    showPreview(key);
+  }
+  if (input.files) input.value = '';
+}
+
+function showPreview(key) {
+  const [type, cat] = key.split('-');
+  const l = getLetter(type);
+  const s = cat === 'owner' ? 'o' : 'c';
+  const el = document.getElementById('preview-' + l + s);
+  if (!el) return;
+  el.innerHTML = (tempMedia[key]||[]).map((m,i) => {
+    if (m.uploading) {
+      return '<div class="thumb pr-item-' + key + '-' + i + '"><div class="upload-progress"><p style="font-size:11px;font-weight:700;">0%</p><div class="bar"><span style="width:0%"></span></div></div></div>';
+    }
+    if (m.error) {
+      return '<div class="thumb" style="background:#ffe0e0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c00;">Failed</div>';
+    }
+    return m.type === 'image'
+      ? '<div class="thumb"><img src="'+m.data+'" alt=""></div>'
+      : '<div class="thumb"><div class="vid-icon">🎬</div></div>';
+  }).join('');
+}
+
+// Drag & drop for upload
+document.addEventListener('dragover', e => {
+  const btn = e.target.closest('.upload-btn');
+  if (btn) { e.preventDefault(); btn.classList.add('dragover'); }
+});
+document.addEventListener('dragleave', e => {
+  const btn = e.target.closest('.upload-btn');
+  if (btn && !btn.contains(e.relatedTarget)) btn.classList.remove('dragover');
+});
+document.addEventListener('drop', e => {
+  const btn = e.target.closest('.upload-btn');
+  if (!btn) return;
+  e.preventDefault();
+  btn.classList.remove('dragover');
+  const type = btn.dataset.type;
+  const cat = btn.dataset.cat;
+  if (e.dataTransfer.files.length) {
+    handleUpload(e.dataTransfer.files, type, cat);
+  }
+});
+
+function mediaToHtml(media) {
+  if (!media || !media.length) return '<div style="color:#bbb;">-</div>';
+  return '<div class="media-thumbs">' + media.map((m,i) => {
+    const enc = encodeURIComponent(m.data);
+    if (m.type === 'image') {
+      return '<div style="cursor:pointer;" onclick="openMedia(\''+enc+'\',\'image\')"><img src="'+m.data+'" style="width:100%;height:100%;object-fit:cover;"></div>';
+    } else {
+      return '<div style="cursor:pointer;" onclick="openMedia(\''+enc+'\',\'video\')">🎬</div>';
+    }
+  }).join('') + '</div>';
+}
+
+function openMedia(encSrc, type) {
+  const src = decodeURIComponent(encSrc);
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.onclick = e => { if (e.target===overlay) overlay.remove(); };
+  const close = document.createElement('button');
+  close.className = 'modal-close'; close.textContent = '✕';
+  close.onclick = () => overlay.remove();
+  overlay.appendChild(close);
+  if (type === 'image') {
+    const img = document.createElement('img');
+    img.src = src; overlay.appendChild(img);
+  } else {
+    const vid = document.createElement('video');
+    vid.src = src; vid.controls = true; vid.autoplay = true;
+    vid.style.width = '90vw'; vid.style.maxHeight = '80vh';
+    overlay.appendChild(vid);
+    const share = document.createElement('button');
+    share.className = 'modal-share';
+    share.textContent = '📤 Share via WhatsApp';
+    share.onclick = () => {
+      const wa = 'https://wa.me/?text=' + encodeURIComponent(src);
+      window.open(wa, '_blank');
+    };
+    overlay.appendChild(share);
+  }
+  document.body.appendChild(overlay);
+}
+
+/* Main tabs */
+document.querySelectorAll('.main-tab').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.main-tab').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    const tab = el.dataset.tab;
+    types.forEach(t => document.getElementById('page-'+t).classList.toggle('hidden', t !== tab));
+    document.getElementById('page-matches').classList.toggle('hidden', tab !== 'matches');
+    document.getElementById('page-report').classList.toggle('hidden', tab !== 'report');
+    if (tab === 'matches') renderMatches();
+  });
+});
+
+/* Sub tabs */
+document.querySelectorAll('.sub-tab').forEach(el => {
+  el.addEventListener('click', () => {
+    const parent = el.closest('.page-content');
+    parent.querySelectorAll('.sub-tab').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    const page = parent.id.replace('page-','');
+    const sub = el.dataset.sub;
+    parent.querySelectorAll('[id^="sub-'+page+'"]').forEach(x => x.classList.add('hidden'));
+    document.getElementById('sub-'+page+'-'+sub).classList.remove('hidden');
+  });
+});
+
+function getLetter(type) { return typeLetters[type] || type[0]; }
+
+function extractNum(s) {
+  if (!s) return null;
+  const m = s.replace(/[,\s]/g,'').match(/(\d+)/);
+  return m ? parseFloat(m[1]) : null;
+}
+
+async function addOwner(type) {
+  const l = getLetter(type);
+  const key = type + '-owner';
+  const obj = {
+    id: Date.now(),
+    type: type,
+    name: document.querySelector('.f-'+l+'o-name').value.trim(),
+    phone: document.querySelector('.f-'+l+'o-phone').value.trim(),
+    location: document.querySelector('.f-'+l+'o-location').value.trim(),
+    price: document.querySelector('.f-'+l+'o-price').value.trim(),
+    area: document.querySelector('.f-'+l+'o-area').value.trim(),
+    rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'o-rent').value.trim() : '',
+    details: document.querySelector('.f-'+l+'o-details').value.trim(),
+    media: tempMedia[key] || []
+  };
+  delete tempMedia[key];
+  const pv = document.getElementById('preview-'+l+'o');
+  if (pv) pv.innerHTML = '';
+  if (!obj.name) return alert('Name is required');
+  const { error } = await supabase.from('owners').insert(obj);
+  if (error) return alert('Error: ' + error.message);
+  DATA[type].owners.push(obj);
+  document.querySelectorAll('.f-'+l+'o-name, .f-'+l+'o-phone, .f-'+l+'o-location, .f-'+l+'o-price, .f-'+l+'o-area, .f-'+l+'o-details' + (type === 'shopsrent' ? ', .f-'+l+'o-rent' : '')).forEach(x => x.value = '');
+  renderTable(type, 'owners');
+}
+
+async function addCustomer(type) {
+  const l = getLetter(type);
+  const obj = {
+    id: Date.now(),
+    type: type,
+    name: document.querySelector('.f-'+l+'c-name').value.trim(),
+    phone: document.querySelector('.f-'+l+'c-phone').value.trim(),
+    need: document.querySelector('.f-'+l+'c-need').value.trim(),
+    location: document.querySelector('.f-'+l+'c-location').value.trim(),
+    budget: document.querySelector('.f-'+l+'c-budget').value.trim(),
+    area: document.querySelector('.f-'+l+'c-area').value.trim(),
+    rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : ''
+  };
+  if (!obj.name) return alert('Name is required');
+  const { error } = await supabase.from('customers').insert(obj);
+  if (error) return alert('Error: ' + error.message);
+  DATA[type].customers.push(obj);
+  document.querySelectorAll('.f-'+l+'c-name, .f-'+l+'c-phone, .f-'+l+'c-need, .f-'+l+'c-location, .f-'+l+'c-budget, .f-'+l+'c-area' + (type === 'shopsrent' ? ', .f-'+l+'c-rent' : '')).forEach(x => x.value = '');
+  renderTable(type, 'customers');
+}
+
+async function delEntry(type, cat, id) {
+  const { error } = await supabase.from(cat).delete().eq('id', id);
+  if (error) return alert('Error: ' + error.message);
+  DATA[type][cat] = DATA[type][cat].filter(x => x.id !== id);
+  renderTable(type, cat);
+}
+
+
+function renderMobileCards(type, cat, arr) {
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const container = document.getElementById('cards-' + l + s);
+  if (!container) return;
+  if (!arr.length) {
+    container.innerHTML = '<div class="mobile-card" style="text-align:center;color:#888;">No data</div>';
+    return;
+  }
+  container.innerHTML = arr.map((item, i) => {
+    const rows = [];
+    rows.push(`<div class="row"><span class="label">Name</span><span class="value">${item.name || '-'}</span></div>`);
+    rows.push(`<div class="row"><span class="label">Phone</span><span class="value">${item.phone || '-'}</span></div>`);
+    if (item.location) rows.push(`<div class="row"><span class="label">Location</span><span class="value">${item.location}</span></div>`);
+    if (cat === 'owners') {
+      if (item.price) rows.push(`<div class="row"><span class="label">Price</span><span class="value">${item.price}</span></div>`);
+      if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
+      if (item.details) rows.push(`<div class="row"><span class="label">Details</span><span class="value">${item.details}</span></div>`);
+    } else {
+      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}</span></div>`);
+      if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
+    }
+    const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'')}` : '#';
+    return `
+      <div class="mobile-card">
+        <div class="title">${i+1}. ${typeNames[type] || type}</div>
+        ${rows.join('')}
+        <div class="actions">
+          <button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button>
+          <a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a>
+          <button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTable(type, cat) {
+  const arr = DATA[type][cat];
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const tbody = document.getElementById('tbl-'+l+s);
+  const count = document.getElementById('count-'+l+s);
+  if (!tbody) return;
+  count.textContent = arr.length;
+  let cols = cat === 'owners' ? 9 : 8;
+  if (type === 'shopsrent') cols++;
+  if (!arr.length) { tbody.innerHTML = '<tr><td colspan="' + cols + '" style="text-align:center;color:#aaa;">No data</td></tr>'; return; }
+  const fields = cat === 'owners'
+    ? (type === 'shopsrent' ? ['name','phone','location','price','area','rent','details'] : ['name','phone','location','price','area','details'])
+    : (type === 'shopsrent' ? ['name','phone','need','location','budget','area','rent'] : ['name','phone','need','location','budget','area']);
+  renderMobileCards(type, cat, arr);
+  tbody.innerHTML = arr.map((item, i) => {
+    const cells = fields.map(f => {
+      let val = item[f] || '-';
+      if (f === 'details') val = val.replace(/\n/g, '<br>');
+      return '<td style="white-space:pre-wrap;">' + val + '</td>';
+    }).join('');
+    const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
+    const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+  }).join('');
+}
+
+function editEntry(type, cat, id) {
+  const l = getLetter(type);
+  const item = DATA[type][cat].find(x => x.id === id);
+  if (!item) return;
+  const page = document.getElementById('page-'+type);
+  page.querySelectorAll('.sub-tab').forEach(x => x.classList.remove('active'));
+  const tab = page.querySelector('.sub-tab[data-sub="'+cat+'"]');
+  if (tab) tab.classList.add('active');
+  page.querySelectorAll('[id^="sub-'+type+'"]').forEach(x => x.classList.add('hidden'));
+  document.getElementById('sub-'+type+'-'+cat).classList.remove('hidden');
+  const formFields = document.querySelector('#sub-'+type+'-'+cat+' .form-fields');
+  if (formFields) formFields.classList.remove('hidden');
+  const toggleBtn = document.querySelector('#sub-'+type+'-'+cat+' .toggle-form-btn');
+  if (toggleBtn) toggleBtn.textContent = toggleBtn.textContent.replace('➕ ', '✕ ');
+  if (cat === 'owners') {
+    document.querySelector('.f-'+l+'o-name').value = item.name || '';
+    document.querySelector('.f-'+l+'o-phone').value = item.phone || '';
+    document.querySelector('.f-'+l+'o-location').value = item.location || '';
+    document.querySelector('.f-'+l+'o-price').value = item.price || '';
+    document.querySelector('.f-'+l+'o-area').value = item.area || '';
+    if (type === 'shopsrent') document.querySelector('.f-'+l+'o-rent').value = item.rent || '';
+    document.querySelector('.f-'+l+'o-details').value = item.details || '';
+    const pv = document.getElementById('preview-'+l+'o');
+    const key = type + '-owner';
+    tempMedia[key] = item.media ? [...item.media] : [];
+    if (pv) showPreview(key);
+  } else {
+    document.querySelector('.f-'+l+'c-name').value = item.name || '';
+    document.querySelector('.f-'+l+'c-phone').value = item.phone || '';
+    document.querySelector('.f-'+l+'c-need').value = item.need || '';
+    document.querySelector('.f-'+l+'c-location').value = item.location || '';
+    document.querySelector('.f-'+l+'c-budget').value = item.budget || '';
+    document.querySelector('.f-'+l+'c-area').value = item.area || '';
+    if (type === 'shopsrent') document.querySelector('.f-'+l+'c-rent').value = item.rent || '';
+  }
+  const btn = document.querySelector('#sub-'+type+'-'+cat+' .btn-primary');
+  btn.textContent = '💾 Save Changes';
+  btn.onclick = async function saveEdit() {
+    if (cat === 'owners') {
+      item.name = document.querySelector('.f-'+l+'o-name').value.trim();
+      item.phone = document.querySelector('.f-'+l+'o-phone').value.trim();
+      item.location = document.querySelector('.f-'+l+'o-location').value.trim();
+      item.price = document.querySelector('.f-'+l+'o-price').value.trim();
+      item.area = document.querySelector('.f-'+l+'o-area').value.trim();
+      if (type === 'shopsrent') item.rent = document.querySelector('.f-'+l+'o-rent').value.trim();
+      item.details = document.querySelector('.f-'+l+'o-details').value.trim();
+      const key = type + '-owner';
+      item.media = tempMedia[key] || [];
+      delete tempMedia[key];
+      const pv = document.getElementById('preview-'+l+'o');
+      if (pv) pv.innerHTML = '';
+    } else {
+      item.name = document.querySelector('.f-'+l+'c-name').value.trim();
+      item.phone = document.querySelector('.f-'+l+'c-phone').value.trim();
+      item.need = document.querySelector('.f-'+l+'c-need').value.trim();
+      item.location = document.querySelector('.f-'+l+'c-location').value.trim();
+      item.budget = document.querySelector('.f-'+l+'c-budget').value.trim();
+      item.area = document.querySelector('.f-'+l+'c-area').value.trim();
+      if (type === 'shopsrent') item.rent = document.querySelector('.f-'+l+'c-rent').value.trim();
+    }
+    const { error } = await supabase.from(cat).update(item).eq('id', item.id);
+    if (error) return alert('Error: ' + error.message);
+    renderTable(type, cat);
+    btn.textContent = cat === 'owners' ? '💾 Save Owner' : '💾 Save Customer';
+    btn.onclick = cat === 'owners'
+      ? function(){ addOwner(type); }
+      : function(){ addCustomer(type); };
+    document.querySelectorAll('#sub-'+type+'-'+cat+' input, #sub-'+type+'-'+cat+' textarea').forEach(x => x.value = '');
+  };
+}
+
+function filterTable(type, cat) {
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const input = document.querySelector('#sub-'+type+'-'+cat+' .search-row input');
+  if (!input) return;
+  const q = input.value.toLowerCase();
+  const arr = DATA[type][cat];
+  const tbody = document.getElementById('tbl-'+l+s);
+  const filtered = arr.filter(x => x.name.toLowerCase().includes(q) || x.phone.includes(q) || (x.location||'').toLowerCase().includes(q) || (x.details||'').toLowerCase().includes(q) || (x.area||'').toLowerCase().includes(q) || (x.rent||'').toLowerCase().includes(q));
+  const fields = cat === 'owners'
+    ? (type === 'shopsrent' ? ['name','phone','location','price','area','rent','details'] : ['name','phone','location','price','area','details'])
+    : (type === 'shopsrent' ? ['name','phone','need','location','budget','area','rent'] : ['name','phone','need','location','budget','area']);
+  let cols = cat === 'owners' ? 9 : 8;
+  if (type === 'shopsrent') cols++;
+  if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="' + cols + '" style="text-align:center;color:#aaa;">No results</td></tr>'; return; }
+  tbody.innerHTML = filtered.map((item, i) => {
+    const cells = fields.map(f => {
+      let val = item[f] || '-';
+      if (f === 'details') val = val.replace(/\n/g, '<br>');
+      return '<td style="white-space:pre-wrap;">' + val + '</td>';
+    }).join('');
+    const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
+    const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+  }).join('');
+}
+
+/* ==================== MATCHES ENGINE ==================== */
+function renderMatches() {
+  const container = document.getElementById('matches-results');
+  const filter = document.getElementById('match-filter').value;
+  const tolPct = parseInt(document.getElementById('match-tolerance').value) / 100;
+  let html = '';
+  const targetTypes = filter === 'all' ? types : [filter];
+
+  targetTypes.forEach(type => {
+    const owners = DATA[type].owners;
+    const customers = DATA[type].customers;
+    if (!owners.length || !customers.length) {
+      html += `<div class="card"><h3>🏢 ${typeNames[type]}</h3><p style="color:#aaa;text-align:center;">${!owners.length && !customers.length ? 'No owners or clients' : !owners.length ? 'No owners' : 'No clients'} in this section</p></div>`;
+      return;
+    }
+
+    let matches = [];
+    owners.forEach(ow => {
+      const owPrice = extractNum(ow.price);
+      const owArea = extractNum(ow.area);
+      customers.forEach(cu => {
+        const cuBudget = extractNum(cu.budget);
+        const cuArea = extractNum(cu.area);
+        let matchScore = 0;
+        let reasons = [];
+
+        const owLoc = (ow.location||'').trim().toLowerCase();
+        const cuLoc = (cu.location||'').trim().toLowerCase();
+        if (owLoc && cuLoc) {
+          const owParts = owLoc.split(/[\/\s\-،,]+/).filter(Boolean);
+          const cuParts = cuLoc.split(/[\/\s\-،,]+/).filter(Boolean);
+          const common = owParts.filter(p => cuParts.includes(p));
+          if (common.length > 0) {
+            matchScore += 40;
+            reasons.push(`📍 Same location (${common.join(', ')})`);
+          }
+        }
+
+        if (owPrice && cuBudget) {
+          const diff = Math.abs(owPrice - cuBudget);
+          const maxVal = Math.max(owPrice, cuBudget);
+          const pct = maxVal > 0 ? diff / maxVal : 1;
+          if (pct <= tolPct) {
+            const score = Math.round((1 - pct / tolPct) * 60);
+            matchScore += score;
+            const direction = owPrice <= cuBudget ? '💰 Within budget' : '💰 Slightly above budget';
+            reasons.push(`${direction} (${Math.round(pct*100)}% فرق)`);
+          }
+        }
+
+        if (owArea && cuArea) {
+          const areaDiff = Math.abs(owArea - cuArea);
+          const areaMax = Math.max(owArea, cuArea);
+          const areaPct = areaMax > 0 ? areaDiff / areaMax : 1;
+          if (areaPct <= tolPct) {
+            const areaScore = Math.round((1 - areaPct / tolPct) * 30);
+            matchScore += areaScore;
+            reasons.push(`📐 Area matches (${Math.round(areaPct*100)}% فرق)`);
+          }
+        }
+
+        if (type === 'shopsrent') {
+          const owRent = extractNum(ow.rent);
+          const cuRent = extractNum(cu.rent);
+          if (owRent && cuRent) {
+            const rentDiff = Math.abs(owRent - cuRent);
+            const rentMax = Math.max(owRent, cuRent);
+            const rentPct = rentMax > 0 ? rentDiff / rentMax : 1;
+            if (rentPct <= tolPct) {
+              const rentScore = Math.round((1 - rentPct / tolPct) * 20);
+              matchScore += rentScore;
+              const direction = owRent <= cuRent ? 'ضمن ميزانية الإيجار' : 'فوق ميزانية الإيجار بقليل';
+              reasons.push(`💰 Rent ${direction} (${Math.round(rentPct*100)}% فرق)`);
+            }
+          }
+        }
+
+        if (cu.need) {
+          const needLower = cu.need.toLowerCase();
+          if ((ow.location||'').toLowerCase().includes(needLower) || needLower.includes((ow.location||'').toLowerCase())) {
+            matchScore += 10;
+            reasons.push('📋 Requirement matches');
+          }
+        }
+
+        if (matchScore > 0) {
+          matches.push({ owner: ow, customer: cu, score: matchScore, reasons, owPrice, cuBudget, owArea, cuArea, owRent: extractNum(ow.rent), cuRent: extractNum(cu.rent) });
+        }
+      });
+    });
+
+    matches.sort((a, b) => b.score - a.score);
+
+    html += `<div class="card"><h3>🏢 ${typeNames[type]} — ${matches.length} match${matches.length!==1?'es':''}</h3>`;
+    if (!matches.length) {
+      html += `<p style="color:#aaa;text-align:center;">No matches found</p>`;
+    } else {
+      html += matches.slice(0, 20).map(m => {
+        const pct = m.owPrice && m.cuBudget ? Math.round((1 - Math.abs(m.owPrice - m.cuBudget) / Math.max(m.owPrice, m.cuBudget)) * 100) : 0;
+        const waOwner = 'https://wa.me/' + m.owner.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+        const waCustomer = 'https://wa.me/' + m.customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+        return `<div class="match-card">
+          <div class="header-match">
+            <div><strong style="font-size:15px;">${m.owner.name}</strong> <span class="match-type">Owner</span></div>
+            <div><span class="percent">${m.score}%</span> match</div>
+          </div>
+          <div class="match-detail">📞 ${m.owner.phone} | 📍 ${m.owner.location||'-'} | 💰 ${m.owner.price||'-'} | 📐 ${m.owner.area||'-'}${m.owner.rent ? ' | 🏪 إيجار '+m.owner.rent : ''}</div>
+          <div style="margin:6px 0;border-top:1px dashed #b0d4b8;"></div>
+          <div class="header-match">
+            <div><strong style="font-size:15px;">${m.customer.name}</strong> <span class="match-type" style="background:#25D366;">Customer</span></div>
+          </div>
+          <div class="match-detail">📞 ${m.customer.phone} | 📍 ${m.customer.location||'-'} | 💰 ${m.customer.budget||'-'} | 📐 ${m.customer.area||'-'}${m.customer.rent ? ' | 🏪 إيجار '+m.customer.rent : ''} | 📋 ${m.customer.need||'-'}</div>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge match">${m.reasons[0]||''}</span>
+            ${m.reasons.slice(1).map(r => `<span class="badge">${r}</span>`).join('')}
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px;">
+            <a href="${waOwner}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Owner</a>
+            <a href="${waCustomer}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Customer</a>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    html += `</div>`;
+  });
+
+  container.innerHTML = html || '<div class="card"><p style="color:#aaa;text-align:center;">Select a property type and click "Find Matches"</p></div>';
+}
+
+function generateReport() {
+  const type = document.getElementById('report-type').value;
+  const cat = document.getElementById('report-cat').value;
+  const fromDate = document.getElementById('report-from').value;
+  const toDate = document.getElementById('report-to').value;
+  const targetTypes = type === 'all' ? types : [type];
+  const targetCats = cat === 'all' ? ['owners','customers'] : [cat];
+
+  const fromTs = fromDate ? new Date(fromDate).setHours(0,0,0,0) : 0;
+  const toTs = toDate ? new Date(toDate).setHours(23,59,59,999) : Infinity;
+
+  let html = '<html><head><meta charset="utf-8"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:Arial;font-size:12px}th,td{border:1px solid #999;padding:6px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:Arial}
+/* Mobile cards */
+.mobile-cards{display:none;}
+.mobile-card{
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.mobile-card .title{
+  font-weight:700;
+  color:#1a3a5c;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.mobile-card .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  font-size:13px;
+}
+.mobile-card .label{
+  color:#666;
+  min-width:70px;
+}
+.mobile-card .value{
+  font-weight:600;
+  text-align:left;
+  flex:1;
+}
+.mobile-card .actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+@media (max-width:768px){
+  body{padding:10px;}
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:16px;
+  }
+  .main-tabs{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    padding-bottom:6px;
+  }
+  .main-tab{
+    flex:0 0 auto;
+    padding:8px 16px;
+    font-size:13px;
+  }
+  .sub-tabs{
+    width:100%;
+    justify-content:space-between;
+  }
+  .sub-tab{
+    flex:1;
+    text-align:center;
+  }
+  .form-row{
+    flex-direction:column;
+  }
+  .table-wrap{
+    overflow:visible;
+  }
+  .table-wrap table{
+    display:none;
+  }
+  .mobile-cards{
+    display:block;
+  }
+}
+
+</style></head><body>';
+  html += '<h1>Real Estate Management Report</h1>';
+  html += '<p>Generated: ' + new Date().toLocaleString('en-EG') + '</p>';
+  if (fromDate || toDate) html += '<p>Date range: ' + (fromDate || '∞') + ' → ' + (toDate || '∞') + '</p>';
+
+  targetTypes.forEach(t => {
+    targetCats.forEach(c => {
+      let arr = DATA[t][c].filter(item => item.id >= fromTs && item.id <= toTs);
+      if (!arr.length) return;
+      html += '<h2>' + typeNames[t] + ' - ' + (c === 'owners' ? 'Owners' : 'Clients') + ' (' + arr.length + ')</h2>';
+      html += '<table><thead><tr>';
+      if (c === 'owners') {
+        html += '<th>#</th><th>Name</th><th>Phone</th><th>Location</th><th>Price</th><th>Area</th>' + (t === 'shopsrent' ? '<th>Rent</th>' : '') + '<th>Details</th>';
+      } else {
+        html += '<th>#</th><th>Name</th><th>Phone</th><th>Requirement</th><th>Location</th><th>Budget</th><th>Area</th>' + (t === 'shopsrent' ? '<th>Rent</th>' : '');
+      }
+      html += '</tr></thead><tbody>';
+      arr.forEach((item, i) => {
+        html += '<tr>';
+        html += '<td>' + (i + 1) + '</td>';
+        html += '<td>' + (item.name || '-') + '</td>';
+        html += '<td>' + (item.phone || '-') + '</td>';
+        if (c === 'owners') {
+          html += '<td>' + (item.location || '-') + '</td>';
+          html += '<td>' + (item.price || '-') + '</td>';
+          html += '<td>' + (item.area || '-') + '</td>';
+          if (t === 'shopsrent') html += '<td>' + (item.rent || '-') + '</td>';
+          html += '<td>' + (item.details || '-') + '</td>';
+        } else {
+          html += '<td>' + (item.need || '-') + '</td>';
+          html += '<td>' + (item.location || '-') + '</td>';
+          html += '<td>' + (item.budget || '-') + '</td>';
+          html += '<td>' + (item.area || '-') + '</td>';
+          if (t === 'shopsrent') html += '<td>' + (item.rent || '-') + '</td>';
+        }
+        html += '</tr>';
+      });
+      html += '</tbody></table><br>';
+    });
+  });
+
+  html += '</body></html>';
+  const blob = new Blob([html], { type: 'application/msword' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'real_estate_report.doc';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function toggleForm(btn) {
+  const form = btn.nextElementSibling;
+  form.classList.toggle('hidden');
+  btn.textContent = form.classList.contains('hidden') ? btn.textContent.replace('✕ ', '➕ ') : btn.textContent.replace('➕ ', '✕ ');
+  if (!form.classList.contains('hidden')) {
+    const saveBtn = form.querySelector('.btn-primary');
+    const isEdit = saveBtn && saveBtn.textContent.includes('Save Changes');
+    if (!isEdit) form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  }
+}
+
+// Load data from server on startup
+loadData();
+</script>
+</body>
+</html>
