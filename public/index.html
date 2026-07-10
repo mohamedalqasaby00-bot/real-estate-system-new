@@ -1122,25 +1122,6 @@ async function sendOwnerToCustomer(btn) {
     + '\n📐 المساحة: ' + (owner.area||'-')
     + (owner.rent ? '\n🏪 الإيجار: ' + owner.rent : '')
     + '\n📋 التفاصيل: ' + (owner.details||'-');
-  var media = owner.media || [];
-  if (media.length) {
-    msg += '\n\n📸 الوسائط:';
-    for (var j = 0; j < media.length; j++) msg += '\n' + media[j].data;
-  }
-  if (navigator.share && media.length) {
-    try {
-      var files = [];
-      for (var k = 0; k < media.length; k++) {
-        try {
-          var resp = await fetch(media[k].data);
-          var blob = await resp.blob();
-          files.push(new File([blob], media[k].data.split('/').pop().split('?')[0], { type: blob.type }));
-        } catch(e) {}
-      }
-      await navigator.share({ text: msg, files: files.length ? files : undefined });
-      return;
-    } catch(e) {}
-  }
   var wa = 'https://wa.me/' + custPhone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg);
   window.open(wa, '_blank');
 }
