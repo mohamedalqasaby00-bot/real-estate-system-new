@@ -823,6 +823,7 @@ function editEntry(type, cat, id) {
     document.querySelector('.f-'+l+'o-area').value = item.area || '';
     if (type === 'shopsrent') document.querySelector('.f-'+l+'o-rent').value = item.rent || '';
     document.querySelector('.f-'+l+'o-details').value = item.details || '';
+    document.querySelector('.f-'+l+'o-details').dispatchEvent(new Event('input', { bubbles: true }));
     const pv = document.getElementById('preview-'+l+'o');
     const key = type + '-owner';
     tempMedia[key] = item.media ? [...item.media] : [];
@@ -831,6 +832,7 @@ function editEntry(type, cat, id) {
     document.querySelector('.f-'+l+'c-name').value = item.name || '';
     document.querySelector('.f-'+l+'c-phone').value = item.phone || '';
     document.querySelector('.f-'+l+'c-need').value = item.need || '';
+    document.querySelector('.f-'+l+'c-need').dispatchEvent(new Event('input', { bubbles: true }));
     document.querySelector('.f-'+l+'c-location').value = item.location || '';
     document.querySelector('.f-'+l+'c-budget').value = item.budget || '';
     document.querySelector('.f-'+l+'c-area').value = item.area || '';
