@@ -199,6 +199,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>👤 Owners <span class="count-badge" id="count-ao">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search by name, phone or location..." oninput="filterTable('apartments','owners')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ao"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ao"></div>
     </div>
   </div>
   <div id="sub-apartments-customers" class="hidden">
@@ -216,6 +217,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>🤝 Clients <span class="count-badge" id="count-ac">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search by name or phone..." oninput="filterTable('apartments','customers')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-ac"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ac"></div>
     </div>
   </div>
 </div>
@@ -241,6 +243,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>👤 Owners <span class="count-badge" id="count-ho">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('houses','owners')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ho"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ho"></div>
     </div>
   </div>
   <div id="sub-houses-customers" class="hidden">
@@ -258,6 +261,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>🤝 Clients <span class="count-badge" id="count-hc">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('houses','customers')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-hc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-hc"></div>
     </div>
   </div>
 </div>
@@ -283,6 +287,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>👤 Owners <span class="count-badge" id="count-lo">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('lands','owners')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-lo"></tbody></table></div>
+      <div class="mobile-cards" id="cards-lo"></div>
     </div>
   </div>
   <div id="sub-lands-customers" class="hidden">
@@ -300,6 +305,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>🤝 Clients <span class="count-badge" id="count-lc">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('lands','customers')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-lc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-lc"></div>
     </div>
   </div>
 </div>
@@ -325,6 +331,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>👤 Owners <span class="count-badge" id="count-so">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shops','owners')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:13%">Location</th><th style="width:11%">Price</th><th style="width:8%">Area</th><th style="width:15%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-so"></tbody></table></div>
+      <div class="mobile-cards" id="cards-so"></div>
     </div>
   </div>
   <div id="sub-shops-customers" class="hidden">
@@ -342,6 +349,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>🤝 Clients <span class="count-badge" id="count-sc">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shops','customers')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-sc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-sc"></div>
     </div>
   </div>
 </div>
@@ -367,6 +375,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>👤 Owners <span class="count-badge" id="count-ro">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shopsrent','owners')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:13%">Location</th><th style="width:11%">Rent</th><th style="width:8%">Area</th><th style="width:15%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ro"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ro"></div>
     </div>
   </div>
   <div id="sub-shopsrent-customers" class="hidden">
@@ -384,6 +393,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <h3>🤝 Clients <span class="count-badge" id="count-rc">0</span></h3>
       <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shopsrent','customers')"></div>
       <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:14%">Rent Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-rc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-rc"></div>
     </div>
   </div>
 </div>
@@ -1080,15 +1090,5 @@ function toggleForm(btn) {
 // Load data from server on startup
 loadData();
 </script>
-<div class="mobile-cards" id="cards-ao"></div>
-<div class="mobile-cards" id="cards-ho"></div>
-<div class="mobile-cards" id="cards-lo"></div>
-<div class="mobile-cards" id="cards-so"></div>
-<div class="mobile-cards" id="cards-ro"></div>
-<div class="mobile-cards" id="cards-ac"></div>
-<div class="mobile-cards" id="cards-hc"></div>
-<div class="mobile-cards" id="cards-lc"></div>
-<div class="mobile-cards" id="cards-sc"></div>
-<div class="mobile-cards" id="cards-rc"></div>
 </body>
 </html>
