@@ -908,7 +908,8 @@ function renderMatches() {
       return;
     }
 
-    let matches = [];
+    if (!window._MATCHES) window._MATCHES = {};
+    var matches = window._MATCHES[type] = [];
     owners.forEach(ow => {
       const owPrice = extractNum(ow.price);
       const owArea = extractNum(ow.area);
@@ -989,7 +990,7 @@ function renderMatches() {
     if (!matches.length) {
       html += `<p style="color:#aaa;text-align:center;">No matches found</p>`;
     } else {
-      html += matches.slice(0, 20).map(m => {
+      html += matches.slice(0, 20).map(function(m, idx) {
         const pct = m.owPrice && m.cuBudget ? Math.round((1 - Math.abs(m.owPrice - m.cuBudget) / Math.max(m.owPrice, m.cuBudget)) * 100) : 0;
         const waOwner = 'https://wa.me/' + m.owner.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
         const waCustomer = 'https://wa.me/' + m.customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
@@ -1013,7 +1014,7 @@ function renderMatches() {
             <a href="${waCustomer}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Customer</a>
           </div>
           <div style="margin-top:6px;">
-            <a href="${'https://wa.me/' + m.customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent('عقار متاح: ' + typeNames[type] + '\n📍 الموقع: ' + (m.owner.location||'-') + '\n💰 السعر: ' + (m.owner.price||'-') + '\n📐 المساحة: ' + (m.owner.area||'-') + (m.owner.rent ? '\n🏪 الإيجار: ' + m.owner.rent : '') + '\n📋 التفاصيل: ' + (m.owner.details||'-') + ((m.owner.media||[]).length ? '\n\n📸 الوسائط:\n' + m.owner.media.map(function(md) { return md.data; }).join('\n') : ''))}" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">📤 Send Details to Customer</a>
+            <button data-type="${type}" data-owner-id="${m.owner.id}" data-cust-phone="${m.customer.phone}" onclick="sendOwnerToCustomer(this)" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">📤 Send Details to Customer</button>
           </div>
         </div>`;
       }).join('');
@@ -1104,6 +1105,44 @@ function toggleForm(btn) {
     const isEdit = saveBtn && saveBtn.textContent.includes('Save Changes');
     if (!isEdit) form.querySelectorAll('input, textarea').forEach(el => el.value = '');
   }
+}
+
+async function sendOwnerToCustomer(btn) {
+  var type = btn.getAttribute('data-type');
+  var ownerId = parseFloat(btn.getAttribute('data-owner-id'));
+  var custPhone = btn.getAttribute('data-cust-phone');
+  var owner = null;
+  for (var i = 0; i < DATA[type].owners.length; i++) {
+    if (DATA[type].owners[i].id === ownerId) { owner = DATA[type].owners[i]; break; }
+  }
+  if (!owner) return alert('Owner not found');
+  var msg = 'عقار متاح: ' + typeNames[type]
+    + '\n📍 الموقع: ' + (owner.location||'-')
+    + '\n💰 السعر: ' + (owner.price||'-')
+    + '\n📐 المساحة: ' + (owner.area||'-')
+    + (owner.rent ? '\n🏪 الإيجار: ' + owner.rent : '')
+    + '\n📋 التفاصيل: ' + (owner.details||'-');
+  var media = owner.media || [];
+  if (media.length) {
+    msg += '\n\n📸 الوسائط:';
+    for (var j = 0; j < media.length; j++) msg += '\n' + media[j].data;
+  }
+  if (navigator.share && media.length) {
+    try {
+      var files = [];
+      for (var k = 0; k < media.length; k++) {
+        try {
+          var resp = await fetch(media[k].data);
+          var blob = await resp.blob();
+          files.push(new File([blob], media[k].data.split('/').pop().split('?')[0], { type: blob.type }));
+        } catch(e) {}
+      }
+      await navigator.share({ text: msg, files: files.length ? files : undefined });
+      return;
+    } catch(e) {}
+  }
+  var wa = 'https://wa.me/' + custPhone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg);
+  window.open(wa, '_blank');
 }
 
 // Load data from server on startup
