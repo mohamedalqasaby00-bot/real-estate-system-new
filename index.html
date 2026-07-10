@@ -6,7 +6,7 @@
 <title>Real Estate Management</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-body { background: #f0f2f5; padding: 20px; direction: rtl; }
+body { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }
 .container { max-width: 1200px; margin: auto; }
 .header { background: linear-gradient(135deg, #1a3a5c, #2d6a9f); color: #fff; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 .header h1 { font-size: 24px; }
@@ -107,6 +107,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   font-weight:600;
   text-align:left;
   flex:1;
+  color:#222;
 }
 .mobile-card .actions{
   display:flex;
@@ -161,7 +162,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 
 <div class="header">
   <div><h1>🏢 Real Estate Management</h1><div class="sub">Company — Staff Only</div></div>
-<div class="mobile-cards" id="cards-ao"></div>
   <div style="display:flex;align-items:center;gap:14px;">
     <span style="opacity:.7;font-size:13px;">Staff: Admin</span>
     <span style="background:#ffffff22;padding:5px 12px;border-radius:6px;font-size:13px;cursor:default;">Logout</span>
@@ -1080,5 +1080,15 @@ function toggleForm(btn) {
 // Load data from server on startup
 loadData();
 </script>
+<div class="mobile-cards" id="cards-ao"></div>
+<div class="mobile-cards" id="cards-ho"></div>
+<div class="mobile-cards" id="cards-lo"></div>
+<div class="mobile-cards" id="cards-so"></div>
+<div class="mobile-cards" id="cards-ro"></div>
+<div class="mobile-cards" id="cards-ac"></div>
+<div class="mobile-cards" id="cards-hc"></div>
+<div class="mobile-cards" id="cards-lc"></div>
+<div class="mobile-cards" id="cards-sc"></div>
+<div class="mobile-cards" id="cards-rc"></div>
 </body>
 </html>
