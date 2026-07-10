@@ -902,6 +902,8 @@ function filterTable(type, cat) {
 }
 
 /* ==================== MATCHES ENGINE ==================== */
+var DISMISSED = {};
+
 function renderMatches() {
   const container = document.getElementById('matches-results');
   const filter = document.getElementById('match-filter').value;
@@ -988,7 +990,9 @@ function renderMatches() {
         }
 
         if (matchScore > 0) {
-          matches.push({ owner: ow, customer: cu, score: matchScore, reasons, owPrice, cuBudget, owArea, cuArea, owRent: extractNum(ow.rent), cuRent: extractNum(cu.rent) });
+          var matchKey = ow.id + '-' + cu.id;
+          if (DISMISSED[matchKey]) return;
+          matches.push({ key: matchKey, owner: ow, customer: cu, score: matchScore, reasons, owPrice, cuBudget, owArea, cuArea, owRent: extractNum(ow.rent), cuRent: extractNum(cu.rent) });
         }
       });
     });
@@ -1003,10 +1007,10 @@ function renderMatches() {
         const pct = m.owPrice && m.cuBudget ? Math.round((1 - Math.abs(m.owPrice - m.cuBudget) / Math.max(m.owPrice, m.cuBudget)) * 100) : 0;
         const waOwner = 'https://wa.me/' + m.owner.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
         const waCustomer = 'https://wa.me/' + m.customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-        return `<div class="match-card">
+        return `<div class="match-card" id="mc-${m.key}">
           <div class="header-match">
             <div><strong style="font-size:15px;">${m.owner.name}</strong> <span class="match-type">Owner</span></div>
-            <div><span class="percent">${m.score}%</span> match</div>
+            <div style="display:flex;align-items:center;gap:8px;"><span class="percent">${m.score}%</span> match<button onclick="dismissMatch('${m.key}')" style="background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0;line-height:1;">✕</button></div>
           </div>
           <div class="match-detail">📞 ${m.owner.phone} | 📍 ${m.owner.location||'-'} | 💰 ${m.owner.price||'-'} | 📐 ${m.owner.area||'-'}${m.owner.rent ? ' | 🏪 إيجار '+m.owner.rent : ''} | 📋 ${m.owner.details||'-'}</div>
           <div style="margin:6px 0;border-top:1px dashed #b0d4b8;"></div>
@@ -1133,6 +1137,12 @@ async function sendOwnerToCustomer(btn) {
     + '\nالتفاصيل: ' + (owner.details||'-');
   var wa = 'https://wa.me/' + custPhone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg);
   window.open(wa, '_blank');
+}
+
+function dismissMatch(key) {
+  DISMISSED[key] = true;
+  var el = document.getElementById('mc-' + key);
+  if (el) el.style.display = 'none';
 }
 
 // Auto-resize textarea
