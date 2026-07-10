@@ -573,10 +573,17 @@ function showPreview(key) {
     if (m.error) {
       return '<div class="thumb" style="background:#ffe0e0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c00;">Failed</div>';
     }
+    var delBtn = '<button onclick="removeMedia(\''+key+'\','+i+')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:none;background:#c0392b;color:#fff;font-size:12px;line-height:20px;text-align:center;cursor:pointer;padding:0;">✕</button>';
     return m.type === 'image'
-      ? '<div class="thumb"><img src="'+m.data+'" alt=""></div>'
-      : '<div class="thumb"><div class="vid-icon">🎬</div></div>';
+      ? '<div class="thumb" style="position:relative;">'+delBtn+'<img src="'+m.data+'" alt=""></div>'
+      : '<div class="thumb" style="position:relative;">'+delBtn+'<div class="vid-icon">🎬</div></div>';
   }).join('');
+}
+
+function removeMedia(key, idx) {
+  if (!tempMedia[key]) return;
+  tempMedia[key].splice(idx, 1);
+  showPreview(key);
 }
 
 // Drag & drop for upload
@@ -1117,20 +1124,22 @@ async function sendOwnerToCustomer(btn) {
   }
   if (!owner) return alert('Owner not found');
   var msg = 'عقار متاح: ' + typeNames[type]
-    + '\n📍 الموقع: ' + (owner.location||'-')
-    + '\n💰 السعر: ' + (owner.price||'-')
-    + '\n📐 المساحة: ' + (owner.area||'-')
-    + (owner.rent ? '\n🏪 الإيجار: ' + owner.rent : '')
-    + '\n📋 التفاصيل: ' + (owner.details||'-');
-  var media = owner.media || [];
-  if (media.length) {
-    msg += '\n\n📸 روابط الوسائط:';
-    for (var j = 0; j < media.length; j++) msg += '\n' + media[j].data;
-    msg += '\n\n👆 اضغط على الرابط لمشاهدة الصورة/الفيديو';
-  }
+    + '\nالموقع: ' + (owner.location||'-')
+    + '\nالسعر: ' + (owner.price||'-')
+    + '\nالمساحة: ' + (owner.area||'-')
+    + (owner.rent ? '\nالإيجار: ' + owner.rent : '')
+    + '\nالتفاصيل: ' + (owner.details||'-');
   var wa = 'https://wa.me/' + custPhone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg);
   window.open(wa, '_blank');
 }
+
+// Auto-resize textarea
+document.addEventListener('input', function(e) {
+  if (e.target.tagName === 'TEXTAREA') {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }
+});
 
 // Load data from server on startup
 loadData();
