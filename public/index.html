@@ -1122,6 +1122,12 @@ async function sendOwnerToCustomer(btn) {
     + '\n📐 المساحة: ' + (owner.area||'-')
     + (owner.rent ? '\n🏪 الإيجار: ' + owner.rent : '')
     + '\n📋 التفاصيل: ' + (owner.details||'-');
+  var media = owner.media || [];
+  if (media.length) {
+    msg += '\n\n📸 روابط الوسائط:';
+    for (var j = 0; j < media.length; j++) msg += '\n' + media[j].data;
+    msg += '\n\n👆 اضغط على الرابط لمشاهدة الصورة/الفيديو';
+  }
   var wa = 'https://wa.me/' + custPhone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg);
   window.open(wa, '_blank');
 }
