@@ -1012,6 +1012,9 @@ function renderMatches() {
             <a href="${waOwner}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Owner</a>
             <a href="${waCustomer}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Customer</a>
           </div>
+          <div style="margin-top:6px;">
+            <a href="${'https://wa.me/' + m.customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent('عقار متاح: ' + typeNames[type] + '\n📍 الموقع: ' + (m.owner.location||'-') + '\n💰 السعر: ' + (m.owner.price||'-') + '\n📐 المساحة: ' + (m.owner.area||'-') + (m.owner.rent ? '\n🏪 الإيجار: ' + m.owner.rent : '') + '\n📋 التفاصيل: ' + (m.owner.details||'-') + ((m.owner.media||[]).length ? '\n\n📸 الوسائط:\n' + m.owner.media.map(function(md) { return md.data; }).join('\n') : ''))}" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">📤 Send Details to Customer</a>
+          </div>
         </div>`;
       }).join('');
     }
