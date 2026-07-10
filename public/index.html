@@ -483,13 +483,19 @@ types.forEach(t => { DATA[t] = { owners: [], customers: [] }; });
 const tempMedia = {};
 
 async function loadData() {
-  const { data: owners } = await supabase.from('owners').select('*');
-  const { data: customers } = await supabase.from('customers').select('*');
-  types.forEach(t => {
-    DATA[t].owners = (owners||[]).filter(x => x.type === t);
-    DATA[t].customers = (customers||[]).filter(x => x.type === t);
-  });
-  types.forEach(t => { renderTable(t, 'owners'); renderTable(t, 'customers'); });
+  try {
+    const { data: owners, error: e1 } = await supabase.from('owners').select('*');
+    if (e1) throw new Error('owners: ' + e1.message);
+    const { data: customers, error: e2 } = await supabase.from('customers').select('*');
+    if (e2) throw new Error('customers: ' + e2.message);
+    types.forEach(t => {
+      DATA[t].owners = (owners||[]).filter(x => x.type === t);
+      DATA[t].customers = (customers||[]).filter(x => x.type === t);
+    });
+    types.forEach(t => { renderTable(t, 'owners'); renderTable(t, 'customers'); });
+  } catch(e) {
+    document.getElementById('app').innerHTML = '<div class="card" style="padding:30px;text-align:center;"><h3 style="color:#c00;">⚠️ خطأ</h3><p style="margin-top:10px;color:#555;font-size:14px;">' + e.message + '</p></div>';
+  }
 }
 
 function uploadWithProgress(file, key, idx) {
