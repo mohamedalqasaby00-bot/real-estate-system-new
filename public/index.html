@@ -174,7 +174,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   <div class="main-tab" data-tab="lands">🗺️ Lands</div>
   <div class="main-tab" data-tab="shops">🏪 Shops</div>
   <div class="main-tab" data-tab="shopsrent">🏪 Shops for Rent</div>
-  <div class="main-tab" data-tab="matches" style="background:#25D366;color:#fff;border-color:#25D366;">🔄 Matches</div>
   <div class="main-tab" data-tab="report">📄 Report</div>
 </div>
 
@@ -429,39 +428,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   </div>
 </div>
 
-<div id="page-matches" class="page-content hidden">
-  <div class="card">
-    <h3>🔄 Smart Matching</h3>
-    <p style="font-size:13px;color:#555;margin-bottom:14px;">The system automatically matches owners with clients based on:
-      <strong>Same property type + Same location + Price vs Budget</strong>
-    </p>
-    <div class="form-row" style="align-items:end;">
-      <div class="form-group"><label>Filter by Type</label>
-        <select id="match-filter" onchange="renderMatches()">
-          <option value="all">All Types</option>
-          <option value="apartments">🏢 Apartments</option>
-          <option value="houses">🏠 Houses</option>
-          <option value="lands">🗺️ Lands</option>
-          <option value="shops">🏪 Shops</option>
-          <option value="shopsrent">🏪 Shops for Rent</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Price Tolerance</label>
-        <select id="match-tolerance" onchange="renderMatches()">
-          <option value="10">± 10%</option>
-          <option value="20" selected>± 20%</option>
-          <option value="30">± 30%</option>
-          <option value="50">± 50%</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-success" onclick="renderMatches()">🔄 Find Matches</button>
-      </div>
-    </div>
-  </div>
-  <div id="matches-results"></div>
-</div>
-
 </div>
 
 <script src="supabase.min.js"></script>
@@ -655,9 +621,7 @@ document.querySelectorAll('.main-tab').forEach(el => {
     el.classList.add('active');
     const tab = el.dataset.tab;
     types.forEach(t => document.getElementById('page-'+t).classList.toggle('hidden', t !== tab));
-    document.getElementById('page-matches').classList.toggle('hidden', tab !== 'matches');
     document.getElementById('page-report').classList.toggle('hidden', tab !== 'report');
-    if (tab === 'matches') renderMatches();
   });
 });
 
@@ -901,142 +865,7 @@ function filterTable(type, cat) {
   }).join('');
 }
 
-/* ==================== MATCHES ENGINE ==================== */
-var DISMISSED = {};
-
-function renderMatches() {
-  const container = document.getElementById('matches-results');
-  const filter = document.getElementById('match-filter').value;
-  const tolPct = parseInt(document.getElementById('match-tolerance').value) / 100;
-  let html = '';
-  const targetTypes = filter === 'all' ? types : [filter];
-
-  targetTypes.forEach(type => {
-    const owners = DATA[type].owners;
-    const customers = DATA[type].customers;
-    if (!owners.length || !customers.length) {
-      html += `<div class="card"><h3>🏢 ${typeNames[type]}</h3><p style="color:#aaa;text-align:center;">${!owners.length && !customers.length ? 'No owners or clients' : !owners.length ? 'No owners' : 'No clients'} in this section</p></div>`;
-      return;
-    }
-
-    if (!window._MATCHES) window._MATCHES = {};
-    var matches = window._MATCHES[type] = [];
-    owners.forEach(ow => {
-      const owPrice = extractNum(ow.price);
-      const owArea = extractNum(ow.area);
-      customers.forEach(cu => {
-        const cuBudget = extractNum(cu.budget);
-        const cuArea = extractNum(cu.area);
-        let matchScore = 0;
-        let reasons = [];
-
-        const owLoc = (ow.location||'').trim().toLowerCase();
-        const cuLoc = (cu.location||'').trim().toLowerCase();
-        if (owLoc && cuLoc) {
-          const owParts = owLoc.split(/[\/\s\-،,]+/).filter(Boolean);
-          const cuParts = cuLoc.split(/[\/\s\-،,]+/).filter(Boolean);
-          const common = owParts.filter(p => cuParts.includes(p));
-          if (common.length > 0) {
-            matchScore += 40;
-            reasons.push(`📍 Same location (${common.join(', ')})`);
-          }
-        }
-
-        if (owPrice && cuBudget) {
-          const diff = Math.abs(owPrice - cuBudget);
-          const maxVal = Math.max(owPrice, cuBudget);
-          const pct = maxVal > 0 ? diff / maxVal : 1;
-          if (pct <= tolPct) {
-            const score = Math.round((1 - pct / tolPct) * 60);
-            matchScore += score;
-            const direction = owPrice <= cuBudget ? '💰 Within budget' : '💰 Slightly above budget';
-            reasons.push(`${direction} (${Math.round(pct*100)}% فرق)`);
-          }
-        }
-
-        if (owArea && cuArea) {
-          const areaDiff = Math.abs(owArea - cuArea);
-          const areaMax = Math.max(owArea, cuArea);
-          const areaPct = areaMax > 0 ? areaDiff / areaMax : 1;
-          if (areaPct <= tolPct) {
-            const areaScore = Math.round((1 - areaPct / tolPct) * 30);
-            matchScore += areaScore;
-            reasons.push(`📐 Area matches (${Math.round(areaPct*100)}% فرق)`);
-          }
-        }
-
-        if (type === 'shopsrent') {
-          const owRent = extractNum(ow.rent);
-          const cuRent = extractNum(cu.rent);
-          if (owRent && cuRent) {
-            const rentDiff = Math.abs(owRent - cuRent);
-            const rentMax = Math.max(owRent, cuRent);
-            const rentPct = rentMax > 0 ? rentDiff / rentMax : 1;
-            if (rentPct <= tolPct) {
-              const rentScore = Math.round((1 - rentPct / tolPct) * 20);
-              matchScore += rentScore;
-              const direction = owRent <= cuRent ? 'ضمن ميزانية الإيجار' : 'فوق ميزانية الإيجار بقليل';
-              reasons.push(`💰 Rent ${direction} (${Math.round(rentPct*100)}% فرق)`);
-            }
-          }
-        }
-
-        if (cu.need) {
-          const needLower = cu.need.toLowerCase();
-          if ((ow.location||'').toLowerCase().includes(needLower) || needLower.includes((ow.location||'').toLowerCase())) {
-            matchScore += 10;
-            reasons.push('📋 Requirement matches');
-          }
-        }
-
-        if (matchScore > 0) {
-          var matchKey = ow.id + '-' + cu.id;
-          if (DISMISSED[matchKey]) return;
-          matches.push({ key: matchKey, owner: ow, customer: cu, score: matchScore, reasons, owPrice, cuBudget, owArea, cuArea, owRent: extractNum(ow.rent), cuRent: extractNum(cu.rent) });
-        }
-      });
-    });
-
-    matches.sort((a, b) => b.score - a.score);
-
-    html += `<div class="card"><h3>🏢 ${typeNames[type]} — ${matches.length} match${matches.length!==1?'es':''}</h3>`;
-    if (!matches.length) {
-      html += `<p style="color:#aaa;text-align:center;">No matches found</p>`;
-    } else {
-      html += matches.slice(0, 20).map(function(m, idx) {
-        const pct = m.owPrice && m.cuBudget ? Math.round((1 - Math.abs(m.owPrice - m.cuBudget) / Math.max(m.owPrice, m.cuBudget)) * 100) : 0;
-        const waOwner = 'https://wa.me/' + m.owner.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-        const waCustomer = 'https://wa.me/' + m.customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-        return `<div class="match-card" id="mc-${m.key}">
-          <div class="header-match">
-            <div><strong style="font-size:15px;">${m.owner.name}</strong> <span class="match-type">Owner</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><span class="percent">${m.score}%</span> match<button onclick="dismissMatch('${m.key}')" style="background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0;line-height:1;">✕</button></div>
-          </div>
-          <div class="match-detail">📞 ${m.owner.phone} | 📍 ${m.owner.location||'-'} | 💰 ${m.owner.price||'-'} | 📐 ${m.owner.area||'-'}${m.owner.rent ? ' | 🏪 إيجار '+m.owner.rent : ''} | 📋 ${m.owner.details||'-'}</div>
-          <div style="margin:6px 0;border-top:1px dashed #b0d4b8;"></div>
-          <div class="header-match">
-            <div><strong style="font-size:15px;">${m.customer.name}</strong> <span class="match-type" style="background:#25D366;">Customer</span></div>
-          </div>
-          <div class="match-detail">📞 ${m.customer.phone} | 📍 ${m.customer.location||'-'} | 💰 ${m.customer.budget||'-'} | 📐 ${m.customer.area||'-'}${m.customer.rent ? ' | 🏪 إيجار '+m.customer.rent : ''} | 📋 ${m.customer.need||'-'}</div>
-          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-            <span class="badge match">${m.reasons[0]||''}</span>
-            ${m.reasons.slice(1).map(r => `<span class="badge">${r}</span>`).join('')}
-          </div>
-          <div style="margin-top:10px;display:flex;gap:8px;">
-            <a href="${waOwner}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Owner</a>
-            <a href="${waCustomer}" target="_blank" class="btn-sm whatsapp" style="background:#25D366;color:#fff;border-color:#25D366;">💬 Contact Customer</a>
-          </div>
-          <div style="margin-top:6px;">
-            <button data-type="${type}" data-owner-id="${m.owner.id}" data-cust-phone="${m.customer.phone}" onclick="sendOwnerToCustomer(this)" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">📤 Send Details to Customer</button>
-          </div>
-        </div>`;
-      }).join('');
-    }
-    html += `</div>`;
-  });
-
-  container.innerHTML = html || '<div class="card"><p style="color:#aaa;text-align:center;">Select a property type and click "Find Matches"</p></div>';
-}
+/* ==================== MATCHES ENGINE REMOVED ==================== */
 
 function generateReport() {
   const type = document.getElementById('report-type').value;
@@ -1120,30 +949,7 @@ function toggleForm(btn) {
   }
 }
 
-async function sendOwnerToCustomer(btn) {
-  var type = btn.getAttribute('data-type');
-  var ownerId = parseFloat(btn.getAttribute('data-owner-id'));
-  var custPhone = btn.getAttribute('data-cust-phone');
-  var owner = null;
-  for (var i = 0; i < DATA[type].owners.length; i++) {
-    if (DATA[type].owners[i].id === ownerId) { owner = DATA[type].owners[i]; break; }
-  }
-  if (!owner) return alert('Owner not found');
-  var msg = 'عقار متاح: ' + typeNames[type]
-    + '\nالموقع: ' + (owner.location||'-')
-    + '\nالسعر: ' + (owner.price||'-')
-    + '\nالمساحة: ' + (owner.area||'-')
-    + (owner.rent ? '\nالإيجار: ' + owner.rent : '')
-    + '\nالتفاصيل: ' + (owner.details||'-');
-  var wa = 'https://wa.me/' + custPhone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(msg);
-  window.open(wa, '_blank');
-}
 
-function dismissMatch(key) {
-  DISMISSED[key] = true;
-  var el = document.getElementById('mc-' + key);
-  if (el) el.style.display = 'none';
-}
 
 // Auto-resize textarea
 document.addEventListener('input', function(e) {
