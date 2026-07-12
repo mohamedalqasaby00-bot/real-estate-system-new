@@ -767,7 +767,7 @@ function renderMobileCards(type, cat, arr) {
         <div class="title">${i+1}. ${typeNames[type] || type}</div>
         ${rows.join('')}
         <div class="actions">
-          <button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button>
+          <button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button>
           <a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a>
           <button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button>
         </div>
@@ -799,83 +799,95 @@ function renderTable(type, cat) {
     }).join('');
     const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
     const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
   }).join('');
 }
 
-function editEntry(type, cat, id) {
-  const l = getLetter(type);
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function editEntry(type, cat, id, el) {
   const item = DATA[type][cat].find(x => x.id === id);
   if (!item) return;
-  const page = document.getElementById('page-'+type);
-  page.querySelectorAll('.sub-tab').forEach(x => x.classList.remove('active'));
-  const tab = page.querySelector('.sub-tab[data-sub="'+cat+'"]');
-  if (tab) tab.classList.add('active');
-  page.querySelectorAll('[id^="sub-'+type+'"]').forEach(x => x.classList.add('hidden'));
-  document.getElementById('sub-'+type+'-'+cat).classList.remove('hidden');
-  const formFields = document.querySelector('#sub-'+type+'-'+cat+' .form-fields');
-  if (formFields) formFields.classList.remove('hidden');
-  const toggleBtn = document.querySelector('#sub-'+type+'-'+cat+' .toggle-form-btn');
-  if (toggleBtn) toggleBtn.textContent = toggleBtn.textContent.replace('➕ ', '✕ ');
-  if (cat === 'owners') {
-    document.querySelector('.f-'+l+'o-name').value = item.name || '';
-    document.querySelector('.f-'+l+'o-phone').value = item.phone || '';
-    document.querySelector('.f-'+l+'o-location').value = item.location || '';
-    document.querySelector('.f-'+l+'o-price').value = item.price || '';
-    document.querySelector('.f-'+l+'o-area').value = item.area || '';
-    if (type === 'shopsrent') document.querySelector('.f-'+l+'o-rent').value = item.rent || '';
-    document.querySelector('.f-'+l+'o-details').value = item.details || '';
-    document.querySelector('.f-'+l+'o-details').dispatchEvent(new Event('input', { bubbles: true }));
-    const pv = document.getElementById('preview-'+l+'o');
-    const key = type + '-owner';
-    tempMedia[key] = item.media ? [...item.media] : [];
-    if (pv) showPreview(key);
+  const existing = document.querySelector('.inline-edit[data-id="'+id+'"]');
+  if (existing) { existing.remove(); return; }
+  const parent = el ? (el.closest('tr') || el.closest('.mobile-card')) : null;
+  if (!parent) return;
+  const isOwner = cat === 'owners';
+  const isSR = type === 'shopsrent';
+  const cols = parent.tagName === 'TR' ? (parent.querySelectorAll('td').length || 9) : null;
+  var html = '<div class="inline-edit" data-id="'+id+'" style="background:#f7f9fc;padding:12px;border-radius:8px;margin:4px 0;">';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:6px 10px;margin-bottom:6px;">';
+  html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Name</label><input class="ie-name" value="'+esc(item.name)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+  html += '<div style="flex:1;min-width:110px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Phone</label><input class="ie-phone" value="'+esc(item.phone)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+  if (isOwner) {
+    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><input class="ie-location" value="'+esc(item.location)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:1;min-width:100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:1;min-width:200px;width:100%;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Details</label><textarea class="ie-details" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.details)+'</textarea></div>';
   } else {
-    document.querySelector('.f-'+l+'c-name').value = item.name || '';
-    document.querySelector('.f-'+l+'c-phone').value = item.phone || '';
-    document.querySelector('.f-'+l+'c-need').value = item.need || '';
-    document.querySelector('.f-'+l+'c-need').dispatchEvent(new Event('input', { bubbles: true }));
-    document.querySelector('.f-'+l+'c-location').value = item.location || '';
-    setBudgetInput(l, item.budget || '');
-    document.querySelector('.f-'+l+'c-area').value = item.area || '';
-    if (type === 'shopsrent') document.querySelector('.f-'+l+'c-rent').value = item.rent || '';
-  }
-  const btn = document.querySelector('#sub-'+type+'-'+cat+' .btn-primary');
-  btn.textContent = '💾 Save Changes';
-  btn.onclick = async function saveEdit() {
-    if (cat === 'owners') {
-      item.name = document.querySelector('.f-'+l+'o-name').value.trim();
-      item.phone = document.querySelector('.f-'+l+'o-phone').value.trim();
-      item.location = document.querySelector('.f-'+l+'o-location').value.trim();
-      item.price = document.querySelector('.f-'+l+'o-price').value.trim();
-      item.area = document.querySelector('.f-'+l+'o-area').value.trim();
-      if (type === 'shopsrent') item.rent = document.querySelector('.f-'+l+'o-rent').value.trim();
-      item.details = document.querySelector('.f-'+l+'o-details').value.trim();
-      const key = type + '-owner';
-      item.media = tempMedia[key] || [];
-      delete tempMedia[key];
-      const pv = document.getElementById('preview-'+l+'o');
-      if (pv) pv.innerHTML = '';
+    html += '<div style="flex:1;min-width:150px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Need</label><textarea class="ie-need" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.need)+'</textarea></div>';
+    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><input class="ie-location" value="'+esc(item.location)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:1;min-width:140px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Budget</label>';
+    var isRange = (item.budget||'').indexOf(' - ') > 0;
+    html += '<div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'block\';document.getElementById(\'ie-br-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'none\';document.getElementById(\'ie-br-'+id+'\').style.display=\'flex\'"> Range</label></div>';
+    if (isRange) {
+      var parts = (item.budget||'').split(' - ').map(function(s){return s.trim();});
+      html += '<div id="ie-bf-'+id+'" style="display:none"><input class="ie-budget" value="'+esc(parts[0]||'')+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-br-'+id+'" style="display:flex;gap:4px;"><input class="ie-budget-min" value="'+esc(parts[0]||'')+'" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-budget-max" value="'+esc(parts[1]||'')+'" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     } else {
-      item.name = document.querySelector('.f-'+l+'c-name').value.trim();
-      item.phone = document.querySelector('.f-'+l+'c-phone').value.trim();
-      item.need = document.querySelector('.f-'+l+'c-need').value.trim();
-      item.location = document.querySelector('.f-'+l+'c-location').value.trim();
-      item.budget = getBudgetInput(l);
-      item.area = document.querySelector('.f-'+l+'c-area').value.trim();
-      if (type === 'shopsrent') item.rent = document.querySelector('.f-'+l+'c-rent').value.trim();
+      html += '<div id="ie-bf-'+id+'"><input class="ie-budget" value="'+esc(item.budget)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-br-'+id+'" style="display:none;gap:4px;"><input class="ie-budget-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-budget-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     }
-    const { error } = await supabase.from(cat).update(item).eq('id', item.id);
-    if (error) return alert('Error: ' + error.message);
-    renderTable(type, cat);
-    btn.textContent = cat === 'owners' ? '💾 Save Owner' : '💾 Save Customer';
-    btn.onclick = cat === 'owners'
-      ? function(){ addOwner(type); }
-      : function(){ addCustomer(type); };
-    document.querySelectorAll('#sub-'+type+'-'+cat+' input, #sub-'+type+'-'+cat+' textarea').forEach(x => x.value = '');
-    document.querySelectorAll('.f-'+l+'c-budget-min, .f-'+l+'c-budget-max').forEach(function(x){ x.value = ''; });
-    if (cat === 'customers') { document.querySelector('[name="budget-type-'+l+'"][value="fixed"]').checked = true; toggleBudgetMode(l, 'fixed'); }
-  };
+    html += '</div>';
+    html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+  }
+  html += '</div><div style="display:flex;gap:6px;"><button class="btn btn-primary" style="padding:5px 12px;font-size:12px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:5px 12px;font-size:12px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
+  if (parent.tagName === 'TR') {
+    var tr = document.createElement('tr'); tr.className = 'inline-edit'; tr.setAttribute('data-id',id);
+    var td = document.createElement('td'); td.colSpan = cols; td.innerHTML = html; tr.appendChild(td);
+    parent.parentNode.insertBefore(tr, parent.nextSibling);
+  } else {
+    var wrap = document.createElement('div'); wrap.innerHTML = html; wrap.className = 'inline-edit'; wrap.setAttribute('data-id',id);
+    parent.parentNode.insertBefore(wrap, parent.nextSibling);
+  }
+}
+
+async function saveInlineEdit(type, cat, id) {
+  const item = DATA[type][cat].find(x => x.id === id);
+  if (!item) return;
+  const con = document.querySelector('.inline-edit[data-id="'+id+'"]');
+  if (!con) return;
+  const isOwner = cat === 'owners';
+  if (isOwner) {
+    item.name = con.querySelector('.ie-name').value.trim();
+    item.phone = con.querySelector('.ie-phone').value.trim();
+    item.location = con.querySelector('.ie-location').value.trim();
+    item.price = con.querySelector('.ie-price').value.trim();
+    item.area = con.querySelector('.ie-area').value.trim();
+    if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
+    item.details = con.querySelector('.ie-details').value.trim();
+  } else {
+    item.name = con.querySelector('.ie-name').value.trim();
+    item.phone = con.querySelector('.ie-phone').value.trim();
+    item.need = con.querySelector('.ie-need').value.trim();
+    item.location = con.querySelector('.ie-location').value.trim();
+    var modeEl = document.querySelector('[name="ie-bt-'+id+'"]:checked');
+    if (modeEl && modeEl.value === 'range') {
+      var mn = con.querySelector('.ie-budget-min').value.trim();
+      var mx = con.querySelector('.ie-budget-max').value.trim();
+      item.budget = mn && mx ? mn + ' - ' + mx : (mn || mx);
+    } else {
+      item.budget = con.querySelector('.ie-budget').value.trim();
+    }
+    item.area = con.querySelector('.ie-area').value.trim();
+    if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
+  }
+  const { error } = await supabase.from(cat).update(item).eq('id', item.id);
+  if (error) return alert('Error: ' + error.message);
+  con.remove();
+  renderTable(type, cat);
 }
 
 function filterTable(type, cat) {
@@ -901,7 +913,7 @@ function filterTable(type, cat) {
     }).join('');
     const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
     const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id})">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
   }).join('');
 }
 
