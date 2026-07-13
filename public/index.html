@@ -67,7 +67,8 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 .count-badge { background: #1a3a5c; color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 12px; margin-right: 6px; }
 .hidden { display: none !important; }
 .page-content { }
-.match-card { border: 2px solid #25D366; border-radius: 10px; padding: 20px; margin-bottom: 16px; background: #f6fff9; line-height: 1.6; }
+.match-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 16px; background: #fff; line-height: 1.6; }
+.match-card.sent { border-color: #25D366; background: #f6fff9; }
 .match-card .header-match { display: flex; justify-content: space-between; align-items: center; }
 .match-detail { font-size: 13px; color: #555; margin-top: 6px; }
 .match-type { font-size: 12px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }
@@ -1140,7 +1141,7 @@ function renderMatches() {
     var waC = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
     var sendMsg = 'عقار متاح: ' + typeNames[m.type] + '\nالموقع: ' + (ow.location||'-') + '\nالسعر: ' + (ow.price||'-') + '\nالمساحة: ' + (ow.area||'-') + (ow.rent ? '\nالإيجار: ' + ow.rent : '') + '\nالتفاصيل: ' + (ow.details||'-');
     var waSend = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(sendMsg);
-    return '<div class="match-card" id="mc-'+key+'" style="'+(isSent?'border-color:#1a7a3c':'')+'">'
+    return '<div class="match-card'+(isSent?' sent':'')+'" id="mc-'+key+'">'
       + '<div class="header-match" style="margin-bottom:8px;"><div><span class="percent" style="font-size:18px;">'+m.score+'%</span> Match'+(isSent?'<span class="match-sent-dot"></span>':'')+'</div><button onclick="hideMatch(\''+key+'\')" style="background:none;border:none;color:#c0392b;font-size:20px;cursor:pointer;padding:0;line-height:1;">✕</button></div>'
       + '<div style="margin:10px 0;border-top:2px solid #e0e0e0;"></div>'
       + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🏢 Property Details</strong><br>'
