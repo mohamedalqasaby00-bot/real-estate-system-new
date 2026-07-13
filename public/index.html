@@ -67,11 +67,13 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 .count-badge { background: #1a3a5c; color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 12px; margin-right: 6px; }
 .hidden { display: none !important; }
 .page-content { }
-.match-card { border: 2px solid #25D366; border-radius: 10px; padding: 16px; margin-bottom: 14px; background: #f6fff9; }
+.match-card { border: 2px solid #25D366; border-radius: 10px; padding: 20px; margin-bottom: 16px; background: #f6fff9; line-height: 1.6; }
 .match-card .header-match { display: flex; justify-content: space-between; align-items: center; }
 .match-detail { font-size: 13px; color: #555; margin-top: 6px; }
 .match-type { font-size: 12px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }
 .percent { font-weight: 700; color: #1a7a3c; }
+.match-sent-dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#25D366; margin-left:4px; }
+.match-badge { display:inline-block; background:#1a3a5c; color:#fff; font-size:11px; padding:2px 10px; border-radius:8px; }
 /* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }
 .modal-overlay video { max-width:90vw; max-height:90vh; border-radius:8px; }
@@ -179,6 +181,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   <div class="main-tab" data-tab="shops">🏪 Shops</div>
   <div class="main-tab" data-tab="shopsrent">🏪 Shops for Rent</div>
   <div class="main-tab" data-tab="report">📄 Report</div>
+  <div class="main-tab" data-tab="matches">🔗 Matches</div>
 </div>
 
 <!-- ====================== APARTMENTS ====================== -->
@@ -194,6 +197,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ao-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ao-phone" placeholder="05xxxxxxxx"></div></div>
           <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ao-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-ao-price" placeholder="مثلاً 500,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ao-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-ao-details" placeholder="Property description (rooms, floor, finish...)"></textarea></div>
+          <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ao" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ao" value="finished"> ✅ Finished</label></div></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="apartments" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'apartments','owner')"></label><div class="preview" id="preview-ao"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('apartments')">💾 Save Owner</button>
       </div>
@@ -213,6 +217,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-ac-location" placeholder="City - District"></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-a" value="fixed" checked onchange="toggleBudgetMode('a','fixed')"> Fixed</label><label><input type="radio" name="budget-type-a" value="range" onchange="toggleBudgetMode('a','range')"> Range</label></div><div id="bf-a"><input class="f-ac-budget" placeholder="Amount"></div><div id="br-a" class="budget-range" style="display:none"><input class="f-ac-budget-min" placeholder="From"><input class="f-ac-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><input class="f-ac-area" placeholder="m²"></div>
+        <div class="form-group"><label>Finish Requirement</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="any" checked> Any</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished Only</label></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('apartments')">💾 Save Customer</button>
       </div>
     </div>
@@ -402,6 +407,17 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 </div>
 
 <!-- ====================== MATCHES ====================== -->
+<div id="page-matches" class="page-content hidden">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+      <h3 style="margin:0;border:none;padding:0;">🔗 Property Matches</h3>
+      <button class="btn btn-primary" onclick="generateAllMatches()">🔄 Generate All Matches</button>
+    </div>
+    <div class="search-row"><input id="matchFilter" placeholder="🔍 Search by name, phone, location..." oninput="renderMatches()"></div>
+    <div id="matches-results"></div>
+  </div>
+</div>
+
 <div id="page-report" class="page-content hidden">
   <div class="card">
     <h3>📄 Export Word Report</h3>
@@ -626,6 +642,8 @@ document.querySelectorAll('.main-tab').forEach(el => {
     const tab = el.dataset.tab;
     types.forEach(t => document.getElementById('page-'+t).classList.toggle('hidden', t !== tab));
     document.getElementById('page-report').classList.toggle('hidden', tab !== 'report');
+    document.getElementById('page-matches').classList.toggle('hidden', tab !== 'matches');
+    if (tab === 'matches') renderMatches();
   });
 });
 
@@ -663,7 +681,8 @@ async function addOwner(type) {
     area: document.querySelector('.f-'+l+'o-area').value.trim(),
     rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'o-rent').value.trim() : '',
     details: document.querySelector('.f-'+l+'o-details').value.trim(),
-    media: tempMedia[key] || []
+    media: tempMedia[key] || [],
+    finished: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'o"]:checked')||{}).value === 'finished' : false
   };
   delete tempMedia[key];
   const pv = document.getElementById('preview-'+l+'o');
@@ -673,7 +692,9 @@ async function addOwner(type) {
   if (error) return alert('Error: ' + error.message);
   DATA[type].owners.push(obj);
   document.querySelectorAll('.f-'+l+'o-name, .f-'+l+'o-phone, .f-'+l+'o-location, .f-'+l+'o-price, .f-'+l+'o-area, .f-'+l+'o-details' + (type === 'shopsrent' ? ', .f-'+l+'o-rent' : '')).forEach(x => x.value = '');
+  if (type === 'apartments') document.querySelector('[name="finish-'+l+'o"][value="unfinished"]').checked = true;
   renderTable(type, 'owners');
+  generateMatchesForType(type);
 }
 
 function toggleBudgetMode(l, mode) {
@@ -684,10 +705,14 @@ function toggleBudgetMode(l, mode) {
 function getBudgetInput(l) {
   const mode = document.querySelector('[name="budget-type-'+l+'"]:checked');
   if (!mode || mode.value === 'fixed') return document.querySelector('.f-'+l+'c-budget').value.trim();
-  const min = document.querySelector('.f-'+l+'c-budget-min').value.trim();
-  const max = document.querySelector('.f-'+l+'c-budget-max').value.trim();
-  if (min && max) return min + ' - ' + max;
-  return min || max;
+  var a = document.querySelector('.f-'+l+'c-budget-min').value.trim();
+  var b = document.querySelector('.f-'+l+'c-budget-max').value.trim();
+  if (a && b) {
+    var na = parseFloat(a.replace(/[^0-9]/g,'')), nb = parseFloat(b.replace(/[^0-9]/g,''));
+    if (na > nb) return b + ' - ' + a;
+    return a + ' - ' + b;
+  }
+  return a || b;
 }
 
 function setBudgetInput(l, val) {
@@ -716,7 +741,8 @@ async function addCustomer(type) {
     location: document.querySelector('.f-'+l+'c-location').value.trim(),
     budget: getBudgetInput(l),
     area: document.querySelector('.f-'+l+'c-area').value.trim(),
-    rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : ''
+    rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : '',
+    finished: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'c"]:checked')||{}).value === 'finished' : false
   };
   if (!obj.name) return alert('Name is required');
   const { error } = await supabase.from('customers').insert(obj);
@@ -728,7 +754,9 @@ async function addCustomer(type) {
   document.querySelector('.f-'+l+'c-budget-max').value = '';
   document.querySelector('[name="budget-type-'+l+'"][value="fixed"]').checked = true;
   toggleBudgetMode(l, 'fixed');
+  if (type === 'apartments') document.querySelector('[name="finish-'+l+'c"][value="any"]').checked = true;
   renderTable(type, 'customers');
+  generateMatchesForType(type);
 }
 
 async function delEntry(type, cat, id) {
@@ -756,9 +784,10 @@ function renderMobileCards(type, cat, arr) {
     if (cat === 'owners') {
       if (item.price) rows.push(`<div class="row"><span class="label">Price</span><span class="value">${item.price}</span></div>`);
       if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
+      if (type === 'apartments') rows.push(`<div class="row"><span class="label">Status</span><span class="value">${item.finished ? '<span class="badge match">✅ Finished</span>' : '<span class="badge nomatch">🔧 Unfinished</span>'}</span></div>`);
       if (item.details) rows.push(`<div class="row"><span class="label">Details</span><span class="value">${item.details}</span></div>`);
     } else {
-      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}</span></div>`);
+      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}${type === 'apartments' && item.finished ? ' <span class="badge match">✅ Finished</span>' : ''}</span></div>`);
       if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
     }
     const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'')}` : '#';
@@ -794,7 +823,13 @@ function renderTable(type, cat) {
   tbody.innerHTML = arr.map((item, i) => {
     const cells = fields.map(f => {
       let val = item[f] || '-';
-      if (f === 'details') val = val.replace(/\n/g, '<br>');
+      if (f === 'details') {
+        var fin = type === 'apartments' ? (item.finished ? '<span class="badge match">✅ Finished</span> ' : '<span class="badge nomatch">🔧 Unfinished</span> ') : '';
+        val = fin + val.replace(/\n/g, '<br>');
+      }
+      if (f === 'need' && type === 'apartments' && item.finished) {
+        val = '<span class="badge match">✅ Finished</span> ' + val;
+      }
       return '<td style="white-space:pre-wrap;">' + val + '</td>';
     }).join('');
     const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
@@ -824,6 +859,7 @@ function editEntry(type, cat, id, el) {
     html += '<div style="flex:1;min-width:100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Status</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
     html += '<div style="flex:1;min-width:200px;width:100%;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Details</label><textarea class="ie-details" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.details)+'</textarea></div>';
   } else {
     html += '<div style="flex:1;min-width:150px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Need</label><textarea class="ie-need" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.need)+'</textarea></div>';
@@ -841,6 +877,7 @@ function editEntry(type, cat, id, el) {
     }
     html += '</div>';
     html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Requirement</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="any"'+(item.finished?'':' checked')+'> Any</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
     if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
   }
   html += '</div><div style="display:flex;gap:6px;"><button class="btn btn-primary" style="padding:5px 12px;font-size:12px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:5px 12px;font-size:12px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
@@ -868,6 +905,7 @@ async function saveInlineEdit(type, cat, id) {
     item.area = con.querySelector('.ie-area').value.trim();
     if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
     item.details = con.querySelector('.ie-details').value.trim();
+    if (type==='apartments') item.finished = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value === 'finished';
   } else {
     item.name = con.querySelector('.ie-name').value.trim();
     item.phone = con.querySelector('.ie-phone').value.trim();
@@ -883,11 +921,13 @@ async function saveInlineEdit(type, cat, id) {
     }
     item.area = con.querySelector('.ie-area').value.trim();
     if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
+    if (type==='apartments') item.finished = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value === 'finished';
   }
   const { error } = await supabase.from(cat).update(item).eq('id', item.id);
   if (error) return alert('Error: ' + error.message);
   con.remove();
   renderTable(type, cat);
+  generateMatchesForType(type);
 }
 
 function filterTable(type, cat) {
@@ -908,7 +948,13 @@ function filterTable(type, cat) {
   tbody.innerHTML = filtered.map((item, i) => {
     const cells = fields.map(f => {
       let val = item[f] || '-';
-      if (f === 'details') val = val.replace(/\n/g, '<br>');
+      if (f === 'details') {
+        var fin = type === 'apartments' ? (item.finished ? '<span class="badge match">✅ Finished</span> ' : '<span class="badge nomatch">🔧 Unfinished</span> ') : '';
+        val = fin + val.replace(/\n/g, '<br>');
+      }
+      if (f === 'need' && type === 'apartments' && item.finished) {
+        val = '<span class="badge match">✅ Finished</span> ' + val;
+      }
       return '<td style="white-space:pre-wrap;">' + val + '</td>';
     }).join('');
     const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
@@ -1002,6 +1048,151 @@ function toggleForm(btn) {
 }
 
 
+
+/* ==================== MATCHES ENGINE ==================== */
+
+function getNum(v) { return parseFloat(String(v||'').replace(/[^0-9.]/g,'')) || 0; }
+
+function calcMatchScore(owner, customer) {
+  var score = 0;
+  var owPrice = getNum(owner.price);
+  var cuRaw = (customer.budget||'').trim();
+  var parts = cuRaw.split(' - ').map(function(s){ return getNum(s); }).filter(Boolean);
+  if (owPrice && parts.length) {
+    if (parts.length >= 2 && parts[0] && parts[1]) {
+      var minB = parts[0], maxB = parts[1];
+      if (owPrice <= maxB) { score += 60; }
+      else { var over = owPrice - maxB; score += Math.round(60 * Math.max(0, 1 - over / 200000)); }
+    } else if (parts[0]) {
+      var budget = parts[0], tol = budget * 0.15, diff = Math.abs(owPrice - budget);
+      if (diff <= tol) score += Math.round(60 * (1 - diff / tol));
+    }
+  }
+  var owLoc = (owner.location||'').toLowerCase(), cuLoc = (customer.location||'').toLowerCase();
+  if (owLoc && cuLoc) {
+    var owP = owLoc.split(/[\s\/\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\s\/\-،,]+/).filter(Boolean);
+    var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });
+    if (common.length) score += Math.min(20, common.length * 10);
+    else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
+  }
+  var owArea = getNum(owner.area), cuArea = getNum(customer.area);
+  if (owArea && cuArea) {
+    var maxA = Math.max(owArea, cuArea);
+    score += Math.round(20 * Math.max(0, 1 - Math.abs(owArea - cuArea) / maxA * 2));
+  }
+  if (score < 1) score = 0;
+  return score;
+}
+
+function generateMatchesForType(type) {
+  if (!window._MATCHES) window._MATCHES = {};
+  var owners = DATA[type].owners, customers = DATA[type].customers;
+  var list = [];
+  owners.forEach(function(ow) {
+    customers.forEach(function(cu) {
+      var score = calcMatchScore(ow, cu);
+      if (score < 1) return;
+      list.push({ type: type, ownerId: ow.id, customerId: cu.id, score: score, sent: false, hidden: false });
+    });
+  });
+  list.sort(function(a,b){ return b.score - a.score; });
+  window._MATCHES[type] = list;
+  try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
+}
+
+function generateAllMatches() {
+  if (!window._MATCHES) window._MATCHES = {};
+  types.forEach(function(t){ generateMatchesForType(t); });
+  renderMatches();
+}
+
+function getMatchKey(m) { return m.type+'-'+m.ownerId+'-'+m.customerId; }
+
+function renderMatches() {
+  var container = document.getElementById('matches-results');
+  if (!container) return;
+  if (!window._MATCHES) window._MATCHES = {};
+  try { var saved = localStorage.getItem('_matches'); if (saved) window._MATCHES = JSON.parse(saved); } catch(e){}
+  var q = (document.getElementById('matchFilter').value||'').toLowerCase();
+  var all = [];
+  types.forEach(function(t){
+    (window._MATCHES[t]||[]).forEach(function(m){
+      if (m.hidden) return;
+      if (q) {
+        var ow = DATA[t].owners.find(function(x){ return x.id === m.ownerId; });
+        var cu = DATA[t].customers.find(function(x){ return x.id === m.customerId; });
+        if (!ow || !cu) return;
+        var txt = (ow.name+' '+ow.phone+' '+ow.location+' '+cu.name+' '+cu.phone+' '+cu.location).toLowerCase();
+        if (txt.indexOf(q) < 0) return;
+      }
+      all.push(m);
+    });
+  });
+  all.sort(function(a,b){ return b.score - a.score; });
+  if (!all.length) { container.innerHTML = '<div class="card" style="text-align:center;color:#888;">'+(q?'No matches match your search':'No matches yet. Click "Generate All Matches" to start.')+'</div>'; return; }
+  container.innerHTML = all.map(function(m, idx){
+    var ow = DATA[m.type].owners.find(function(x){ return x.id === m.ownerId; });
+    var cu = DATA[m.type].customers.find(function(x){ return x.id === m.customerId; });
+    if (!ow || !cu) return '';
+    var key = getMatchKey(m);
+    var isSent = m.sent;
+    var waO = 'https://wa.me/' + ow.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var waC = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var sendMsg = 'عقار متاح: ' + typeNames[m.type] + '\nالموقع: ' + (ow.location||'-') + '\nالسعر: ' + (ow.price||'-') + '\nالمساحة: ' + (ow.area||'-') + (ow.rent ? '\nالإيجار: ' + ow.rent : '') + '\nالتفاصيل: ' + (ow.details||'-');
+    var waSend = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(sendMsg);
+    return '<div class="match-card" id="mc-'+key+'" style="'+(isSent?'border-color:#1a7a3c':'')+'">'
+      + '<div class="header-match" style="margin-bottom:8px;"><div><span class="percent" style="font-size:18px;">'+m.score+'%</span> Match'+(isSent?'<span class="match-sent-dot"></span>':'')+'</div><button onclick="hideMatch(\''+key+'\')" style="background:none;border:none;color:#c0392b;font-size:20px;cursor:pointer;padding:0;line-height:1;">✕</button></div>'
+      + '<div style="margin:10px 0;border-top:2px solid #e0e0e0;"></div>'
+      + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🏢 Property Details</strong><br>'
+      + '<span class="match-badge">'+typeNames[m.type]+'</span>'
+      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(ow.location||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Price:</span> <strong>'+(ow.price||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Area:</span> <strong>'+(ow.area||'-')+' m²</strong></div>'
+      + (ow.rent ? '<div><span style="color:#555;">Rent:</span> <strong>'+ow.rent+'</strong></div>' : '')
+      + (ow.details ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">📋 '+ow.details+'</div>' : '')
+      + '</div>'
+      + '<div style="margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;">👤 <strong>'+ow.name+'</strong> &nbsp;|&nbsp; 📞 '+ow.phone+'</div>'
+      + '<div style="margin:12px 0;border-top:2px dashed #b0d4b8;"></div>'
+      + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🤝 Customer Request</strong><br>'
+      + '<span class="match-badge">'+typeNames[m.type]+'</span>'
+      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(cu.location||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Budget:</span> <strong>'+(cu.budget||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Area:</span> <strong>'+(cu.area||'-')+' m²</strong></div>'
+      + (cu.need ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">📋 '+cu.need+'</div>' : '')
+      + '</div>'
+      + '<div style="margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;">👤 <strong>'+cu.name+'</strong> &nbsp;|&nbsp; 📞 '+cu.phone+'</div>'
+      + '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">'
+      + '<a href="'+waO+'" target="_blank" class="btn-sm whatsapp" style="padding:6px 14px;">💬 Contact Owner</a>'
+      + '<a href="'+waC+'" target="_blank" class="btn-sm whatsapp" style="padding:6px 14px;">💬 Contact Client</a>'
+      + '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;padding:6px 14px;" onclick="markSent(\''+key+'\')">📤 Send Details to Client</a>'
+      + '<button onclick="hideMatch(\''+key+'\')" class="btn-sm" style="color:#888;padding:6px 14px;">Hide</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function hideMatch(key) {
+  var parts = key.split('-');
+  var type = parts[0];
+  var matches = window._MATCHES[type];
+  if (!matches) return;
+  for (var i = 0; i < matches.length; i++) {
+    if (getMatchKey(matches[i]) === key) { matches[i].hidden = true; break; }
+  }
+  try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
+  var el = document.getElementById('mc-'+key);
+  if (el) el.style.display = 'none';
+}
+
+function markSent(key) {
+  var parts = key.split('-');
+  var type = parts[0];
+  var matches = window._MATCHES[type];
+  if (!matches) return;
+  for (var i = 0; i < matches.length; i++) {
+    if (getMatchKey(matches[i]) === key) { matches[i].sent = true; break; }
+  }
+  try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
+}
 
 // Auto-resize textarea
 document.addEventListener('input', function(e) {
