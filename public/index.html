@@ -412,7 +412,13 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
       <h3 style="margin:0;border:none;padding:0;">🔗 Property Matches</h3>
-      <button class="btn btn-primary" onclick="generateAllMatches()">🔄 Generate All Matches</button>
+      <div class="form-row" style="gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="generateAllMatches('apartments')" style="font-size:13px;padding:6px 14px;">🏢 Apartments</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('houses')" style="font-size:13px;padding:6px 14px;">🏠 Houses</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('lands')" style="font-size:13px;padding:6px 14px;">🗺️ Lands</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('shops')" style="font-size:13px;padding:6px 14px;">🏪 Shops</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('shopsrent')" style="font-size:13px;padding:6px 14px;">🏪 Shops for Rent</button>
+      </div>
     </div>
     <div class="search-row"><input id="matchFilter" placeholder="🔍 Search by name, phone, location..." oninput="renderMatches()"></div>
     <div id="matches-results"></div>
@@ -1101,9 +1107,10 @@ function generateMatchesForType(type) {
   try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
 }
 
-function generateAllMatches() {
+function generateAllMatches(type) {
   if (!window._MATCHES) window._MATCHES = {};
-  types.forEach(function(t){ generateMatchesForType(t); });
+  if (type) { generateMatchesForType(type); }
+  else { types.forEach(function(t){ generateMatchesForType(t); }); }
   renderMatches();
 }
 
