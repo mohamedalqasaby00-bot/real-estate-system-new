@@ -75,6 +75,15 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 .percent { font-weight: 700; color: #1a7a3c; }
 .match-sent-dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#25D366; margin-left:4px; }
 .match-badge { display:inline-block; background:#1a3a5c; color:#fff; font-size:11px; padding:2px 10px; border-radius:8px; }
+/* Location autocomplete */
+.ac-wrapper { position: relative; }
+.ac-wrapper input { width:100%; padding:8px 10px; border:1px solid #d0d5dd; border-radius:5px; font-size:13px; outline:none; }
+.ac-wrapper input:focus { border-color:#2d6a9f; }
+.ac-dropdown { position:absolute; top:100%; left:0; right:0; z-index:100; background:#fff; border:1px solid #d0d5dd; border-radius:0 0 5px 5px; max-height:200px; overflow-y:auto; display:none; box-shadow:0 4px 12px rgba(0,0,0,.1); }
+.ac-dropdown div { padding:8px 10px; cursor:pointer; font-size:13px; border-bottom:1px solid #f0f0f0; }
+.ac-dropdown div:hover, .ac-dropdown div.active { background:#e8f0fe; }
+.ac-dropdown div:last-child { border-bottom:none; }
+.ac-dropdown .no-result { color:#999; cursor:default; }
 /* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }
 .modal-overlay video { max-width:90vw; max-height:90vh; border-radius:8px; }
@@ -196,7 +205,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Apartment)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ao-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ao-phone" placeholder="05xxxxxxxx"></div></div>
-          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ao-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-ao-price" placeholder="مثلاً 500,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ao-area" placeholder="m²"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ao-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ao-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-ao-price" placeholder="مثلاً 500,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ao-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-ao-details" placeholder="Property description (rooms, floor, finish...)"></textarea></div>
           <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ao" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ao" value="finished"> ✅ Finished</label></div></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="apartments" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'apartments','owner')"></label><div class="preview" id="preview-ao"></div></div>
@@ -215,7 +224,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Apartment)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ac-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ac-phone" placeholder="05xxxxxxxx"></div></div>
-        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-ac-location" placeholder="City - District"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ac-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ac-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-a" value="fixed" checked onchange="toggleBudgetMode('a','fixed')"> Fixed</label><label><input type="radio" name="budget-type-a" value="range" onchange="toggleBudgetMode('a','range')"> Range</label></div><div id="bf-a"><input class="f-ac-budget" placeholder="Amount"></div><div id="br-a" class="budget-range" style="display:none"><input class="f-ac-budget-min" placeholder="From"><input class="f-ac-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><input class="f-ac-area" placeholder="m²"></div>
         <div class="form-group"><label>Finish Requirement</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="any" checked> Any</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished Only</label></div></div>
@@ -242,7 +251,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (House)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ho-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ho-phone" placeholder="05xxxxxxxx"></div></div>
-          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ho-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-ho-price" placeholder="مثلاً 800,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ho-area" placeholder="m²"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ho-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ho-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-ho-price" placeholder="مثلاً 800,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ho-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-ho-details" placeholder="House description"></textarea></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="houses" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'houses','owner')"></label><div class="preview" id="preview-ho"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('houses')">💾 Save Owner</button>
@@ -260,7 +269,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (House)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-hc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-hc-phone" placeholder="05xxxxxxxx"></div></div>
-        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-hc-need" placeholder="e.g. 2-storey villa" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-hc-location" placeholder="City - District"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-hc-need" placeholder="e.g. 2-storey villa" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-hc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-hc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-h" value="fixed" checked onchange="toggleBudgetMode('h','fixed')"> Fixed</label><label><input type="radio" name="budget-type-h" value="range" onchange="toggleBudgetMode('h','range')"> Range</label></div><div id="bf-h"><input class="f-hc-budget" placeholder="Amount"></div><div id="br-h" class="budget-range" style="display:none"><input class="f-hc-budget-min" placeholder="From"><input class="f-hc-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><input class="f-hc-area" placeholder="m²"></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('houses')">💾 Save Customer</button>
@@ -286,7 +295,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Land)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lo-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lo-phone" placeholder="05xxxxxxxx"></div></div>
-          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-lo-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-lo-price" placeholder="مثلاً 200,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-lo-area" placeholder="m²"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-lo-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-lo-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-lo-price" placeholder="مثلاً 200,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-lo-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-lo-details" placeholder="Land description (area, permit...)"></textarea></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="lands" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'lands','owner')"></label><div class="preview" id="preview-lo"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('lands')">💾 Save Owner</button>
@@ -304,7 +313,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Land)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lc-phone" placeholder="05xxxxxxxx"></div></div>
-        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-lc-need" placeholder="e.g. residential land 500m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-lc-location" placeholder="City - District"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-lc-need" placeholder="e.g. residential land 500m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-lc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-lc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-l" value="fixed" checked onchange="toggleBudgetMode('l','fixed')"> Fixed</label><label><input type="radio" name="budget-type-l" value="range" onchange="toggleBudgetMode('l','range')"> Range</label></div><div id="bf-l"><input class="f-lc-budget" placeholder="Amount"></div><div id="br-l" class="budget-range" style="display:none"><input class="f-lc-budget-min" placeholder="From"><input class="f-lc-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><input class="f-lc-area" placeholder="m²"></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('lands')">💾 Save Customer</button>
@@ -330,7 +339,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Shop)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-so-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-so-phone" placeholder="05xxxxxxxx"></div></div>
-          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-so-location" placeholder="City - District"></div><div class="form-group"><label>Price</label><input class="f-so-price" placeholder="مثلاً 150,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-so-area" placeholder="m²"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-so-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-so-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-so-price" placeholder="مثلاً 150,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-so-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-so-details" placeholder="Shop description (area, activity...)"></textarea></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="shops" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'shops','owner')"></label><div class="preview" id="preview-so"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('shops')">💾 Save Owner</button>
@@ -348,7 +357,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Shop)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-sc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-sc-phone" placeholder="05xxxxxxxx"></div></div>
-        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-sc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-sc-location" placeholder="City - District"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-sc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-sc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-sc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-s" value="fixed" checked onchange="toggleBudgetMode('s','fixed')"> Fixed</label><label><input type="radio" name="budget-type-s" value="range" onchange="toggleBudgetMode('s','range')"> Range</label></div><div id="bf-s"><input class="f-sc-budget" placeholder="Amount"></div><div id="br-s" class="budget-range" style="display:none"><input class="f-sc-budget-min" placeholder="From"><input class="f-sc-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><input class="f-sc-area" placeholder="m²"></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shops')">💾 Save Customer</button>
@@ -374,7 +383,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Shop for Rent)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ro-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ro-phone" placeholder="05xxxxxxxx"></div></div>
-          <div class="form-row"><div class="form-group"><label>Location</label><input class="f-ro-location" placeholder="City - District"></div><div class="form-group"><label>Rent</label><input class="f-ro-price" placeholder="مثلاً 10,000 ج.م/شهر"></div><div class="form-group"><label>Area</label><input class="f-ro-area" placeholder="m²"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ro-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ro-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Rent</label><input class="f-ro-price" placeholder="مثلاً 10,000 ج.م/شهر"></div><div class="form-group"><label>Area</label><input class="f-ro-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-ro-details" placeholder="Shop description (area, activity...)"></textarea></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="shopsrent" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'shopsrent','owner')"></label><div class="preview" id="preview-ro"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('shopsrent')">💾 Save Owner</button>
@@ -392,7 +401,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
       <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Shop for Rent)</button>
       <div class="form-fields hidden">
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-rc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-rc-phone" placeholder="05xxxxxxxx"></div></div>
-        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-rc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><input class="f-rc-location" placeholder="City - District"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-rc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-rc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-rc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Rent Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-r" value="fixed" checked onchange="toggleBudgetMode('r','fixed')"> Fixed</label><label><input type="radio" name="budget-type-r" value="range" onchange="toggleBudgetMode('r','range')"> Range</label></div><div id="bf-r"><input class="f-rc-budget" placeholder="Amount"></div><div id="br-r" class="budget-range" style="display:none"><input class="f-rc-budget-min" placeholder="From"><input class="f-rc-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><input class="f-rc-area" placeholder="m²"></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shopsrent')">💾 Save Customer</button>
@@ -455,8 +464,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   </div>
 </div>
 
-</div>
-
 <script src="supabase.min.js"></script>
 <script>
 var DEBUG = document.getElementById('app');
@@ -484,6 +491,130 @@ types.forEach(t => { DATA[t] = { owners: [], customers: [] }; });
 
 const tempMedia = {};
 
+/* ==================== LOCATIONS SYSTEM ==================== */
+window._LOCATIONS = {};      // id → name
+window._LOCATIONS_BY_NAME = {}; // name → id
+window._LOCATIONS_ARR = [];  // [{id, name}]
+
+async function loadLocations() {
+  var res = await supabase.from('locations').select('id,name');
+  if (res.error) throw new Error(res.error.message);
+  window._LOCATIONS = {};
+  window._LOCATIONS_BY_NAME = {};
+  window._LOCATIONS_ARR = (res.data||[]).map(function(r){
+    window._LOCATIONS[r.id] = r.name;
+    window._LOCATIONS_BY_NAME[r.name.toLowerCase().trim()] = r.id;
+    return r;
+  });
+}
+
+async function ensureLocation(name) {
+  if (!name) return null;
+  var key = name.toLowerCase().trim();
+  if (window._LOCATIONS_BY_NAME[key]) return window._LOCATIONS_BY_NAME[key];
+  var id = Date.now() + Math.floor(Math.random()*1000);
+  var res = await supabase.from('locations').insert({ id: id, name: name.trim() });
+  if (res.error) throw new Error(res.error.message);
+  window._LOCATIONS[id] = name.trim();
+  window._LOCATIONS_BY_NAME[key] = id;
+  window._LOCATIONS_ARR.push({ id: id, name: name.trim() });
+  return id;
+}
+
+async function migrateLocations() {
+  var names = {};
+  types.forEach(function(t){
+    DATA[t].owners.forEach(function(x){
+      if (x.location && !x.location_id) names[x.location.trim()] = true;
+    });
+    DATA[t].customers.forEach(function(x){
+      if (x.location && !x.location_id) names[x.location.trim()] = true;
+    });
+  });
+  var unique = Object.keys(names).filter(Boolean);
+  if (!unique.length) return;
+  for (var i = 0; i < unique.length; i++) {
+    var lid = await ensureLocation(unique[i]);
+    if (!lid) continue;
+    types.forEach(function(t){
+      DATA[t].owners.forEach(function(x){
+        if (x.location && x.location.trim() === unique[i] && !x.location_id) {
+          x.location_id = lid;
+          supabase.from('owners').update({ location_id: lid }).eq('id', x.id).then(function(){});
+        }
+      });
+      DATA[t].customers.forEach(function(x){
+        if (x.location && x.location.trim() === unique[i] && !x.location_id) {
+          x.location_id = lid;
+          supabase.from('customers').update({ location_id: lid }).eq('id', x.id).then(function(){});
+        }
+      });
+    });
+  }
+}
+
+function getLocationName(item) {
+  if (!item) return '-';
+  if (item.location_id && window._LOCATIONS[item.location_id]) return window._LOCATIONS[item.location_id];
+  return item.location || '';
+}
+
+function hasLocation(item) { return !!(item.location || (item.location_id && window._LOCATIONS[item.location_id])); }
+
+function setupAutocomplete(input, hiddenInput) {
+  var wrapper = input.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var dropdown = wrapper.querySelector('.ac-dropdown');
+  input.addEventListener('input', function(){
+    var q = input.value.toLowerCase().trim();
+    if (!q) { dropdown.style.display = 'none'; hiddenInput.value = ''; return; }
+    var matches = window._LOCATIONS_ARR.filter(function(r){ return r.name.toLowerCase().includes(q); });
+    var html = '';
+    if (matches.length) {
+      html = matches.map(function(r){
+        return '<div onclick="selectLocation(this,\''+r.id+'\',\''+escAttr(r.name)+'\')">'+r.name+'</div>';
+      }).join('');
+    }
+    html += '<div class="ac-add" onclick="addLocationFromAutocomplete(this)" style="color:#1a3a5c;font-weight:600;border-top:'+(matches.length?'1px solid #e0e0e0':'none')+';">➕ Add location</div>';
+    dropdown.innerHTML = html;
+    dropdown.style.display = 'block';
+  });
+  input.addEventListener('blur', function(){
+    setTimeout(function(){ dropdown.style.display = 'none'; }, 200);
+  });
+  input.addEventListener('focus', function(){
+    if (input.value.trim()) input.dispatchEvent(new Event('input'));
+  });
+  dropdown.addEventListener('mousedown', function(e){ e.preventDefault(); });
+}
+
+function selectLocation(el, id, name) {
+  var wrapper = el.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var input = wrapper.querySelector('input[type="text"]') || wrapper.querySelector('input:not([type="hidden"])');
+  var hidden = wrapper.querySelector('input[type="hidden"]');
+  if (input) input.value = name;
+  if (hidden) hidden.value = id;
+  wrapper.querySelector('.ac-dropdown').style.display = 'none';
+}
+
+async function addLocationFromAutocomplete(el) {
+  var wrapper = el.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var input = wrapper.querySelector('input[type="text"]') || wrapper.querySelector('input:not([type="hidden"])');
+  var hidden = wrapper.querySelector('input[type="hidden"]');
+  if (!input || !hidden) return;
+  var name = input.value.trim();
+  if (!name) return;
+  var id = await ensureLocation(name);
+  if (id) {
+    await loadLocations();
+    selectLocation(el, id, name);
+  }
+}
+
+function escAttr(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
 async function loadData() {
   try {
     var o = await supabase.from('owners').select('*');
@@ -494,7 +625,14 @@ async function loadData() {
       DATA[t].owners = (o.data||[]).filter(function(x) { return x.type === t; });
       DATA[t].customers = (c.data||[]).filter(function(x) { return x.type === t; });
     });
+    await loadLocations();
+    await migrateLocations();
     types.forEach(function(t) { renderTable(t, 'owners'); renderTable(t, 'customers'); });
+    document.querySelectorAll('.ac-wrapper').forEach(function(w){
+      var inp = w.querySelector('input[type="text"]') || w.querySelector('input:not([type="hidden"])');
+      var hid = w.querySelector('input[type="hidden"]');
+      if (inp && hid) setupAutocomplete(inp, hid);
+    });
   } catch(e) {
     var app = document.getElementById('app');
     if (app) app.innerHTML = '<div class="card" style="padding:30px;text-align:center;"><h3 style="color:#c00;">⚠️ خطأ</h3><p style="margin-top:10px;color:#555;font-size:14px;direction:ltr;">' + e.message + '</p></div>';
@@ -678,12 +816,18 @@ function extractNum(s) {
 async function addOwner(type) {
   const l = getLetter(type);
   const key = type + '-owner';
+  var locInput = document.querySelector('.f-'+l+'o-location');
+  var locIdInput = document.querySelector('.f-'+l+'o-location-id');
+  var locName = locInput ? locInput.value.trim() : '';
+  var locId = locIdInput ? locIdInput.value : '';
+  if (locName && !locId) locId = await ensureLocation(locName);
   const obj = {
     id: Date.now(),
     type: type,
     name: document.querySelector('.f-'+l+'o-name').value.trim(),
     phone: document.querySelector('.f-'+l+'o-phone').value.trim(),
-    location: document.querySelector('.f-'+l+'o-location').value.trim(),
+    location: locName,
+    location_id: locId || null,
     price: document.querySelector('.f-'+l+'o-price').value.trim(),
     area: document.querySelector('.f-'+l+'o-area').value.trim(),
     rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'o-rent').value.trim() : '',
@@ -699,6 +843,7 @@ async function addOwner(type) {
   if (error) return alert('Error: ' + error.message);
   DATA[type].owners.push(obj);
   document.querySelectorAll('.f-'+l+'o-name, .f-'+l+'o-phone, .f-'+l+'o-location, .f-'+l+'o-price, .f-'+l+'o-area, .f-'+l+'o-details' + (type === 'shopsrent' ? ', .f-'+l+'o-rent' : '')).forEach(x => x.value = '');
+  if (locIdInput) locIdInput.value = '';
   if (type === 'apartments') document.querySelector('[name="finish-'+l+'o"][value="unfinished"]').checked = true;
   renderTable(type, 'owners');
   generateMatchesForType(type);
@@ -739,13 +884,19 @@ function setBudgetInput(l, val) {
 
 async function addCustomer(type) {
   const l = getLetter(type);
+  var locInput = document.querySelector('.f-'+l+'c-location');
+  var locIdInput = document.querySelector('.f-'+l+'c-location-id');
+  var locName = locInput ? locInput.value.trim() : '';
+  var locId = locIdInput ? locIdInput.value : '';
+  if (locName && !locId) locId = await ensureLocation(locName);
   const obj = {
     id: Date.now(),
     type: type,
     name: document.querySelector('.f-'+l+'c-name').value.trim(),
     phone: document.querySelector('.f-'+l+'c-phone').value.trim(),
     need: document.querySelector('.f-'+l+'c-need').value.trim(),
-    location: document.querySelector('.f-'+l+'c-location').value.trim(),
+    location: locName,
+    location_id: locId || null,
     budget: getBudgetInput(l),
     area: document.querySelector('.f-'+l+'c-area').value.trim(),
     rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : '',
@@ -756,6 +907,7 @@ async function addCustomer(type) {
   if (error) return alert('Error: ' + error.message);
   DATA[type].customers.push(obj);
   document.querySelectorAll('.f-'+l+'c-name, .f-'+l+'c-phone, .f-'+l+'c-need, .f-'+l+'c-location, .f-'+l+'c-area' + (type === 'shopsrent' ? ', .f-'+l+'c-rent' : '')).forEach(x => x.value = '');
+  if (locIdInput) locIdInput.value = '';
   document.querySelector('.f-'+l+'c-budget').value = '';
   document.querySelector('.f-'+l+'c-budget-min').value = '';
   document.querySelector('.f-'+l+'c-budget-max').value = '';
@@ -787,7 +939,7 @@ function renderMobileCards(type, cat, arr) {
     const rows = [];
     rows.push(`<div class="row"><span class="label">Name</span><span class="value">${item.name || '-'}</span></div>`);
     rows.push(`<div class="row"><span class="label">Phone</span><span class="value">${item.phone || '-'}</span></div>`);
-    if (item.location) rows.push(`<div class="row"><span class="label">Location</span><span class="value">${item.location}</span></div>`);
+    if (hasLocation(item)) rows.push(`<div class="row"><span class="label">Location</span><span class="value">${getLocationName(item)}</span></div>`);
     if (cat === 'owners') {
       if (item.price) rows.push(`<div class="row"><span class="label">Price</span><span class="value">${item.price}</span></div>`);
       if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
@@ -829,7 +981,7 @@ function renderTable(type, cat) {
   renderMobileCards(type, cat, arr);
   tbody.innerHTML = arr.map((item, i) => {
     const cells = fields.map(f => {
-      let val = item[f] || '-';
+      let val = f === 'location' ? (getLocationName(item) || '-') : (item[f] || '-');
       if (f === 'details') {
         var fin = type === 'apartments' ? (item.finished ? '<span class="badge match">✅ Finished</span> ' : '<span class="badge nomatch">🔧 Unfinished</span> ') : '';
         val = fin + val.replace(/\n/g, '<br>');
@@ -862,7 +1014,7 @@ function editEntry(type, cat, id, el) {
   html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Name</label><input class="ie-name" value="'+esc(item.name)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
   html += '<div style="flex:1;min-width:110px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Phone</label><input class="ie-phone" value="'+esc(item.phone)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
   if (isOwner) {
-    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><input class="ie-location" value="'+esc(item.location)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><div class="ac-wrapper"><input class="ie-location" value="'+esc(getLocationName(item))+'" autocomplete="off" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input type="hidden" class="ie-location-id" value="'+(item.location_id||'')+'"><div class="ac-dropdown"></div></div></div>';
     html += '<div style="flex:1;min-width:100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
@@ -870,7 +1022,7 @@ function editEntry(type, cat, id, el) {
     html += '<div style="flex:1;min-width:200px;width:100%;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Details</label><textarea class="ie-details" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.details)+'</textarea></div>';
   } else {
     html += '<div style="flex:1;min-width:150px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Need</label><textarea class="ie-need" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.need)+'</textarea></div>';
-    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><input class="ie-location" value="'+esc(item.location)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><div class="ac-wrapper"><input class="ie-location" value="'+esc(getLocationName(item))+'" autocomplete="off" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input type="hidden" class="ie-location-id" value="'+(item.location_id||'')+'"><div class="ac-dropdown"></div></div></div>';
     html += '<div style="flex:1;min-width:140px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Budget</label>';
     var isRange = (item.budget||'').indexOf(' - ') > 0;
     html += '<div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'block\';document.getElementById(\'ie-br-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'none\';document.getElementById(\'ie-br-'+id+'\').style.display=\'flex\'"> Range</label></div>';
@@ -896,6 +1048,16 @@ function editEntry(type, cat, id, el) {
     var wrap = document.createElement('div'); wrap.innerHTML = html; wrap.className = 'inline-edit'; wrap.setAttribute('data-id',id);
     parent.parentNode.insertBefore(wrap, parent.nextSibling);
   }
+  // Initialize autocomplete for the new inline edit
+  var newCon = document.querySelector('.inline-edit[data-id="'+id+'"]');
+  if (newCon) {
+    var w = newCon.querySelector('.ac-wrapper');
+    if (w) {
+      var inp = w.querySelector('input[type="text"]') || w.querySelector('input:not([type="hidden"])');
+      var hid = w.querySelector('input[type="hidden"]');
+      if (inp && hid) setupAutocomplete(inp, hid);
+    }
+  }
 }
 
 async function saveInlineEdit(type, cat, id) {
@@ -904,10 +1066,15 @@ async function saveInlineEdit(type, cat, id) {
   const con = document.querySelector('.inline-edit[data-id="'+id+'"]');
   if (!con) return;
   const isOwner = cat === 'owners';
+  var locIdEl = con.querySelector('.ie-location-id');
+  var locId = locIdEl ? locIdEl.value : '';
+  var locName = con.querySelector('.ie-location').value.trim();
+  if (locName && !locId) locId = await ensureLocation(locName);
   if (isOwner) {
     item.name = con.querySelector('.ie-name').value.trim();
     item.phone = con.querySelector('.ie-phone').value.trim();
-    item.location = con.querySelector('.ie-location').value.trim();
+    item.location = locName;
+    item.location_id = locId || null;
     item.price = con.querySelector('.ie-price').value.trim();
     item.area = con.querySelector('.ie-area').value.trim();
     if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
@@ -917,7 +1084,8 @@ async function saveInlineEdit(type, cat, id) {
     item.name = con.querySelector('.ie-name').value.trim();
     item.phone = con.querySelector('.ie-phone').value.trim();
     item.need = con.querySelector('.ie-need').value.trim();
-    item.location = con.querySelector('.ie-location').value.trim();
+    item.location = locName;
+    item.location_id = locId || null;
     var modeEl = document.querySelector('[name="ie-bt-'+id+'"]:checked');
     if (modeEl && modeEl.value === 'range') {
       var mn = con.querySelector('.ie-budget-min').value.trim();
@@ -945,7 +1113,7 @@ function filterTable(type, cat) {
   const q = input.value.toLowerCase();
   const arr = DATA[type][cat];
   const tbody = document.getElementById('tbl-'+l+s);
-  const filtered = arr.filter(x => x.name.toLowerCase().includes(q) || x.phone.includes(q) || (x.location||'').toLowerCase().includes(q) || (x.details||'').toLowerCase().includes(q) || (x.area||'').toLowerCase().includes(q) || (x.rent||'').toLowerCase().includes(q));
+  const filtered = arr.filter(x => x.name.toLowerCase().includes(q) || x.phone.includes(q) || getLocationName(x).toLowerCase().includes(q) || (x.details||'').toLowerCase().includes(q) || (x.area||'').toLowerCase().includes(q) || (x.rent||'').toLowerCase().includes(q));
   const fields = cat === 'owners'
     ? (type === 'shopsrent' ? ['name','phone','location','price','area','rent','details'] : ['name','phone','location','price','area','details'])
     : (type === 'shopsrent' ? ['name','phone','need','location','budget','area','rent'] : ['name','phone','need','location','budget','area']);
@@ -954,7 +1122,7 @@ function filterTable(type, cat) {
   if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="' + cols + '" style="text-align:center;color:#aaa;">No results</td></tr>'; return; }
   tbody.innerHTML = filtered.map((item, i) => {
     const cells = fields.map(f => {
-      let val = item[f] || '-';
+      let val = f === 'location' ? (getLocationName(item) || '-') : (item[f] || '-');
       if (f === 'details') {
         var fin = type === 'apartments' ? (item.finished ? '<span class="badge match">✅ Finished</span> ' : '<span class="badge nomatch">🔧 Unfinished</span> ') : '';
         val = fin + val.replace(/\n/g, '<br>');
@@ -1016,14 +1184,14 @@ function generateReport() {
         html += '<td>' + (item.name || '-') + '</td>';
         html += '<td>' + (item.phone || '-') + '</td>';
         if (c === 'owners') {
-          html += '<td>' + (item.location || '-') + '</td>';
+          html += '<td>' + (getLocationName(item) || '-') + '</td>';
           html += '<td>' + (item.price || '-') + '</td>';
           html += '<td>' + (item.area || '-') + '</td>';
           if (t === 'shopsrent') html += '<td>' + (item.rent || '-') + '</td>';
           html += '<td>' + (item.details || '-') + '</td>';
         } else {
           html += '<td>' + (item.need || '-') + '</td>';
-          html += '<td>' + (item.location || '-') + '</td>';
+          html += '<td>' + (getLocationName(item) || '-') + '</td>';
           html += '<td>' + (item.budget || '-') + '</td>';
           html += '<td>' + (item.area || '-') + '</td>';
           if (t === 'shopsrent') html += '<td>' + (item.rent || '-') + '</td>';
@@ -1075,12 +1243,16 @@ function calcMatchScore(owner, customer) {
       if (diff <= tol) score += Math.round(60 * (1 - diff / tol));
     }
   }
-  var owLoc = (owner.location||'').toLowerCase(), cuLoc = (customer.location||'').toLowerCase();
-  if (owLoc && cuLoc) {
-    var owP = owLoc.split(/[\s\/\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\s\/\-،,]+/).filter(Boolean);
-    var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });
-    if (common.length) score += Math.min(20, common.length * 10);
-    else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
+  if (owner.location_id && customer.location_id) {
+    if (owner.location_id === customer.location_id) score += 20;
+  } else {
+    var owLoc = (owner.location||getLocationName(owner)||'').toLowerCase(), cuLoc = (customer.location||getLocationName(customer)||'').toLowerCase();
+    if (owLoc && cuLoc) {
+      var owP = owLoc.split(/[\s\/\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\s\/\-،,]+/).filter(Boolean);
+      var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });
+      if (common.length) score += Math.min(20, common.length * 10);
+      else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
+    }
   }
   var owArea = getNum(owner.area), cuArea = getNum(customer.area);
   if (owArea && cuArea) {
@@ -1130,7 +1302,7 @@ function renderMatches() {
         var ow = DATA[t].owners.find(function(x){ return x.id === m.ownerId; });
         var cu = DATA[t].customers.find(function(x){ return x.id === m.customerId; });
         if (!ow || !cu) return;
-        var txt = (ow.name+' '+ow.phone+' '+ow.location+' '+cu.name+' '+cu.phone+' '+cu.location).toLowerCase();
+        var txt = (ow.name+' '+ow.phone+' '+getLocationName(ow)+' '+cu.name+' '+cu.phone+' '+getLocationName(cu)).toLowerCase();
         if (txt.indexOf(q) < 0) return;
       }
       all.push(m);
@@ -1146,14 +1318,14 @@ function renderMatches() {
     var isSent = m.sent;
     var waO = 'https://wa.me/' + ow.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
     var waC = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-    var sendMsg = 'عقار متاح: ' + typeNames[m.type] + '\nالموقع: ' + (ow.location||'-') + '\nالسعر: ' + (ow.price||'-') + '\nالمساحة: ' + (ow.area||'-') + (ow.rent ? '\nالإيجار: ' + ow.rent : '') + '\nالتفاصيل: ' + (ow.details||'-');
+    var sendMsg = 'عقار متاح: ' + typeNames[m.type] + '\nالموقع: ' + (getLocationName(ow)||'-') + '\nالسعر: ' + (ow.price||'-') + '\nالمساحة: ' + (ow.area||'-') + (ow.rent ? '\nالإيجار: ' + ow.rent : '') + '\nالتفاصيل: ' + (ow.details||'-');
     var waSend = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(sendMsg);
     return '<div class="match-card'+(isSent?' sent':'')+'" id="mc-'+key+'">'
       + '<div class="header-match" style="margin-bottom:8px;"><div><span class="percent" style="font-size:18px;">'+m.score+'%</span> Match'+(isSent?'<span class="match-sent-dot"></span>':'')+'</div><button onclick="hideMatch(\''+key+'\')" style="background:none;border:none;color:#c0392b;font-size:20px;cursor:pointer;padding:0;line-height:1;">✕</button></div>'
       + '<div style="margin:10px 0;border-top:2px solid #e0e0e0;"></div>'
       + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🏢 Property Details</strong><br>'
       + '<span class="match-badge">'+typeNames[m.type]+'</span>'
-      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(ow.location||'-')+'</strong></div>'
+      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(getLocationName(ow)||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Price:</span> <strong>'+(ow.price||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Area:</span> <strong>'+(ow.area||'-')+' m²</strong></div>'
       + (ow.rent ? '<div><span style="color:#555;">Rent:</span> <strong>'+ow.rent+'</strong></div>' : '')
@@ -1163,7 +1335,7 @@ function renderMatches() {
       + '<div style="margin:12px 0;border-top:2px dashed #b0d4b8;"></div>'
       + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🤝 Customer Request</strong><br>'
       + '<span class="match-badge">'+typeNames[m.type]+'</span>'
-      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(cu.location||'-')+'</strong></div>'
+      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(getLocationName(cu)||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Budget:</span> <strong>'+(cu.budget||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Area:</span> <strong>'+(cu.area||'-')+' m²</strong></div>'
       + (cu.need ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">📋 '+cu.need+'</div>' : '')
