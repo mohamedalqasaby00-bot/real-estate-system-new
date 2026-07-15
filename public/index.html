@@ -4,30 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Real Estate Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Inter', 'Segoe UI', Tahoma, sans-serif; }
 body { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }
 .container { max-width: 1200px; margin: auto; }
 .header { background: linear-gradient(135deg, #1a3a5c, #2d6a9f); color: #fff; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-.header h1 { font-size: 24px; }
-.header .sub { font-size: 13px; opacity: .7; }
+.header h1 { font-size: 26px; }
+.header .sub { font-size: 14px; opacity: .7; }
 .main-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .main-tab { padding: 10px 28px; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; color: #555; border: 1px solid #d0d5dd; transition: .2s; }
 .main-tab:hover { border-color: #2d6a9f; }
 .main-tab.active { background: #1a3a5c; color: #fff; border-color: #1a3a5c; }
 .sub-tabs { display: flex; gap: 0; margin-bottom: 18px; background: #e8edf2; border-radius: 8px; padding: 4px; width: fit-content; }
-.sub-tab { padding: 8px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; color: #555; transition: .2s; user-select: none; }
+.sub-tab { padding: 8px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px; color: #555; transition: .2s; user-select: none; }
 .sub-tab.active { background: #fff; color: #1a3a5c; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
 .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow-wrap: break-word; word-break: break-word; }
-.card h3 { font-size: 16px; margin-bottom: 14px; color: #1a3a5c; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.card h3 { font-size: 17px; margin-bottom: 14px; color: #1a3a5c; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .form-group { margin-bottom: 10px; }
-.form-group label { display: block; font-weight: 600; font-size: 12px; color: #444; margin-bottom: 3px; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 13px; outline: none; }
+.form-group label { display: block; font-weight: 600; font-size: 13px; color: #444; margin-bottom: 3px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 14px; outline: none; }
 .form-group input:focus, .form-group textarea:focus { border-color: #2d6a9f; }
 .form-group textarea { min-height: 70px; resize: vertical; }
 .form-row { display: flex; gap: 8px; }
 .form-row .form-group { flex: 1; }
-.upload-btn { border: 2px dashed #b0c4d9; border-radius: 6px; padding: 14px; text-align: center; color: #888; cursor: pointer; font-size: 13px; display:block; }
+.upload-btn { border: 2px dashed #b0c4d9; border-radius: 6px; padding: 14px; text-align: center; color: #888; cursor: pointer; font-size: 14px; display:block; }
 .upload-btn:hover { border-color: #1a3a5c; background: #f8faff; }
 .upload-btn.dragover { border-color: #1a7a3c; background: #e6f9ed; }
 .preview { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
@@ -37,55 +40,55 @@ body { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }
 .preview .thumb .upload-progress { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 10px; line-height: 1.4; }
 .preview .thumb .upload-progress .bar { width: 40px; height: 4px; background: #555; border-radius: 2px; margin-top: 4px; overflow: hidden; }
 .preview .thumb .upload-progress .bar span { display: block; height: 100%; background: #25D366; transition: width .2s; }
-.btn { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; font-size: 13px; }
+.btn { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; font-size: 14px; }
 .btn-primary { background: #1a3a5c; color: #fff; }
 .btn-primary:hover { background: #2d6a9f; }
 .btn-success { background: #1a7a3c; color: #fff; }
 .btn-success:hover { background: #249c4e; }
-.toggle-form-btn { display: block; width: 100%; padding: 12px; font-size: 15px; font-weight: 700; margin: 0; }
+.toggle-form-btn { display: block; width: 100%; padding: 12px; font-size: 16px; font-weight: 700; margin: 0; }
 .form-fields { margin-top: 14px; }
-.btn-sm { padding: 4px 10px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.btn-sm { padding: 5px 12px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
 .btn-sm.edit { color: #2d6a9f; border-color: #2d6a9f; }
 .btn-sm.del { color: #c0392b; border-color: #c0392b; }
 .btn-sm.whatsapp { color: #25D366; border-color: #25D366; text-decoration: none; display: inline-block; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
 th { background: #f7f9fc; padding: 8px 10px; text-align: right; color: #555; border-bottom: 2px solid #e8edf2; word-break: break-word; }
 td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word; white-space: normal; text-align: right; }
-.badge { display: inline-block; background: #e8f0fe; color: #1a3a5c; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.badge { display: inline-block; background: #e8f0fe; color: #1a3a5c; padding: 3px 10px; border-radius: 10px; font-size: 12px; }
 .badge.match { background: #e6f9ed; color: #1a7a3c; }
 .badge.nomatch { background: #fef3e2; color: #b86b00; }
 .media-thumbs { display: flex; gap: 4px; flex-wrap: wrap; }
 .media-thumbs div { width: 36px; height: 36px; border-radius: 4px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid #ddd; }
 .search-row { display: flex; gap: 8px; margin-bottom: 10px; }
-.search-row input { flex: 1; padding: 7px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 13px; }
+.search-row input { flex: 1; padding: 7px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 14px; }
 .budget-toggle { display:flex; gap:10px; margin-bottom:4px; }
-.budget-toggle label { cursor:pointer; font-weight:400; font-size:13px; }
+.budget-toggle label { cursor:pointer; font-weight:400; font-size:14px; }
 .budget-range { display:flex; gap:6px; }
 .budget-range input { flex:1; }
 .table-wrap { max-height: 320px; overflow-y: auto; overflow-x: hidden; }
 .actions { display: flex; gap: 4px; flex-wrap: wrap; }
-.count-badge { background: #1a3a5c; color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 12px; margin-right: 6px; }
+.count-badge { background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 6px; }
 .hidden { display: none !important; }
 .page-content { }
 .match-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 16px; background: #fff; line-height: 1.6; }
 .match-card.sent { border-color: #25D366; background: #f6fff9; }
 .match-card .header-match { display: flex; justify-content: space-between; align-items: center; }
-.match-detail { font-size: 13px; color: #555; margin-top: 6px; }
-.match-type { font-size: 12px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }
+.match-detail { font-size: 14px; color: #555; margin-top: 6px; }
+.match-type { font-size: 13px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }
 .percent { font-weight: 700; color: #1a7a3c; }
 .match-sent-dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#25D366; margin-left:4px; }
-.match-badge { display:inline-block; background:#1a3a5c; color:#fff; font-size:11px; padding:2px 10px; border-radius:8px; }
+.match-badge { display:inline-block; background:#1a3a5c; color:#fff; font-size:12px; padding:3px 12px; border-radius:8px; }
 /* Location autocomplete */
 .ac-wrapper { position: relative; }
-.ac-wrapper input { width:100%; padding:8px 10px; border:1px solid #d0d5dd; border-radius:5px; font-size:13px; outline:none; }
+.ac-wrapper input { width:100%; padding:8px 10px; border:1px solid #d0d5dd; border-radius:5px; font-size:14px; outline:none; }
 .ac-wrapper input:focus { border-color:#2d6a9f; }
 .ac-dropdown { position:absolute; top:100%; left:0; right:0; z-index:100; background:#fff; border:1px solid #d0d5dd; border-radius:0 0 5px 5px; max-height:200px; overflow-y:auto; display:none; box-shadow:0 4px 12px rgba(0,0,0,.1); }
-.ac-dropdown div { padding:8px 10px; cursor:pointer; font-size:13px; border-bottom:1px solid #f0f0f0; }
+.ac-dropdown div { padding:8px 10px; cursor:pointer; font-size:14px; border-bottom:1px solid #f0f0f0; }
 .ac-dropdown div:hover, .ac-dropdown div.active { background:#e8f0fe; }
 .ac-dropdown div:last-child { border-bottom:none; }
 .ac-dropdown .no-result { color:#999; cursor:default; }
 .ac-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px; }
-.ac-tag { display:inline-flex; align-items:center; gap:4px; background:#e8f0fe; color:#1a3a5c; padding:2px 8px; border-radius:10px; font-size:12px; }
+.ac-tag { display:inline-flex; align-items:center; gap:4px; background:#e8f0fe; color:#1a3a5c; padding:3px 10px; border-radius:10px; font-size:13px; }
 .ac-tag button { background:none; border:none; color:#c0392b; cursor:pointer; font-size:14px; line-height:1; padding:0; }
 /* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }
@@ -116,7 +119,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   justify-content:space-between;
   gap:10px;
   margin-bottom:6px;
-  font-size:13px;
+  font-size:14px;
 }
 .mobile-card .label{
   color:#666;
@@ -148,7 +151,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
   .main-tab{
     flex:0 0 auto;
     padding:8px 16px;
-    font-size:13px;
+    font-size:14px;
     color:#1a3a5c;
   }
   .sub-tabs{
@@ -1115,45 +1118,45 @@ function editEntry(type, cat, id, el) {
   const cols = parent.tagName === 'TR' ? (parent.querySelectorAll('td').length || 9) : null;
   var html = '<div class="inline-edit" data-id="'+id+'" style="background:#f7f9fc;padding:12px;border-radius:8px;margin:4px 0;">';
   html += '<div style="display:flex;flex-wrap:wrap;gap:6px 10px;margin-bottom:6px;">';
-  html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Name</label><input class="ie-name" value="'+esc(item.name)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-  html += '<div style="flex:1;min-width:110px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Phone</label><input class="ie-phone" value="'+esc(item.phone)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+  html += '<div style="flex:1;min-width:130px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Name</label><input class="ie-name" value="'+esc(item.name)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+  html += '<div style="flex:1;min-width:110px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Phone</label><input class="ie-phone" value="'+esc(item.phone)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
   if (isOwner) {
-    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><div class="ac-wrapper"><input class="ie-location" value="'+esc(getLocationName(item))+'" autocomplete="off" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input type="hidden" class="ie-location-id" value="'+(item.location_id||'')+'"><div class="ac-dropdown"></div></div></div>';
-    html += '<div style="flex:1;min-width:100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-    html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-    if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="flex:1;min-width:130px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Location</label><div class="ac-wrapper"><input class="ie-location" value="'+esc(getLocationName(item))+'" autocomplete="off" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"><input type="hidden" class="ie-location-id" value="'+(item.location_id||'')+'"><div class="ac-dropdown"></div></div></div>';
+    html += '<div style="flex:1;min-width:100px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+    html += '<div style="flex:0 1 70px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+    if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
     if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Status</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
-    html += '<div style="flex:1;min-width:200px;width:100%;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Details</label><textarea class="ie-details" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.details)+'</textarea></div>';
+    html += '<div style="flex:1;min-width:200px;width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Details</label><textarea class="ie-details" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;min-height:40px;">'+esc(item.details)+'</textarea></div>';
   } else {
-    html += '<div style="flex:1;min-width:150px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Need</label><textarea class="ie-need" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;min-height:40px;">'+esc(item.need)+'</textarea></div>';
-    html += '<div style="flex:1;min-width:130px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="ie-location" value="" placeholder="Type to search..." autocomplete="off" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input type="hidden" class="ie-location-id" value="'+esc(JSON.stringify(parseLocIds(item)))+'"><div class="ac-dropdown"></div></div></div>';
+    html += '<div style="flex:1;min-width:150px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Need</label><textarea class="ie-need" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;min-height:40px;">'+esc(item.need)+'</textarea></div>';
+    html += '<div style="flex:1;min-width:130px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="ie-location" value="" placeholder="Type to search..." autocomplete="off" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"><input type="hidden" class="ie-location-id" value="'+esc(JSON.stringify(parseLocIds(item)))+'"><div class="ac-dropdown"></div></div></div>';
     html += '<div style="flex:1;min-width:140px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Budget</label>';
     var isRange = (item.budget||'').indexOf(' - ') > 0;
-    html += '<div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'block\';document.getElementById(\'ie-br-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'none\';document.getElementById(\'ie-br-'+id+'\').style.display=\'flex\'"> Range</label></div>';
+    html += '<div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:12px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'block\';document.getElementById(\'ie-br-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:12px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'none\';document.getElementById(\'ie-br-'+id+'\').style.display=\'flex\'"> Range</label></div>';
     if (isRange) {
       var parts = (item.budget||'').split(' - ').map(function(s){return s.trim();});
-      html += '<div id="ie-bf-'+id+'" style="display:none"><input class="ie-budget" value="'+esc(parts[0]||'')+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-      html += '<div id="ie-br-'+id+'" style="display:flex;gap:4px;"><input class="ie-budget-min" value="'+esc(parts[0]||'')+'" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-budget-max" value="'+esc(parts[1]||'')+'" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-bf-'+id+'" style="display:none"><input class="ie-budget" value="'+esc(parts[0]||'')+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+      html += '<div id="ie-br-'+id+'" style="display:flex;gap:4px;"><input class="ie-budget-min" value="'+esc(parts[0]||'')+'" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"><input class="ie-budget-max" value="'+esc(parts[1]||'')+'" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
     } else {
-      html += '<div id="ie-bf-'+id+'"><input class="ie-budget" value="'+esc(item.budget)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-      html += '<div id="ie-br-'+id+'" style="display:none;gap:4px;"><input class="ie-budget-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-budget-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-bf-'+id+'"><input class="ie-budget" value="'+esc(item.budget)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+      html += '<div id="ie-br-'+id+'" style="display:none;gap:4px;"><input class="ie-budget-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"><input class="ie-budget-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
     }
     html += '</div>';
-    html += '<div style="min-width:180px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'block\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'none\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'flex\'"> Range</label></div>';
+    html += '<div style="min-width:180px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Area</label><div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:12px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'block\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:12px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'none\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'flex\'"> Range</label></div>';
     var areaIsRange = (item.area||'').indexOf(' - ') > 0;
     if (areaIsRange) {
       var aParts = (item.area||'').split(' - ').map(function(s){return s.trim();});
-      html += '<div id="ie-af-'+id+'" style="display:none"><input class="ie-area" value="'+esc(aParts[0]||'')+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-      html += '<div id="ie-ar-'+id+'" style="display:flex;gap:4px;"><input class="ie-area-min" value="'+esc(aParts[0]||'')+'" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-area-max" value="'+esc(aParts[1]||'')+'" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-af-'+id+'" style="display:none"><input class="ie-area" value="'+esc(aParts[0]||'')+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+      html += '<div id="ie-ar-'+id+'" style="display:flex;gap:4px;"><input class="ie-area-min" value="'+esc(aParts[0]||'')+'" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"><input class="ie-area-max" value="'+esc(aParts[1]||'')+'" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
     } else {
-      html += '<div id="ie-af-'+id+'"><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
-      html += '<div id="ie-ar-'+id+'" style="display:none;gap:4px;"><input class="ie-area-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-area-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-af-'+id+'"><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
+      html += '<div id="ie-ar-'+id+'" style="display:none;gap:4px;"><input class="ie-area-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"><input class="ie-area-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
     }
     html += '</div>';
-    if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Status</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
-    if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Status</label><div style="display:flex;gap:6px;"><label style="font-size:12px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:12px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
+    if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:12px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:13px;"></div>';
   }
-  html += '</div><div style="display:flex;gap:6px;"><button class="btn btn-primary" style="padding:5px 12px;font-size:12px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:5px 12px;font-size:12px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
+  html += '</div><div style="display:flex;gap:6px;"><button class="btn btn-primary" style="padding:6px 14px;font-size:13px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:6px 14px;font-size:13px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
   if (parent.tagName === 'TR') {
     var tr = document.createElement('tr'); tr.className = 'inline-edit'; tr.setAttribute('data-id',id);
     var td = document.createElement('td'); td.colSpan = cols; td.innerHTML = html; tr.appendChild(td);
@@ -1277,7 +1280,7 @@ function generateReport() {
   const fromTs = fromDate ? new Date(fromDate).setHours(0,0,0,0) : 0;
   const toTs = toDate ? new Date(toDate).setHours(23,59,59,999) : Infinity;
 
-  let html = '<html><head><meta charset="utf-8"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:Arial;font-size:12px}th,td{border:1px solid #999;padding:6px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:Arial}'
+  let html = '<html><head><meta charset="utf-8"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:"Cairo","Inter",Arial;font-size:13px}th,td{border:1px solid #999;padding:8px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:"Cairo","Inter",Arial}'
   + '/* Mobile cards */'
   + '.mobile-cards{display:none;}'
   + '.mobile-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);}'
@@ -1478,7 +1481,7 @@ function renderMatches() {
       + '<div><span style="color:#555;">Price:</span> <strong>'+(ow.price||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Area:</span> <strong>'+(ow.area||'-')+' m²</strong></div>'
       + (ow.rent ? '<div><span style="color:#555;">Rent:</span> <strong>'+ow.rent+'</strong></div>' : '')
-      + (ow.details ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">📋 '+ow.details+'</div>' : '')
+      + (ow.details ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:13px;color:#666;">📋 '+ow.details+'</div>' : '')
       + '</div>'
       + '<div style="margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;">👤 <strong>'+ow.name+'</strong> &nbsp;|&nbsp; 📞 '+ow.phone+'</div>'
       + '<div style="margin:12px 0;border-top:2px dashed #b0d4b8;"></div>'
@@ -1487,7 +1490,7 @@ function renderMatches() {
       + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(getLocationName(cu)||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Budget:</span> <strong>'+(cu.budget||'-')+'</strong></div>'
       + '<div><span style="color:#555;">Area:</span> <strong>'+(cu.area||'-')+' m²</strong></div>'
-      + (cu.need ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">📋 '+cu.need+'</div>' : '')
+      + (cu.need ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:13px;color:#666;">📋 '+cu.need+'</div>' : '')
       + '</div>'
       + '<div style="margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;">👤 <strong>'+cu.name+'</strong> &nbsp;|&nbsp; 📞 '+cu.phone+'</div>'
       + '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">'
