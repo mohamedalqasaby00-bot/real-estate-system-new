@@ -226,7 +226,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ac-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ac-phone" placeholder="05xxxxxxxx"></div></div>
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ac-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ac-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-a" value="fixed" checked onchange="toggleBudgetMode('a','fixed')"> Fixed</label><label><input type="radio" name="budget-type-a" value="range" onchange="toggleBudgetMode('a','range')"> Range</label></div><div id="bf-a"><input class="f-ac-budget" placeholder="Amount"></div><div id="br-a" class="budget-range" style="display:none"><input class="f-ac-budget-min" placeholder="From"><input class="f-ac-budget-max" placeholder="To"></div></div>
-        <div class="form-group"><label>Required Area</label><input class="f-ac-area" placeholder="m²"></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-a" value="fixed" checked onchange="toggleAreaMode('a','fixed')"> Fixed</label><label><input type="radio" name="area-type-a" value="range" onchange="toggleAreaMode('a','range')"> Range</label></div><div id="af-a"><input class="f-ac-area" placeholder="m²"></div><div id="ar-a" class="budget-range" style="display:none"><input class="f-ac-area-min" placeholder="From m²"><input class="f-ac-area-max" placeholder="To m²"></div></div>
         <div class="form-group"><label>Finish Requirement</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="any" checked> Any</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished Only</label></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('apartments')">💾 Save Customer</button>
       </div>
@@ -271,7 +271,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-hc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-hc-phone" placeholder="05xxxxxxxx"></div></div>
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-hc-need" placeholder="e.g. 2-storey villa" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-hc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-hc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-h" value="fixed" checked onchange="toggleBudgetMode('h','fixed')"> Fixed</label><label><input type="radio" name="budget-type-h" value="range" onchange="toggleBudgetMode('h','range')"> Range</label></div><div id="bf-h"><input class="f-hc-budget" placeholder="Amount"></div><div id="br-h" class="budget-range" style="display:none"><input class="f-hc-budget-min" placeholder="From"><input class="f-hc-budget-max" placeholder="To"></div></div>
-        <div class="form-group"><label>Required Area</label><input class="f-hc-area" placeholder="m²"></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-h" value="fixed" checked onchange="toggleAreaMode('h','fixed')"> Fixed</label><label><input type="radio" name="area-type-h" value="range" onchange="toggleAreaMode('h','range')"> Range</label></div><div id="af-h"><input class="f-hc-area" placeholder="m²"></div><div id="ar-h" class="budget-range" style="display:none"><input class="f-hc-area-min" placeholder="From m²"><input class="f-hc-area-max" placeholder="To m²"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('houses')">💾 Save Customer</button>
       </div>
     </div>
@@ -315,7 +315,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lc-phone" placeholder="05xxxxxxxx"></div></div>
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-lc-need" placeholder="e.g. residential land 500m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-lc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-lc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-l" value="fixed" checked onchange="toggleBudgetMode('l','fixed')"> Fixed</label><label><input type="radio" name="budget-type-l" value="range" onchange="toggleBudgetMode('l','range')"> Range</label></div><div id="bf-l"><input class="f-lc-budget" placeholder="Amount"></div><div id="br-l" class="budget-range" style="display:none"><input class="f-lc-budget-min" placeholder="From"><input class="f-lc-budget-max" placeholder="To"></div></div>
-        <div class="form-group"><label>Required Area</label><input class="f-lc-area" placeholder="m²"></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-l" value="fixed" checked onchange="toggleAreaMode('l','fixed')"> Fixed</label><label><input type="radio" name="area-type-l" value="range" onchange="toggleAreaMode('l','range')"> Range</label></div><div id="af-l"><input class="f-lc-area" placeholder="m²"></div><div id="ar-l" class="budget-range" style="display:none"><input class="f-lc-area-min" placeholder="From m²"><input class="f-lc-area-max" placeholder="To m²"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('lands')">💾 Save Customer</button>
       </div>
     </div>
@@ -359,7 +359,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-sc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-sc-phone" placeholder="05xxxxxxxx"></div></div>
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-sc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-sc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-sc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-s" value="fixed" checked onchange="toggleBudgetMode('s','fixed')"> Fixed</label><label><input type="radio" name="budget-type-s" value="range" onchange="toggleBudgetMode('s','range')"> Range</label></div><div id="bf-s"><input class="f-sc-budget" placeholder="Amount"></div><div id="br-s" class="budget-range" style="display:none"><input class="f-sc-budget-min" placeholder="From"><input class="f-sc-budget-max" placeholder="To"></div></div>
-        <div class="form-group"><label>Required Area</label><input class="f-sc-area" placeholder="m²"></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-s" value="fixed" checked onchange="toggleAreaMode('s','fixed')"> Fixed</label><label><input type="radio" name="area-type-s" value="range" onchange="toggleAreaMode('s','range')"> Range</label></div><div id="af-s"><input class="f-sc-area" placeholder="m²"></div><div id="ar-s" class="budget-range" style="display:none"><input class="f-sc-area-min" placeholder="From m²"><input class="f-sc-area-max" placeholder="To m²"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shops')">💾 Save Customer</button>
       </div>
     </div>
@@ -403,7 +403,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-rc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-rc-phone" placeholder="05xxxxxxxx"></div></div>
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-rc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-rc-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-rc-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Rent Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-r" value="fixed" checked onchange="toggleBudgetMode('r','fixed')"> Fixed</label><label><input type="radio" name="budget-type-r" value="range" onchange="toggleBudgetMode('r','range')"> Range</label></div><div id="bf-r"><input class="f-rc-budget" placeholder="Amount"></div><div id="br-r" class="budget-range" style="display:none"><input class="f-rc-budget-min" placeholder="From"><input class="f-rc-budget-max" placeholder="To"></div></div>
-        <div class="form-group"><label>Required Area</label><input class="f-rc-area" placeholder="m²"></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-r" value="fixed" checked onchange="toggleAreaMode('r','fixed')"> Fixed</label><label><input type="radio" name="area-type-r" value="range" onchange="toggleAreaMode('r','range')"> Range</label></div><div id="af-r"><input class="f-rc-area" placeholder="m²"></div><div id="ar-r" class="budget-range" style="display:none"><input class="f-rc-area-min" placeholder="From m²"><input class="f-rc-area-max" placeholder="To m²"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shopsrent')">💾 Save Customer</button>
       </div>
     </div>
@@ -882,6 +882,39 @@ function setBudgetInput(l, val) {
   }
 }
 
+function toggleAreaMode(l, mode) {
+  document.getElementById('af-'+l).style.display = mode === 'fixed' ? 'block' : 'none';
+  document.getElementById('ar-'+l).style.display = mode === 'range' ? 'flex' : 'none';
+}
+
+function getAreaInput(l) {
+  var mode = document.querySelector('[name="area-type-'+l+'"]:checked');
+  if (!mode || mode.value === 'fixed') return document.querySelector('.f-'+l+'c-area').value.trim();
+  var a = document.querySelector('.f-'+l+'c-area-min').value.trim();
+  var b = document.querySelector('.f-'+l+'c-area-max').value.trim();
+  if (a && b) {
+    var na = parseFloat(a.replace(/[^0-9]/g,'')), nb = parseFloat(b.replace(/[^0-9]/g,''));
+    if (na > nb) return b + ' - ' + a;
+    return a + ' - ' + b;
+  }
+  return a || b;
+}
+
+function setAreaInput(l, val) {
+  if (!val) { document.querySelector('.f-'+l+'c-area').value = ''; document.querySelector('.f-'+l+'c-area-min').value = ''; document.querySelector('.f-'+l+'c-area-max').value = ''; return; }
+  var parts = val.split('-').map(function(s){ return s.trim(); }).filter(Boolean);
+  if (parts.length >= 2) {
+    document.querySelector('[name="area-type-'+l+'"][value="range"]').checked = true;
+    toggleAreaMode(l, 'range');
+    document.querySelector('.f-'+l+'c-area-min').value = parts[0];
+    document.querySelector('.f-'+l+'c-area-max').value = parts[1];
+  } else {
+    document.querySelector('[name="area-type-'+l+'"][value="fixed"]').checked = true;
+    toggleAreaMode(l, 'fixed');
+    document.querySelector('.f-'+l+'c-area').value = val;
+  }
+}
+
 async function addCustomer(type) {
   const l = getLetter(type);
   var locInput = document.querySelector('.f-'+l+'c-location');
@@ -898,7 +931,7 @@ async function addCustomer(type) {
     location: locName,
     location_id: locId || null,
     budget: getBudgetInput(l),
-    area: document.querySelector('.f-'+l+'c-area').value.trim(),
+    area: getAreaInput(l),
     rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : '',
     finished: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'c"]:checked')||{}).value === 'finished' : false
   };
@@ -913,6 +946,10 @@ async function addCustomer(type) {
   document.querySelector('.f-'+l+'c-budget-max').value = '';
   document.querySelector('[name="budget-type-'+l+'"][value="fixed"]').checked = true;
   toggleBudgetMode(l, 'fixed');
+  document.querySelector('.f-'+l+'c-area-min').value = '';
+  document.querySelector('.f-'+l+'c-area-max').value = '';
+  document.querySelector('[name="area-type-'+l+'"][value="fixed"]').checked = true;
+  toggleAreaMode(l, 'fixed');
   if (type === 'apartments') document.querySelector('[name="finish-'+l+'c"][value="any"]').checked = true;
   renderTable(type, 'customers');
   generateMatchesForType(type);
@@ -1035,7 +1072,17 @@ function editEntry(type, cat, id, el) {
       html += '<div id="ie-br-'+id+'" style="display:none;gap:4px;"><input class="ie-budget-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-budget-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     }
     html += '</div>';
-    html += '<div style="flex:0 1 70px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    html += '<div style="min-width:180px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Area</label><div style="display:flex;gap:6px;margin-bottom:3px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="fixed"'+(isRange?'':' checked')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'block\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="range"'+(isRange?' checked':'')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'none\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'flex\'"> Range</label></div>';
+    var areaIsRange = (item.area||'').indexOf(' - ') > 0;
+    if (areaIsRange) {
+      var aParts = (item.area||'').split(' - ').map(function(s){return s.trim();});
+      html += '<div id="ie-af-'+id+'" style="display:none"><input class="ie-area" value="'+esc(aParts[0]||'')+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-ar-'+id+'" style="display:flex;gap:4px;"><input class="ie-area-min" value="'+esc(aParts[0]||'')+'" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-area-max" value="'+esc(aParts[1]||'')+'" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    } else {
+      html += '<div id="ie-af-'+id+'"><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+      html += '<div id="ie-ar-'+id+'" style="display:none;gap:4px;"><input class="ie-area-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-area-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
+    }
+    html += '</div>';
     if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Requirement</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="any"'+(item.finished?'':' checked')+'> Any</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
     if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
   }
@@ -1094,7 +1141,14 @@ async function saveInlineEdit(type, cat, id) {
     } else {
       item.budget = con.querySelector('.ie-budget').value.trim();
     }
-    item.area = con.querySelector('.ie-area').value.trim();
+    var areaModeEl = document.querySelector('[name="ie-at-'+id+'"]:checked');
+    if (areaModeEl && areaModeEl.value === 'range') {
+      var amn = con.querySelector('.ie-area-min').value.trim();
+      var amx = con.querySelector('.ie-area-max').value.trim();
+      item.area = amn && amx ? amn + ' - ' + amx : (amn || amx);
+    } else {
+      item.area = con.querySelector('.ie-area').value.trim();
+    }
     if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
     if (type==='apartments') item.finished = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value === 'finished';
   }
@@ -1254,10 +1308,22 @@ function calcMatchScore(owner, customer) {
       else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
     }
   }
-  var owArea = getNum(owner.area), cuArea = getNum(customer.area);
-  if (owArea && cuArea) {
-    var maxA = Math.max(owArea, cuArea);
-    score += Math.round(20 * Math.max(0, 1 - Math.abs(owArea - cuArea) / maxA * 2));
+  var owArea = getNum(owner.area);
+  var cuRawArea = (customer.area||'').trim();
+  if (owArea && cuRawArea) {
+    var aParts = cuRawArea.split(' - ').map(function(s){ return getNum(s); }).filter(Boolean);
+    if (aParts.length >= 2 && aParts[0] && aParts[1]) {
+      var minA = aParts[0], maxA = aParts[1];
+      if (owArea >= minA && owArea <= maxA) { score += 20; }
+      else {
+        var dist = Math.min(Math.abs(owArea - minA), Math.abs(owArea - maxA));
+        score += Math.round(20 * Math.max(0, 1 - dist / Math.max(maxA, 1)));
+      }
+    } else if (aParts[0]) {
+      var cuArea = aParts[0];
+      var maxA = Math.max(owArea, cuArea);
+      score += Math.round(20 * Math.max(0, 1 - Math.abs(owArea - cuArea) / maxA * 2));
+    }
   }
   if (score < 1) score = 0;
   return score;
