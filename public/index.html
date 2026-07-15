@@ -51,6 +51,9 @@ body { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }
 .btn-sm.edit { color: #2d6a9f; border-color: #2d6a9f; }
 .btn-sm.del { color: #c0392b; border-color: #c0392b; }
 .btn-sm.whatsapp { color: #25D366; border-color: #25D366; text-decoration: none; display: inline-block; }
+.btn-sm.match-find { color: #1a7a3c; border-color: #1a7a3c; }
+.customer-matches { margin-top: 10px; padding: 10px; background: #f7f9fc; border-radius: 8px; border: 1px solid #d0d5dd; }
+.customer-matches .match-count { font-size: 13px; color: #555; margin-bottom: 8px; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
 th { background: #f7f9fc; padding: 8px 10px; text-align: right; color: #555; border-bottom: 2px solid #e8edf2; word-break: break-word; }
 td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word; white-space: normal; text-align: right; }
@@ -1057,11 +1060,13 @@ function renderMobileCards(type, cat, arr) {
       if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
     }
     const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'')}` : '#';
+    var findBtnMob = cat === 'customers' ? `<button class="btn-sm match-find" onclick="showCustomerMatches('${type}',${item.id},this)">Find Matches</button>` : '';
     return `
       <div class="mobile-card">
         <div class="title">${i+1}. ${typeNames[type] || type}</div>
         ${rows.join('')}
         <div class="actions">
+          ${findBtnMob}
           <button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button>
           <a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a>
           <button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button>
@@ -1100,7 +1105,8 @@ function renderTable(type, cat) {
     }).join('');
     const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
     const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+    var findBtn = cat === 'customers' ? '<button class="btn-sm match-find" onclick="showCustomerMatches(\''+type+'\','+item.id+',this)">Find Matches</button>' : '';
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions">${findBtn}<button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
   }).join('');
 }
 
@@ -1263,7 +1269,8 @@ function filterTable(type, cat) {
     }).join('');
     const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
     const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
-    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions"><button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+    var findBtn = cat === 'customers' ? '<button class="btn-sm match-find" onclick="showCustomerMatches(\''+type+'\','+item.id+',this)">Find Matches</button>' : '';
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions">${findBtn}<button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
   }).join('');
 }
 
@@ -1439,6 +1446,57 @@ function generateAllMatches(type) {
 }
 
 function getMatchKey(m) { return m.type+'-'+m.ownerId+'-'+m.customerId; }
+
+function showCustomerMatches(type, customerId, btn) {
+  var customer = DATA[type].customers.find(function(x){ return x.id === customerId; });
+  if (!customer) return;
+  var owners = DATA[type].owners;
+  var matches = [];
+  owners.forEach(function(ow){
+    var score = calcMatchScore(ow, customer);
+    if (score < 1) return;
+    matches.push({ owner: ow, score: score });
+  });
+  matches.sort(function(a,b){ return b.score - a.score; });
+  var parent = btn.closest('tr') || btn.closest('.mobile-card') || btn.parentElement;
+  if (!parent) return;
+  var existing = parent.querySelector('.customer-matches');
+  if (existing) { existing.remove(); return; }
+  var div = document.createElement('div');
+  div.className = 'customer-matches';
+  if (!matches.length) {
+    div.innerHTML = '<div class="match-count">No matches found for this customer.</div>';
+    parent.parentNode.insertBefore(div, parent.nextSibling);
+    return;
+  }
+  div.innerHTML = '<div class="match-count">' + matches.length + ' match(s) found:</div>'
+    + matches.map(function(m){
+      var ow = m.owner;
+      var waO = 'https://wa.me/' + ow.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+      var waC = 'https://wa.me/' + customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+      var sendMsg = 'عقار متاح: ' + typeNames[type] + '\nالموقع: ' + (getLocationName(ow)||'-') + '\nالسعر: ' + (ow.price||'-') + '\nالمساحة: ' + (ow.area||'-') + (ow.rent ? '\nالإيجار: ' + ow.rent : '') + '\nالتفاصيل: ' + (ow.details||'-');
+      var waSend = 'https://wa.me/' + customer.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(sendMsg);
+      return '<div class="match-card" style="margin-bottom:8px;padding:12px;">'
+        + '<div class="header-match" style="margin-bottom:6px;"><div><span class="percent" style="font-size:16px;">'+m.score+'%</span> Match</div>'
+        + '<button onclick="this.closest(\'.match-card\').remove()" style="background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;">✕</button></div>'
+        + '<div style="margin:6px 0;line-height:1.5;font-size:13px;">'
+        + '<span class="match-badge">'+typeNames[type]+'</span>'
+        + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(getLocationName(ow)||'-')+'</strong></div>'
+        + '<div><span style="color:#555;">Price:</span> <strong>'+(ow.price||'-')+'</strong></div>'
+        + '<div><span style="color:#555;">Area:</span> <strong>'+(ow.area||'-')+' m²</strong></div>'
+        + (ow.rent ? '<div><span style="color:#555;">Rent:</span> <strong>'+ow.rent+'</strong></div>' : '')
+        + (ow.details ? '<div style="margin-top:4px;padding:4px 8px;background:#f7f9fc;border-radius:4px;font-size:12px;color:#666;">📋 '+ow.details+'</div>' : '')
+        + '<div style="margin:6px 0;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:4px;">👤 <strong>'+ow.name+'</strong> &nbsp;|&nbsp; 📞 '+ow.phone+'</div>'
+        + '</div>'
+        + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">'
+        + '<a href="'+waO+'" target="_blank" class="btn-sm whatsapp" style="padding:5px 10px;font-size:12px;">💬 Contact Owner</a>'
+        + '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;padding:5px 10px;font-size:12px;">📤 Send Details to Client</a>'
+        + '<a href="'+waC+'" target="_blank" class="btn-sm whatsapp" style="padding:5px 10px;font-size:12px;">💬 Contact Client</a>'
+        + '<button onclick="this.closest(\'.match-card\').remove()" class="btn-sm del" style="padding:5px 10px;font-size:12px;">Delete</button>'
+        + '</div></div>';
+    }).join('');
+  parent.parentNode.insertBefore(div, parent.nextSibling);
+}
 
 function renderMatches() {
   var container = document.getElementById('matches-results');
