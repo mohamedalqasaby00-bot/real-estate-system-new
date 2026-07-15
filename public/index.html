@@ -227,7 +227,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ac-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ac-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-a" value="fixed" checked onchange="toggleBudgetMode('a','fixed')"> Fixed</label><label><input type="radio" name="budget-type-a" value="range" onchange="toggleBudgetMode('a','range')"> Range</label></div><div id="bf-a"><input class="f-ac-budget" placeholder="Amount"></div><div id="br-a" class="budget-range" style="display:none"><input class="f-ac-budget-min" placeholder="From"><input class="f-ac-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-a" value="fixed" checked onchange="toggleAreaMode('a','fixed')"> Fixed</label><label><input type="radio" name="area-type-a" value="range" onchange="toggleAreaMode('a','range')"> Range</label></div><div id="af-a"><input class="f-ac-area" placeholder="m²"></div><div id="ar-a" class="budget-range" style="display:none"><input class="f-ac-area-min" placeholder="From m²"><input class="f-ac-area-max" placeholder="To m²"></div></div>
-        <div class="form-group"><label>Finish Requirement</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="any" checked> Any</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished Only</label></div></div>
+        <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished</label></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('apartments')">💾 Save Customer</button>
       </div>
     </div>
@@ -950,7 +950,7 @@ async function addCustomer(type) {
   document.querySelector('.f-'+l+'c-area-max').value = '';
   document.querySelector('[name="area-type-'+l+'"][value="fixed"]').checked = true;
   toggleAreaMode(l, 'fixed');
-  if (type === 'apartments') document.querySelector('[name="finish-'+l+'c"][value="any"]').checked = true;
+  if (type === 'apartments') document.querySelector('[name="finish-'+l+'c"][value="unfinished"]').checked = true;
   renderTable(type, 'customers');
   generateMatchesForType(type);
 }
@@ -1083,7 +1083,7 @@ function editEntry(type, cat, id, el) {
       html += '<div id="ie-ar-'+id+'" style="display:none;gap:4px;"><input class="ie-area-min" placeholder="From" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"><input class="ie-area-max" placeholder="To" style="flex:1;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
     }
     html += '</div>';
-    if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Requirement</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="any"'+(item.finished?'':' checked')+'> Any</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
+    if (type==='apartments') html += '<div style="flex:0 1 170px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Status</label><div style="display:flex;gap:6px;"><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:11px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
     if (isSR) html += '<div style="flex:0 1 100px;"><label style="font-size:11px;font-weight:600;color:#444;display:block;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:5px 8px;border:1px solid #d0d5dd;border-radius:4px;font-size:12px;"></div>';
   }
   html += '</div><div style="display:flex;gap:6px;"><button class="btn btn-primary" style="padding:5px 12px;font-size:12px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:5px 12px;font-size:12px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
