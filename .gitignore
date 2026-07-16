@@ -2,3 +2,10 @@ node_modules/
 uploads/*
 !uploads/.gitkeep
 data.json
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
