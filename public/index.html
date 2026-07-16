@@ -60,6 +60,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 .badge { display: inline-block; background: #e8f0fe; color: #1a3a5c; padding: 3px 10px; border-radius: 10px; font-size: 12px; }
 .badge.match { background: #e6f9ed; color: #1a7a3c; }
 .badge.nomatch { background: #fef3e2; color: #b86b00; }
+.badge.both { background: #e8f0fe; color: #1a3a5c; }
 .media-thumbs { display: flex; gap: 4px; flex-wrap: wrap; }
 .media-thumbs div { width: 36px; height: 36px; border-radius: 4px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid #ddd; }
 .search-row { display: flex; gap: 8px; margin-bottom: 10px; }
@@ -221,7 +222,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ao-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ao-phone" placeholder="05xxxxxxxx"></div></div>
           <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ao-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ao-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-ao-price" placeholder="مثلاً 500,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ao-area" placeholder="m²"></div></div>
           <div class="form-group"><label>Details</label><textarea class="f-ao-details" placeholder="Property description (rooms, floor, finish...)"></textarea></div>
-          <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ao" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ao" value="finished"> ✅ Finished</label></div></div>
+          <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ao" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ao" value="finished"> ✅ Finished</label><label><input type="radio" name="finish-ao" value="both"> ✅🔧 Both</label></div></div>
         <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="apartments" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'apartments','owner')"></label><div class="preview" id="preview-ao"></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('apartments')">💾 Save Owner</button>
       </div>
@@ -241,7 +242,7 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
         <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="f-ac-location" placeholder="Type to search..." autocomplete="off"><input type="hidden" class="f-ac-location-id"><div class="ac-dropdown"></div></div></div></div>
         <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-a" value="fixed" checked onchange="toggleBudgetMode('a','fixed')"> Fixed</label><label><input type="radio" name="budget-type-a" value="range" onchange="toggleBudgetMode('a','range')"> Range</label></div><div id="bf-a"><input class="f-ac-budget" placeholder="Amount"></div><div id="br-a" class="budget-range" style="display:none"><input class="f-ac-budget-min" placeholder="From"><input class="f-ac-budget-max" placeholder="To"></div></div>
         <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-a" value="fixed" checked onchange="toggleAreaMode('a','fixed')"> Fixed</label><label><input type="radio" name="area-type-a" value="range" onchange="toggleAreaMode('a','range')"> Range</label></div><div id="af-a"><input class="f-ac-area" placeholder="m²"></div><div id="ar-a" class="budget-range" style="display:none"><input class="f-ac-area-min" placeholder="From m²"><input class="f-ac-area-max" placeholder="To m²"></div></div>
-        <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished</label></div></div>
+        <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished</label><label><input type="radio" name="finish-ac" value="both"> ✅🔧 Both</label></div></div>
         <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('apartments')">💾 Save Customer</button>
       </div>
     </div>
@@ -611,6 +612,17 @@ function hasLocation(item) {
   var ids = parseLocIds(item);
   return ids.length > 0 && ids.some(function(id){ return !!window._LOCATIONS[id]; });
 }
+function getFinishStatus(item) {
+  if (item.finish_status) return item.finish_status;
+  if (item.finished === true) return 'finished';
+  if (item.finished === false) return 'unfinished';
+  return 'unfinished';
+}
+function finishBadge(s) {
+  if (s === 'finished') return '<span class="badge match">✅ Finished</span>';
+  if (s === 'both') return '<span class="badge both">✅🔧 Both</span>';
+  return '<span class="badge nomatch">🔧 Unfinished</span>';
+}
 
 function getLocIds(hidden) {
   if (!hidden || !hidden.value) return [];
@@ -934,7 +946,7 @@ async function addOwner(type) {
     rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'o-rent').value.trim() : '',
     details: document.querySelector('.f-'+l+'o-details').value.trim(),
     media: tempMedia[key] || [],
-    finished: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'o"]:checked')||{}).value === 'finished' : false
+    finish_status: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'o"]:checked')||{}).value || 'unfinished' : 'unfinished',
   };
   delete tempMedia[key];
   const pv = document.getElementById('preview-'+l+'o');
@@ -1037,7 +1049,7 @@ async function addCustomer(type) {
     budget: getBudgetInput(l),
     area: getAreaInput(l),
     rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : '',
-    finished: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'c"]:checked')||{}).value === 'finished' : false
+    finish_status: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'c"]:checked')||{}).value || 'unfinished' : 'unfinished',
   };
   if (!obj.name) return alert('Name is required');
   const { error } = await supabase.from('customers').insert(obj);
@@ -1085,10 +1097,10 @@ function renderMobileCards(type, cat, arr) {
     if (cat === 'owners') {
       if (item.price) rows.push(`<div class="row"><span class="label">Price</span><span class="value">${item.price}</span></div>`);
       if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
-      if (type === 'apartments') rows.push(`<div class="row"><span class="label">Status</span><span class="value">${item.finished ? '<span class="badge match">✅ Finished</span>' : '<span class="badge nomatch">🔧 Unfinished</span>'}</span></div>`);
+      if (type === 'apartments') rows.push(`<div class="row"><span class="label">Status</span><span class="value">${finishBadge(getFinishStatus(item))}</span></div>`);
       if (item.details) rows.push(`<div class="row"><span class="label">Details</span><span class="value">${item.details}</span></div>`);
     } else {
-      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}${type === 'apartments' && item.finished ? ' <span class="badge match">✅ Finished</span>' : ''}</span></div>`);
+      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}${type === 'apartments' ? ' ' + finishBadge(getFinishStatus(item)) : ''}</span></div>`);
       if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
       if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
     }
@@ -1128,11 +1140,11 @@ function renderTable(type, cat) {
     const cells = fields.map(f => {
       let val = f === 'location' ? (getLocationName(item) || '-') : (item[f] || '-');
       if (f === 'details') {
-        var fin = type === 'apartments' ? (item.finished ? '<span class="badge match">✅ Finished</span> ' : '<span class="badge nomatch">🔧 Unfinished</span> ') : '';
+        var fin = type === 'apartments' ? finishBadge(getFinishStatus(item)) + ' ' : '';
         val = fin + val.replace(/\n/g, '<br>');
       }
-      if (f === 'need' && type === 'apartments' && item.finished) {
-        val = '<span class="badge match">✅ Finished</span> ' + val;
+      if (f === 'need' && type === 'apartments') {
+        val = finishBadge(getFinishStatus(item)) + ' ' + val;
       }
       return '<td style="white-space:pre-wrap;">' + val + '</td>';
     }).join('');
@@ -1164,7 +1176,7 @@ function editEntry(type, cat, id, el) {
     html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
     html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
     if (isSR) html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
-    if (type==='apartments') html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Status</label><div style="display:flex;gap:12px;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
+    if (type==='apartments') html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Status</label><div style="display:flex;gap:12px;flex-wrap:wrap;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(getFinishStatus(item)==='unfinished'?' checked':'')+'> 🔧 Unfinished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(getFinishStatus(item)==='finished'?' checked':'')+'> ✅ Finished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="both"'+(getFinishStatus(item)==='both'?' checked':'')+'> ✅🔧 Both</label></div></div>';
     html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Details</label><textarea class="ie-details" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;min-height:50px;">'+esc(item.details)+'</textarea></div>';
   } else {
     var curBudget = item.budget||'', curArea = item.area||'';
@@ -1193,7 +1205,7 @@ function editEntry(type, cat, id, el) {
       html += '<div id="ie-ar-'+id+'" style="display:none;gap:6px;"><input class="ie-area-min" placeholder="From" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input class="ie-area-max" placeholder="To" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
     }
     html += '</div>';
-    if (type==='apartments') html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Status</label><div style="display:flex;gap:12px;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(item.finished?'':' checked')+'> 🔧 Unfinished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(item.finished?' checked':'')+'> ✅ Finished</label></div></div>';
+    if (type==='apartments') html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Status</label><div style="display:flex;gap:12px;flex-wrap:wrap;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(getFinishStatus(item)==='unfinished'?' checked':'')+'> 🔧 Unfinished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(getFinishStatus(item)==='finished'?' checked':'')+'> ✅ Finished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="both"'+(getFinishStatus(item)==='both'?' checked':'')+'> ✅🔧 Both</label></div></div>';
     if (isSR) html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
   }
   html += '</div><div style="display:flex;gap:8px;margin-top:6px;"><button class="btn btn-primary" style="padding:8px 18px;font-size:14px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:8px 18px;font-size:14px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
@@ -1237,7 +1249,7 @@ async function saveInlineEdit(type, cat, id) {
     item.area = con.querySelector('.ie-area').value.trim();
     if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
     item.details = con.querySelector('.ie-details').value.trim();
-    if (type==='apartments') item.finished = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value === 'finished';
+    if (type==='apartments') item.finish_status = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value || 'unfinished';
   } else {
     item.name = con.querySelector('.ie-name').value.trim();
     item.phone = con.querySelector('.ie-phone').value.trim();
@@ -1266,7 +1278,7 @@ async function saveInlineEdit(type, cat, id) {
       item.area = con.querySelector('.ie-area').value.trim();
     }
     if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
-    if (type==='apartments') item.finished = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value === 'finished';
+    if (type==='apartments') item.finish_status = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value || 'unfinished';
   }
   const { error } = await supabase.from(cat).update(item).eq('id', item.id);
   if (error) return alert('Error: ' + error.message);
@@ -1294,11 +1306,11 @@ function filterTable(type, cat) {
     const cells = fields.map(f => {
       let val = f === 'location' ? (getLocationName(item) || '-') : (item[f] || '-');
       if (f === 'details') {
-        var fin = type === 'apartments' ? (item.finished ? '<span class="badge match">✅ Finished</span> ' : '<span class="badge nomatch">🔧 Unfinished</span> ') : '';
+        var fin = type === 'apartments' ? finishBadge(getFinishStatus(item)) + ' ' : '';
         val = fin + val.replace(/\n/g, '<br>');
       }
-      if (f === 'need' && type === 'apartments' && item.finished) {
-        val = '<span class="badge match">✅ Finished</span> ' + val;
+      if (f === 'need' && type === 'apartments') {
+        val = finishBadge(getFinishStatus(item)) + ' ' + val;
       }
       return '<td style="white-space:pre-wrap;">' + val + '</td>';
     }).join('');
