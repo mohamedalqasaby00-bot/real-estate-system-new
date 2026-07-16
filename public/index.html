@@ -491,6 +491,8 @@ function loadCachedData() {
     if (!data || !data._DATA) return false;
     types.forEach(function(t){
       DATA[t] = data._DATA[t];
+      if (DATA[t].owners) DATA[t].owners.sort(function(a,b){ return a.id - b.id; });
+      if (DATA[t].customers) DATA[t].customers.sort(function(a,b){ return a.id - b.id; });
     });
     types.forEach(function(t) { renderTable(t, 'owners'); renderTable(t, 'customers'); });
     document.getElementById('loading-overlay').style.display = 'none';
