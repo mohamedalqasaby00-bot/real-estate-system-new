@@ -1415,19 +1415,33 @@ function getNum(v) { return parseFloat(String(v||'').replace(/[^0-9.]/g,'')) || 
 
 function calcMatchScore(owner, customer) {
   var score = 0;
+  // Price (up to 35 pts)
   var owPrice = getNum(owner.price);
   var cuRaw = (customer.budget||'').trim();
   var parts = cuRaw.split(' - ').map(function(s){ return getNum(s); }).filter(Boolean);
   if (owPrice && parts.length) {
     if (parts.length >= 2 && parts[0] && parts[1]) {
       var minB = parts[0], maxB = parts[1];
-      if (owPrice <= maxB) { score += 60; }
-      else { var over = owPrice - maxB; score += Math.round(60 * Math.max(0, 1 - over / 200000)); }
+      if (owPrice <= maxB) { score += 35; }
+      else { var over = owPrice - maxB; score += Math.round(35 * Math.max(0, 1 - over / 200000)); }
     } else if (parts[0]) {
       var budget = parts[0], tol = budget * 0.15, diff = Math.abs(owPrice - budget);
-      if (diff <= tol) score += Math.round(60 * (1 - diff / tol));
+      if (diff <= tol) score += Math.round(35 * (1 - diff / tol));
     }
   }
+  // Finish status (up to 25 pts)
+  var owFinish = getFinishStatus(owner);
+  var cuFinish = getFinishStatus(customer);
+  if (owFinish && cuFinish && cuFinish !== 'unfinished') {
+    if (cuFinish === 'both' || owFinish === cuFinish || owFinish === 'both') {
+      score += 25;
+    }
+  } else if (owFinish && cuFinish && cuFinish === 'unfinished') {
+    if (owFinish === 'unfinished' || owFinish === 'both') {
+      score += 25;
+    }
+  }
+  // Location (up to 20 pts)
   if (owner.location_id && customer.location_id) {
     var oLoc = String(owner.location_id);
     var cIds = parseLocIds(customer);
@@ -1450,6 +1464,7 @@ function calcMatchScore(owner, customer) {
       else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
     }
   }
+  // Area (up to 20 pts)
   var owArea = getNum(owner.area);
   var cuRawArea = (customer.area||'').trim();
   if (owArea && cuRawArea) {
