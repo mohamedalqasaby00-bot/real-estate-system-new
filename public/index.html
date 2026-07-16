@@ -1090,6 +1090,7 @@ function renderMobileCards(type, cat, arr) {
     } else {
       if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}${type === 'apartments' && item.finished ? ' <span class="badge match">✅ Finished</span>' : ''}</span></div>`);
       if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
+      if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
     }
     const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'')}` : '#';
     var findBtnMob = cat === 'customers' ? `<button class="btn-sm match-find" onclick="showCustomerMatches('${type}',${item.id},this)">Find Matches</button>` : '';
