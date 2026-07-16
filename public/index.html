@@ -726,9 +726,9 @@ function escAttr(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot
 async function loadData() {
   var hasCache = loadCachedData();
   try {
-    var o = await supabase.from('owners').select('*');
+    var o = await supabase.from('owners').select('*').order('id');
     if (o.error) throw new Error(o.error.message);
-    var c = await supabase.from('customers').select('*');
+    var c = await supabase.from('customers').select('*').order('id');
     if (c.error) throw new Error(c.error.message);
     types.forEach(function(t) {
       DATA[t].owners = (o.data||[]).filter(function(x) { return x.type === t; });
