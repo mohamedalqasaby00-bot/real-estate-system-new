@@ -1537,7 +1537,9 @@ function showCustomerMatches(type, customerId, btn) {
   wrap.className = 'customer-matches';
   if (!matches.length) {
     wrap.innerHTML = '<div class="match-count">No matches found.</div>';
-    card.appendChild(wrap);
+    var anchor = btn.closest('.mobile-card') || btn.closest('.table-wrap');
+    if (anchor && anchor.parentNode) { anchor.parentNode.insertBefore(wrap, anchor.nextSibling); }
+    else { card.appendChild(wrap); }
     return;
   }
   var html = '<div class="match-count">' + matches.length + ' match(es) found — highest first</div>';
@@ -1567,7 +1569,9 @@ function showCustomerMatches(type, customerId, btn) {
       + '</div></div>';
   });
   wrap.innerHTML = html;
-  card.appendChild(wrap);
+  var anchor = btn.closest('.mobile-card') || btn.closest('.table-wrap');
+  if (anchor && anchor.parentNode) { anchor.parentNode.insertBefore(wrap, anchor.nextSibling); }
+  else { card.appendChild(wrap); }
   wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
   } catch(e) { console.error('showCustomerMatches error:', e); }
 }
@@ -1592,7 +1596,9 @@ function showOwnerMatches(type, ownerId, btn) {
   wrap.className = 'customer-matches';
   if (!matches.length) {
     wrap.innerHTML = '<div class="match-count">No matching customers found.</div>';
-    card.appendChild(wrap);
+    var anchor = btn.closest('.mobile-card') || btn.closest('.table-wrap');
+    if (anchor && anchor.parentNode) { anchor.parentNode.insertBefore(wrap, anchor.nextSibling); }
+    else { card.appendChild(wrap); }
     return;
   }
   var html = '<div class="match-count">' + matches.length + ' matching customer(s) — highest first</div>';
@@ -1621,7 +1627,9 @@ function showOwnerMatches(type, ownerId, btn) {
       + '</div></div>';
   });
   wrap.innerHTML = html;
-  card.appendChild(wrap);
+  var anchor = btn.closest('.mobile-card') || btn.closest('.table-wrap');
+  if (anchor && anchor.parentNode) { anchor.parentNode.insertBefore(wrap, anchor.nextSibling); }
+  else { card.appendChild(wrap); }
   wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
   } catch(e) { console.error('showOwnerMatches error:', e); }
 }
