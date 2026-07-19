@@ -1517,6 +1517,41 @@ function getMatchKey(m) { return m.type+'-'+m.ownerId+'-'+m.customerId; }
 function escH(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function scoreColor(s) { return s >= 70 ? '#1a7a3c' : s >= 40 ? '#b86b00' : '#c0392b'; }
 
+function renderMatchCard(m, type, ow, cu) {
+  var phO = (ow.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
+  var phC = (cu.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
+  var waO = phO ? 'https://wa.me/'+phO : '#';
+  var waC = phC ? 'https://wa.me/'+phC : '#';
+  var sendMsg = 'Property: ' + typeNames[type] + ' | Location: ' + (getLocationName(ow)||'-') + ' | Price: ' + (ow.price||'-') + ' | Area: ' + (ow.area||'-') + (ow.rent ? ' | Rent: ' + ow.rent : '');
+  var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
+  return '<div class="match-card" style="margin-bottom:8px;padding:12px;border-left:4px solid '+scoreColor(m.score)+';">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+    + '<span class="match-badge">'+escH(typeNames[type])+'</span>'
+    + '<div style="display:flex;align-items:center;gap:8px;"><span style="font-weight:700;color:'+scoreColor(m.score)+';font-size:18px;">'+m.score+'%</span>'
+    + '<button onclick="this.closest(\'.match-card\').remove()" style="background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0 4px;line-height:1;" title="Remove">&#10005;</button></div></div>'
+    + '<div style="display:flex;gap:10px;flex-wrap:wrap;">'
+    + '<div style="flex:1;min-width:200px;background:#f7f9fc;border-radius:8px;padding:10px;font-size:13px;line-height:1.8;color:#333;">'
+    + '<div style="font-weight:700;color:#1a3a5c;margin-bottom:4px;">Owner</div>'
+    + '<b>'+escH(ow.name)+'</b> — '+escH(ow.phone||'-')+'<br>'
+    + 'Location: '+(escH(getLocationName(ow))||'-')+'<br>'
+    + 'Price: '+(escH(ow.price)||'-')+' &nbsp;|&nbsp; Area: '+(escH(ow.area)||'-')+' m&sup2;'
+    + (ow.rent ? '<br>Rent: '+escH(ow.rent) : '')
+    + (ow.details ? '<br><span style="color:#666;font-size:12px;">'+escH(ow.details)+'</span>' : '')
+    + '</div>'
+    + '<div style="flex:1;min-width:200px;background:#f0f4f8;border-radius:8px;padding:10px;font-size:13px;line-height:1.8;color:#333;">'
+    + '<div style="font-weight:700;color:#1a3a5c;margin-bottom:4px;">Client</div>'
+    + '<b>'+escH(cu.name)+'</b> — '+escH(cu.phone||'-')+'<br>'
+    + 'Location: '+(escH(getLocationName(cu))||'-')+'<br>'
+    + 'Budget: '+(escH(cu.budget)||'-')+' &nbsp;|&nbsp; Area: '+(escH(cu.area)||'-')
+    + (cu.need ? '<br><span style="color:#666;font-size:12px;">'+escH(cu.need)+'</span>' : '')
+    + '</div></div>'
+    + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">'
+    + (phO ? '<a href="'+waO+'" target="_blank" class="btn-sm whatsapp">Contact Owner</a>' : '')
+    + (phC ? '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">Send Details</a>' : '')
+    + (phC ? '<a href="'+waC+'" target="_blank" class="btn-sm whatsapp">Contact Client</a>' : '')
+    + '</div></div>';
+}
+
 function showCustomerMatches(type, customerId, btn) {
   try {
   var customer = DATA[type].customers.find(function(x){ return x.id === customerId; });
@@ -1543,31 +1578,7 @@ function showCustomerMatches(type, customerId, btn) {
     return;
   }
   var html = '<div class="match-count">' + matches.length + ' match(es) found — highest first</div>';
-  matches.forEach(function(m){
-    var ow = m.owner;
-    var phO = (ow.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
-    var phC = (customer.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
-    var waO = phO ? 'https://wa.me/'+phO : '#';
-    var waC = phC ? 'https://wa.me/'+phC : '#';
-    var sendMsg = 'Property: ' + typeNames[type] + ' | Location: ' + (getLocationName(ow)||'-') + ' | Price: ' + (ow.price||'-') + ' | Area: ' + (ow.area||'-') + (ow.rent ? ' | Rent: ' + ow.rent : '');
-    var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
-    html += '<div class="match-card" style="margin-bottom:8px;padding:12px;border-left:4px solid '+scoreColor(m.score)+';">'
-      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
-      + '<span class="match-badge">'+escH(typeNames[type])+'</span>'
-      + '<div style="display:flex;align-items:center;gap:8px;"><span style="font-weight:700;color:'+scoreColor(m.score)+';font-size:18px;">'+m.score+'%</span>'
-      + '<button onclick="this.closest(\'.match-card\').remove()" style="background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0 4px;line-height:1;" title="Remove">&#10005;</button></div></div>'
-      + '<div style="font-size:13px;color:#333;line-height:1.8;">'
-      + '<b>'+escH(ow.name)+'</b> — '+escH(ow.phone||'-')+'<br>'
-      + 'Location: '+(escH(getLocationName(ow))||'-')+' &nbsp;|&nbsp; Price: '+(escH(ow.price)||'-')+' &nbsp;|&nbsp; Area: '+(escH(ow.area)||'-')+' m&sup2;'
-      + (ow.rent ? ' &nbsp;|&nbsp; Rent: '+escH(ow.rent) : '')
-      + (ow.details ? '<br><span style="color:#666;font-size:12px;">'+escH(ow.details)+'</span>' : '')
-      + '</div>'
-      + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">'
-      + (phO ? '<a href="'+waO+'" target="_blank" class="btn-sm whatsapp">Contact Owner</a>' : '')
-      + (phC ? '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">Send to Client</a>' : '')
-      + (phC ? '<a href="'+waC+'" target="_blank" class="btn-sm whatsapp">Contact Client</a>' : '')
-      + '</div></div>';
-  });
+  matches.forEach(function(m){ html += renderMatchCard(m, type, m.owner, customer); });
   wrap.innerHTML = html;
   var anchor = btn.closest('.mobile-card') || btn.closest('.table-wrap');
   if (anchor && anchor.parentNode) { anchor.parentNode.insertBefore(wrap, anchor.nextSibling); }
@@ -1602,30 +1613,7 @@ function showOwnerMatches(type, ownerId, btn) {
     return;
   }
   var html = '<div class="match-count">' + matches.length + ' matching customer(s) — highest first</div>';
-  matches.forEach(function(m){
-    var cu = m.customer;
-    var phO = (owner.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
-    var phC = (cu.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
-    var oWa = phO ? 'https://wa.me/'+phO : '#';
-    var cWa = phC ? 'https://wa.me/'+phC : '#';
-    var sendMsg = 'Property: ' + typeNames[type] + ' | Location: ' + (getLocationName(owner)||'-') + ' | Price: ' + (owner.price||'-') + ' | Area: ' + (owner.area||'-') + (owner.rent ? ' | Rent: ' + owner.rent : '');
-    var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
-    html += '<div class="match-card" style="margin-bottom:8px;padding:12px;border-left:4px solid '+scoreColor(m.score)+';">'
-      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
-      + '<span class="match-badge">'+escH(typeNames[type])+'</span>'
-      + '<div style="display:flex;align-items:center;gap:8px;"><span style="font-weight:700;color:'+scoreColor(m.score)+';font-size:18px;">'+m.score+'%</span>'
-      + '<button onclick="this.closest(\'.match-card\').remove()" style="background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0 4px;line-height:1;" title="Remove">&#10005;</button></div></div>'
-      + '<div style="font-size:13px;color:#333;line-height:1.8;">'
-      + '<b>'+escH(cu.name)+'</b> — '+escH(cu.phone||'-')+'<br>'
-      + 'Location: '+(escH(getLocationName(cu))||'-')+' &nbsp;|&nbsp; Budget: '+(escH(cu.budget)||'-')+' &nbsp;|&nbsp; Area: '+(escH(cu.area)||'-')
-      + (cu.need ? '<br><span style="color:#666;font-size:12px;">'+escH(cu.need)+'</span>' : '')
-      + '</div>'
-      + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">'
-      + (phC ? '<a href="'+cWa+'" target="_blank" class="btn-sm whatsapp">Contact Client</a>' : '')
-      + (phC ? '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">Send Details</a>' : '')
-      + (phO ? '<a href="'+oWa+'" target="_blank" class="btn-sm whatsapp">Contact Owner</a>' : '')
-      + '</div></div>';
-  });
+  matches.forEach(function(m){ html += renderMatchCard(m, type, owner, m.customer); });
   wrap.innerHTML = html;
   var anchor = btn.closest('.mobile-card') || btn.closest('.table-wrap');
   if (anchor && anchor.parentNode) { anchor.parentNode.insertBefore(wrap, anchor.nextSibling); }
