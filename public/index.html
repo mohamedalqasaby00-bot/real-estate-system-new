@@ -1525,15 +1525,16 @@ function showCustomerMatches(type, customerId, btn) {
     matches.push({ owner: ow, score: score });
   });
   matches.sort(function(a,b){ return b.score - a.score; });
-  var parent = btn.closest('tr') || btn.closest('.mobile-card') || btn.parentElement;
-  if (!parent) return;
-  var existing = parent.querySelector('.customer-matches');
+  var tableWrap = btn.closest('.table-wrap') || btn.closest('.mobile-cards');
+  var card = btn.closest('.card');
+  if (!card) return;
+  var existing = card.querySelector('.customer-matches');
   if (existing) { existing.remove(); return; }
   var div = document.createElement('div');
   div.className = 'customer-matches';
   if (!matches.length) {
     div.innerHTML = '<div class="match-count">No matches found for this customer.</div>';
-    parent.parentNode.insertBefore(div, parent.nextSibling);
+    card.appendChild(div);
     return;
   }
   div.innerHTML = '<div class="match-count">' + matches.length + ' match(s) found:</div>'
@@ -1562,7 +1563,7 @@ function showCustomerMatches(type, customerId, btn) {
         + '<button onclick="this.closest(\'.match-card\').remove()" class="btn-sm del" style="padding:5px 10px;font-size:12px;">Delete</button>'
         + '</div></div>';
     }).join('');
-  parent.parentNode.insertBefore(div, parent.nextSibling);
+  card.appendChild(div);
 }
 
 function showOwnerMatches(type, ownerId, btn) {
@@ -1576,15 +1577,15 @@ function showOwnerMatches(type, ownerId, btn) {
     matches.push({ customer: cu, score: score });
   });
   matches.sort(function(a,b){ return b.score - a.score; });
-  var parent = btn.closest('tr') || btn.closest('.mobile-card') || btn.parentElement;
-  if (!parent) return;
-  var existing = parent.querySelector('.customer-matches');
+  var card = btn.closest('.card');
+  if (!card) return;
+  var existing = card.querySelector('.customer-matches');
   if (existing) { existing.remove(); return; }
   var div = document.createElement('div');
   div.className = 'customer-matches';
   if (!matches.length) {
     div.innerHTML = '<div class="match-count">No matching customers found.</div>';
-    parent.parentNode.insertBefore(div, parent.nextSibling);
+    card.appendChild(div);
     return;
   }
   div.innerHTML = '<div class="match-count">' + matches.length + ' matching customer(s):</div>'
@@ -1613,7 +1614,7 @@ function showOwnerMatches(type, ownerId, btn) {
         + '<button onclick="this.closest(\'.match-card\').remove()" class="btn-sm del" style="padding:5px 10px;font-size:12px;">Close</button>'
         + '</div></div>';
     }).join('');
-  parent.parentNode.insertBefore(div, parent.nextSibling);
+  card.appendChild(div);
 }
 
 function renderMatches() {
