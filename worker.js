@@ -21,7 +21,7 @@ body { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }
 .sub-tabs { display: flex; gap: 0; margin-bottom: 18px; background: #e8edf2; border-radius: 8px; padding: 4px; width: fit-content; }
 .sub-tab { padding: 8px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px; color: #555; transition: .2s; user-select: none; }
 .sub-tab.active { background: #fff; color: #1a3a5c; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow-wrap: break-word; word-break: break-word; }
+.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow-wrap: break-word; }
 .card h3 { font-size: 17px; margin-bottom: 14px; color: #1a3a5c; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .form-group { margin-bottom: 10px; }
 .form-group label { display: block; font-weight: 600; font-size: 13px; color: #444; margin-bottom: 3px; }
@@ -94,37 +94,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 .ac-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px; }
 .ac-tag { display:inline-flex; align-items:center; gap:4px; background:#e8f0fe; color:#1a3a5c; padding:3px 10px; border-radius:10px; font-size:13px; }
 .ac-tag button { background:none; border:none; color:#c0392b; cursor:pointer; font-size:14px; line-height:1; padding:0; }
-/* Matches Drawer */
-.match-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;opacity:0;transition:opacity .3s;direction:ltr;}
-.match-drawer-overlay.open{display:block;opacity:1;}
-.match-drawer{position:fixed;top:0;right:-500px;width:460px;max-width:100vw;height:100vh;background:#f0f2f5;z-index:2001;box-shadow:-4px 0 24px rgba(0,0,0,.2);transition:right .3s ease;display:flex;flex-direction:column;direction:ltr;}
-.match-drawer.open{right:0;}
-.match-drawer-header{background:linear-gradient(135deg,#1a3a5c,#2d6a9f);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
-.match-drawer-header h3{font-size:17px;font-weight:700;margin:0;}
-.match-drawer-header .match-count-text{font-size:13px;opacity:.85;margin-top:2px;}
-.match-drawer-close{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-.match-drawer-close:hover{background:rgba(255,255,255,.35);}
-.match-drawer-body{flex:1;overflow-y:auto;padding:14px;}
-.match-drawer-body .drawer-match-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);word-break:normal;overflow-wrap:break-word;}
-.drawer-match-card .dm-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;}
-.drawer-match-card .dm-score{font-size:28px;font-weight:700;line-height:1;}
-.drawer-match-card .dm-score.high{color:#1a7a3c;}
-.drawer-match-card .dm-score.mid{color:#b86b00;}
-.drawer-match-card .dm-score.low{color:#c0392b;}
-.drawer-match-card .dm-name{font-size:15px;font-weight:700;color:#1a3a5c;margin-bottom:4px;}
-.drawer-match-card .dm-badge{display:inline-block;background:#1a3a5c;color:#fff;font-size:11px;padding:2px 10px;border-radius:8px;margin-bottom:8px;}
-.drawer-match-card .dm-info{font-size:13px;color:#555;line-height:1.8;margin-bottom:10px;}
-.drawer-match-card .dm-info span{display:block;}
-.drawer-match-card .dm-info b{color:#333;min-width:70px;display:inline-block;}
-.drawer-match-card .dm-btns{display:flex;gap:6px;flex-wrap:wrap;}
-.drawer-match-card .dm-btns a,.drawer-match-card .dm-btns button{padding:7px 14px;font-size:12px;font-weight:600;border-radius:6px;text-decoration:none;cursor:pointer;border:1px solid #ddd;background:#fff;color:#333;display:inline-flex;align-items:center;gap:4px;transition:all .2s;}
-.drawer-match-card .dm-btns .dm-whatsapp{color:#25D366;border-color:#25D366;background:#fff;}
-.drawer-match-card .dm-btns .dm-wa-send{color:#fff;border-color:#075E54;background:#075E54;}
-.drawer-match-card .dm-btns .dm-close-btn{color:#c0392b;border-color:#c0392b;}
-@media(max-width:768px){
-  .match-drawer{width:100vw;right:-100vw;}
-  .match-drawer.open{right:0;}
-}
 /* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }
 .modal-overlay video { max-width:90vw; max-height:90vh; border-radius:8px; }
@@ -215,14 +184,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word
 </style>
 </head>
 <body>
-<div id="match-drawer-overlay" class="match-drawer-overlay" onclick="closeMatchDrawer()"></div>
-<div id="match-drawer" class="match-drawer">
-  <div class="match-drawer-header">
-    <div><h3 id="drawer-title">Matches</h3><div class="match-count-text" id="drawer-count"></div></div>
-    <button class="match-drawer-close" onclick="closeMatchDrawer()">&times;</button>
-  </div>
-  <div class="match-drawer-body" id="drawer-body"></div>
-</div>
 <div id="loading-overlay" style="position:fixed;inset:0;background:#f0f2f5;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
   <div style="width:40px;height:40px;border:4px solid #d0d5dd;border-top-color:#1a3a5c;border-radius:50%;animation:spin .8s linear infinite;"></div>
   <div style="font-size:16px;color:#555;">جاري تحميل البيانات...</div>
@@ -1553,23 +1514,8 @@ function generateAllMatches(type) {
 
 function getMatchKey(m) { return m.type+'-'+m.ownerId+'-'+m.customerId; }
 
-function openMatchDrawer(title, countText, cardsHtml) {
-  var overlay = document.getElementById('match-drawer-overlay');
-  var drawer = document.getElementById('match-drawer');
-  document.getElementById('drawer-title').textContent = title;
-  document.getElementById('drawer-count').textContent = countText;
-  document.getElementById('drawer-body').innerHTML = cardsHtml;
-  overlay.classList.add('open');
-  drawer.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeMatchDrawer() {
-  document.getElementById('match-drawer-overlay').classList.remove('open');
-  document.getElementById('match-drawer').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function scoreClass(s) { return s >= 70 ? 'high' : s >= 40 ? 'mid' : 'low'; }
 function escH(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function scoreColor(s) { return s >= 70 ? '#1a7a3c' : s >= 40 ? '#b86b00' : '#c0392b'; }
 
 function showCustomerMatches(type, customerId, btn) {
   try {
@@ -1583,37 +1529,45 @@ function showCustomerMatches(type, customerId, btn) {
     matches.push({ owner: ow, score: score });
   });
   matches.sort(function(a,b){ return b.score - a.score; });
+  var card = btn.closest('.card');
+  if (!card) return;
+  var existing = card.querySelector('.customer-matches');
+  if (existing) { existing.remove(); return; }
+  var wrap = document.createElement('div');
+  wrap.className = 'customer-matches';
   if (!matches.length) {
-    openMatchDrawer('Matches for ' + escH(customer.name), '0 matches found', '<div style="text-align:center;padding:40px;color:#888;">No matches found for this customer.</div>');
+    wrap.innerHTML = '<div class="match-count">No matches found.</div>';
+    card.appendChild(wrap);
     return;
   }
-  var cardsHtml = matches.map(function(m){
+  var html = '<div class="match-count">' + matches.length + ' match(es) found — highest first</div>';
+  matches.forEach(function(m){
     var ow = m.owner;
     var phO = (ow.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
     var phC = (customer.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
     var waO = phO ? 'https://wa.me/'+phO : '#';
     var waC = phC ? 'https://wa.me/'+phC : '#';
-    var sendMsg = 'Property: ' + typeNames[type] + '\nLocation: ' + (getLocationName(ow)||'-') + '\nPrice: ' + (ow.price||'-') + '\nArea: ' + (ow.area||'-') + (ow.rent ? '\nRent: ' + ow.rent : '') + '\nDetails: ' + (ow.details||'-');
+    var sendMsg = 'Property: ' + typeNames[type] + ' | Location: ' + (getLocationName(ow)||'-') + ' | Price: ' + (ow.price||'-') + ' | Area: ' + (ow.area||'-') + (ow.rent ? ' | Rent: ' + ow.rent : '');
     var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
-    return '<div class="drawer-match-card">'
-      + '<div class="dm-top"><div><div class="dm-name">' + escH(ow.name) + '</div>'
-      + '<div class="dm-badge">' + escH(typeNames[type]) + '</div></div>'
-      + '<div class="dm-score ' + scoreClass(m.score) + '">' + m.score + '%</div></div>'
-      + '<div class="dm-info">'
-      + '<span><b>Location:</b> ' + escH(getLocationName(ow)||'-') + '</span>'
-      + '<span><b>Price:</b> ' + escH(ow.price||'-') + '</span>'
-      + '<span><b>Area:</b> ' + escH(ow.area||'-') + ' m&sup2;</span>'
-      + (ow.rent ? '<span><b>Rent:</b> ' + escH(ow.rent) + '</span>' : '')
-      + (ow.details ? '<span style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">' + escH(ow.details) + '</span>' : '')
-      + '<span style="margin-top:6px;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:6px;">&#128100; ' + escH(ow.name) + ' &nbsp;|&nbsp; &#128222; ' + escH(ow.phone||'-') + '</span>'
+    html += '<div class="match-card" style="margin-bottom:8px;padding:12px;border-left:4px solid '+scoreColor(m.score)+';">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+      + '<span class="match-badge">'+escH(typeNames[type])+'</span>'
+      + '<span style="font-weight:700;color:'+scoreColor(m.score)+';font-size:18px;">'+m.score+'%</span></div>'
+      + '<div style="font-size:13px;color:#333;line-height:1.8;">'
+      + '<b>'+escH(ow.name)+'</b> — '+escH(ow.phone||'-')+'<br>'
+      + 'Location: '+(escH(getLocationName(ow))||'-')+' &nbsp;|&nbsp; Price: '+(escH(ow.price)||'-')+' &nbsp;|&nbsp; Area: '+(escH(ow.area)||'-')+' m&sup2;'
+      + (ow.rent ? ' &nbsp;|&nbsp; Rent: '+escH(ow.rent) : '')
+      + (ow.details ? '<br><span style="color:#666;font-size:12px;">'+escH(ow.details)+'</span>' : '')
       + '</div>'
-      + '<div class="dm-btns">'
-      + (phO ? '<a href="'+waO+'" target="_blank" class="dm-whatsapp">&#128172; Owner</a>' : '')
-      + (phC ? '<a href="'+waSend+'" target="_blank" class="dm-wa-send">&#128228; Send to Client</a>' : '')
-      + (phC ? '<a href="'+waC+'" target="_blank" class="dm-whatsapp">&#128172; Client</a>' : '')
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">'
+      + (phO ? '<a href="'+waO+'" target="_blank" class="btn-sm whatsapp">Contact Owner</a>' : '')
+      + (phC ? '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">Send to Client</a>' : '')
+      + (phC ? '<a href="'+waC+'" target="_blank" class="btn-sm whatsapp">Contact Client</a>' : '')
       + '</div></div>';
-  }).join('');
-  openMatchDrawer('Matches for ' + escH(customer.name), matches.length + ' match(es) found - Highest First', cardsHtml);
+  });
+  wrap.innerHTML = html;
+  card.appendChild(wrap);
+  wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
   } catch(e) { console.error('showCustomerMatches error:', e); }
 }
 
@@ -1629,36 +1583,44 @@ function showOwnerMatches(type, ownerId, btn) {
     matches.push({ customer: cu, score: score });
   });
   matches.sort(function(a,b){ return b.score - a.score; });
+  var card = btn.closest('.card');
+  if (!card) return;
+  var existing = card.querySelector('.customer-matches');
+  if (existing) { existing.remove(); return; }
+  var wrap = document.createElement('div');
+  wrap.className = 'customer-matches';
   if (!matches.length) {
-    openMatchDrawer('Matches for ' + escH(owner.name), '0 matches found', '<div style="text-align:center;padding:40px;color:#888;">No matching customers found.</div>');
+    wrap.innerHTML = '<div class="match-count">No matching customers found.</div>';
+    card.appendChild(wrap);
     return;
   }
-  var cardsHtml = matches.map(function(m){
+  var html = '<div class="match-count">' + matches.length + ' matching customer(s) — highest first</div>';
+  matches.forEach(function(m){
     var cu = m.customer;
     var phO = (owner.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
     var phC = (cu.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
     var oWa = phO ? 'https://wa.me/'+phO : '#';
     var cWa = phC ? 'https://wa.me/'+phC : '#';
-    var sendMsg = 'Property: ' + typeNames[type] + '\nLocation: ' + (getLocationName(owner)||'-') + '\nPrice: ' + (owner.price||'-') + '\nArea: ' + (owner.area||'-') + (owner.rent ? '\nRent: ' + owner.rent : '') + '\nDetails: ' + (owner.details||'-');
+    var sendMsg = 'Property: ' + typeNames[type] + ' | Location: ' + (getLocationName(owner)||'-') + ' | Price: ' + (owner.price||'-') + ' | Area: ' + (owner.area||'-') + (owner.rent ? ' | Rent: ' + owner.rent : '');
     var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
-    return '<div class="drawer-match-card">'
-      + '<div class="dm-top"><div><div class="dm-name">' + escH(cu.name) + '</div>'
-      + '<div class="dm-badge">' + escH(typeNames[type]) + '</div></div>'
-      + '<div class="dm-score ' + scoreClass(m.score) + '">' + m.score + '%</div></div>'
-      + '<div class="dm-info">'
-      + '<span><b>Location:</b> ' + escH(getLocationName(cu)||'-') + '</span>'
-      + '<span><b>Budget:</b> ' + escH(cu.budget||'-') + '</span>'
-      + '<span><b>Area:</b> ' + escH(cu.area||'-') + '</span>'
-      + (cu.need ? '<span style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">' + escH(cu.need) + '</span>' : '')
-      + '<span style="margin-top:6px;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:6px;">&#128100; ' + escH(cu.name) + ' &nbsp;|&nbsp; &#128222; ' + escH(cu.phone||'-') + '</span>'
+    html += '<div class="match-card" style="margin-bottom:8px;padding:12px;border-left:4px solid '+scoreColor(m.score)+';">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+      + '<span class="match-badge">'+escH(typeNames[type])+'</span>'
+      + '<span style="font-weight:700;color:'+scoreColor(m.score)+';font-size:18px;">'+m.score+'%</span></div>'
+      + '<div style="font-size:13px;color:#333;line-height:1.8;">'
+      + '<b>'+escH(cu.name)+'</b> — '+escH(cu.phone||'-')+'<br>'
+      + 'Location: '+(escH(getLocationName(cu))||'-')+' &nbsp;|&nbsp; Budget: '+(escH(cu.budget)||'-')+' &nbsp;|&nbsp; Area: '+(escH(cu.area)||'-')
+      + (cu.need ? '<br><span style="color:#666;font-size:12px;">'+escH(cu.need)+'</span>' : '')
       + '</div>'
-      + '<div class="dm-btns">'
-      + (phC ? '<a href="'+cWa+'" target="_blank" class="dm-whatsapp">&#128172; Client</a>' : '')
-      + (phC ? '<a href="'+waSend+'" target="_blank" class="dm-wa-send">&#128228; Send Details</a>' : '')
-      + (phO ? '<a href="'+oWa+'" target="_blank" class="dm-whatsapp">&#128172; Owner</a>' : '')
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">'
+      + (phC ? '<a href="'+cWa+'" target="_blank" class="btn-sm whatsapp">Contact Client</a>' : '')
+      + (phC ? '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;">Send Details</a>' : '')
+      + (phO ? '<a href="'+oWa+'" target="_blank" class="btn-sm whatsapp">Contact Owner</a>' : '')
       + '</div></div>';
-  }).join('');
-  openMatchDrawer('Matches for ' + escH(owner.name), matches.length + ' matching customer(s) - Highest First', cardsHtml);
+  });
+  wrap.innerHTML = html;
+  card.appendChild(wrap);
+  wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
   } catch(e) { console.error('showOwnerMatches error:', e); }
 }
 
@@ -1754,10 +1716,6 @@ document.addEventListener('input', function(e) {
     e.target.style.height = 'auto';
     e.target.style.height = e.target.scrollHeight + 'px';
   }
-});
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeMatchDrawer();
 });
 
 // Load data from server on startup
