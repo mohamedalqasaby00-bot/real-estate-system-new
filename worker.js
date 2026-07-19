@@ -1,4 +1,1771 @@
-const HTML = "<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Real Estate Management</title>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">\n<style>\n* { margin: 0; padding: 0; box-sizing: border-box; font-family: \'Cairo\', \'Inter\', \'Segoe UI\', Tahoma, sans-serif; }\nbody { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }\n.container { max-width: 1200px; margin: auto; padding-bottom: 80px; }\n.header { background: linear-gradient(135deg, #1a3a5c, #2d6a9f); color: #fff; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }\n.header h1 { font-size: 26px; }\n.header .sub { font-size: 14px; opacity: .7; }\n.main-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }\n.main-tab { padding: 10px 28px; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; color: #555; border: 1px solid #d0d5dd; transition: .2s; }\n.main-tab:hover { border-color: #2d6a9f; }\n.main-tab.active { background: #1a3a5c; color: #fff; border-color: #1a3a5c; }\n.sub-tabs { display: flex; gap: 0; margin-bottom: 18px; background: #e8edf2; border-radius: 8px; padding: 4px; width: fit-content; }\n.sub-tab { padding: 8px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px; color: #555; transition: .2s; user-select: none; }\n.sub-tab.active { background: #fff; color: #1a3a5c; box-shadow: 0 1px 4px rgba(0,0,0,.1); }\n.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow-wrap: break-word; word-break: break-word; }\n.card h3 { font-size: 17px; margin-bottom: 14px; color: #1a3a5c; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }\n.form-group { margin-bottom: 10px; }\n.form-group label { display: block; font-weight: 600; font-size: 13px; color: #444; margin-bottom: 3px; }\n.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 14px; outline: none; }\n.form-group input:focus, .form-group textarea:focus { border-color: #2d6a9f; }\n.form-group textarea { min-height: 70px; resize: vertical; }\n.form-row { display: flex; gap: 8px; }\n.form-row .form-group { flex: 1; }\n.upload-btn { border: 2px dashed #b0c4d9; border-radius: 6px; padding: 14px; text-align: center; color: #888; cursor: pointer; font-size: 14px; display:block; }\n.upload-btn:hover { border-color: #1a3a5c; background: #f8faff; }\n.upload-btn.dragover { border-color: #1a7a3c; background: #e6f9ed; }\n.preview { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }\n.preview .thumb { width: 56px; height: 56px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; position: relative; }\n.preview .thumb img { width: 100%; height: 100%; object-fit: cover; }\n.preview .thumb .vid-icon { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; font-size: 11px; }\n.preview .thumb .upload-progress { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 10px; line-height: 1.4; }\n.preview .thumb .upload-progress .bar { width: 40px; height: 4px; background: #555; border-radius: 2px; margin-top: 4px; overflow: hidden; }\n.preview .thumb .upload-progress .bar span { display: block; height: 100%; background: #25D366; transition: width .2s; }\n.btn { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; font-size: 14px; }\n.btn-primary { background: #1a3a5c; color: #fff; }\n.btn-primary:hover { background: #2d6a9f; }\n.btn-success { background: #1a7a3c; color: #fff; }\n.btn-success:hover { background: #249c4e; }\n.toggle-form-btn { display: block; width: 100%; padding: 12px; font-size: 16px; font-weight: 700; margin: 0; }\n.form-fields { margin-top: 14px; }\n.btn-sm { padding: 5px 12px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }\n.btn-sm.edit { color: #2d6a9f; border-color: #2d6a9f; }\n.btn-sm.del { color: #c0392b; border-color: #c0392b; }\n.btn-sm.whatsapp { color: #25D366; border-color: #25D366; text-decoration: none; display: inline-block; }\n.btn-sm.match-find { color: #1a7a3c; border-color: #1a7a3c; }\n.customer-matches { margin-top: 10px; padding: 10px; background: #f7f9fc; border-radius: 8px; border: 1px solid #d0d5dd; }\n.customer-matches .match-count { font-size: 13px; color: #555; margin-bottom: 8px; }\ntable { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }\nth { background: #f7f9fc; padding: 8px 10px; text-align: right; color: #555; border-bottom: 2px solid #e8edf2; word-break: break-word; }\ntd { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word; white-space: normal; text-align: right; }\n.badge { display: inline-block; background: #e8f0fe; color: #1a3a5c; padding: 3px 10px; border-radius: 10px; font-size: 12px; }\n.badge.match { background: #e6f9ed; color: #1a7a3c; }\n.badge.nomatch { background: #fef3e2; color: #b86b00; }\n.badge.both { background: #e8f0fe; color: #1a3a5c; }\n.media-thumbs { display: flex; gap: 4px; flex-wrap: wrap; }\n.media-thumbs div { width: 36px; height: 36px; border-radius: 4px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid #ddd; }\n.search-row { display: flex; gap: 8px; margin-bottom: 10px; }\n.search-row input { flex: 1; padding: 7px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 14px; }\n.budget-toggle { display:flex; gap:10px; margin-bottom:4px; }\n.budget-toggle label { cursor:pointer; font-weight:400; font-size:14px; }\n.budget-range { display:flex; gap:6px; }\n.budget-range input { flex:1; }\n.table-wrap { overflow-x: auto; }\n.actions { display: flex; gap: 4px; flex-wrap: wrap; }\n.count-badge { background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 6px; }\n.hidden { display: none !important; }\n.page-content { }\n.match-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 16px; background: #fff; line-height: 1.6; }\n.match-card.sent { border-color: #25D366; background: #f6fff9; }\n.match-card .header-match { display: flex; justify-content: space-between; align-items: center; }\n.match-detail { font-size: 14px; color: #555; margin-top: 6px; }\n.match-type { font-size: 13px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }\n.percent { font-weight: 700; color: #1a7a3c; }\n.match-sent-dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#25D366; margin-left:4px; }\n.match-badge { display:inline-block; background:#1a3a5c; color:#fff; font-size:12px; padding:3px 12px; border-radius:8px; }\n/* Location autocomplete */\n.ac-wrapper { position: relative; }\n.ac-wrapper input { width:100%; padding:8px 10px; border:1px solid #d0d5dd; border-radius:5px; font-size:14px; outline:none; }\n.ac-wrapper input:focus { border-color:#2d6a9f; }\n.ac-dropdown { position:absolute; top:100%; left:0; right:0; z-index:100; background:#fff; border:1px solid #d0d5dd; border-radius:0 0 5px 5px; max-height:200px; overflow-y:auto; display:none; box-shadow:0 4px 12px rgba(0,0,0,.1); }\n.ac-dropdown div { padding:8px 10px; cursor:pointer; font-size:14px; border-bottom:1px solid #f0f0f0; }\n.ac-dropdown div:hover, .ac-dropdown div.active { background:#e8f0fe; }\n.ac-dropdown div:last-child { border-bottom:none; }\n.ac-dropdown .no-result { color:#999; cursor:default; }\n.ac-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px; }\n.ac-tag { display:inline-flex; align-items:center; gap:4px; background:#e8f0fe; color:#1a3a5c; padding:3px 10px; border-radius:10px; font-size:13px; }\n.ac-tag button { background:none; border:none; color:#c0392b; cursor:pointer; font-size:14px; line-height:1; padding:0; }\n/* Modal */\n.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }\n.modal-overlay video { max-width:90vw; max-height:90vh; border-radius:8px; }\n.modal-overlay img { max-width:90vw; max-height:90vh; border-radius:8px; }\n.modal-close { position:absolute; top:20px; left:20px; color:#fff; font-size:30px; cursor:pointer; background:rgba(0,0,0,.5); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; }\n.modal-share { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); padding:10px 24px; background:#25D366; color:#fff; border:none; border-radius:8px; font-size:15px; cursor:pointer; font-weight:600; }\n\n/* Mobile cards */\n.mobile-cards{display:none;}\n.mobile-card{\n  background:#fff;\n  border-radius:12px;\n  padding:14px;\n  margin-bottom:12px;\n  box-shadow:0 2px 8px rgba(0,0,0,.06);\n}\n.mobile-card .title{\n  font-weight:700;\n  color:#1a3a5c;\n  margin-bottom:8px;\n  display:flex;\n  align-items:center;\n  gap:6px;\n}\n.mobile-card .row{\n  display:flex;\n  justify-content:space-between;\n  gap:10px;\n  margin-bottom:6px;\n  font-size:14px;\n}\n.mobile-card .label{\n  color:#666;\n  min-width:70px;\n}\n.mobile-card .value{\n  font-weight:600;\n  text-align:left;\n  flex:1;\n  color:#222;\n}\n.mobile-card .actions{\n  display:flex;\n  flex-wrap:wrap;\n  gap:6px;\n  margin-top:10px;\n}\n@media (max-width:768px){\n  body{padding:10px;}\n  .container{display:flex;flex-direction:column;}\n  .main-tabs{order:-1;overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;margin-bottom:10px;}\n  .header{\n    order:0;\n    flex-direction:column;\n    align-items:flex-start;\n    gap:10px;\n    padding:16px;\n  }\n  .main-tab{\n    flex:0 0 auto;\n    padding:8px 16px;\n    font-size:14px;\n    color:#1a3a5c;\n  }\n  .sub-tabs{\n    width:100%;\n    justify-content:space-between;\n  }\n  .sub-tab{\n    flex:1;\n    text-align:center;\n    color:#1a3a5c;\n  }\n  .form-row{\n    flex-direction:column;\n  }\n  .table-wrap{\n    overflow:visible;\n  }\n  .table-wrap table{\n    display:none;\n  }\n  .mobile-cards{\n    display:block;\n  }\n}\n\n</style>\n</head>\n<body>\n<div id=\"loading-overlay\" style=\"position:fixed;inset:0;background:#f0f2f5;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;\">\n  <div style=\"width:40px;height:40px;border:4px solid #d0d5dd;border-top-color:#1a3a5c;border-radius:50%;animation:spin .8s linear infinite;\"></div>\n  <div style=\"font-size:16px;color:#555;\">جاري تحميل البيانات...</div>\n</div>\n<style>@keyframes spin{to{transform:rotate(360deg)}}</style>\n<div class=\"container\" id=\"app\">\n\n<div class=\"header\">\n  <div><h1>🏢 Real Estate Management</h1><div class=\"sub\">Company — Staff Only</div></div>\n  <div style=\"display:flex;align-items:center;gap:14px;\">\n    <span style=\"opacity:.7;font-size:13px;\">Staff: Admin</span>\n    <span style=\"background:#ffffff22;padding:5px 12px;border-radius:6px;font-size:13px;cursor:default;\">Logout</span>\n  </div>\n</div>\n\n<div class=\"main-tabs\">\n  <div class=\"main-tab active\" data-tab=\"apartments\">🏢 Apartments</div>\n  <div class=\"main-tab\" data-tab=\"houses\">🏠 Houses</div>\n  <div class=\"main-tab\" data-tab=\"lands\">🗺️ Lands</div>\n  <div class=\"main-tab\" data-tab=\"shops\">🏪 Shops</div>\n  <div class=\"main-tab\" data-tab=\"shopsrent\">🏪 Shops for Rent</div>\n  <div class=\"main-tab\" data-tab=\"report\">📄 Report</div>\n  <div class=\"main-tab\" data-tab=\"matches\">🔗 Matches</div>\n</div>\n\n<!-- ====================== APARTMENTS ====================== -->\n<div id=\"page-apartments\" class=\"page-content\">\n  <div class=\"sub-tabs\">\n    <div class=\"sub-tab active\" data-sub=\"owners\">👤 Owners</div>\n    <div class=\"sub-tab\" data-sub=\"customers\">🤝 Clients</div>\n  </div>\n  <div id=\"sub-apartments-owners\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Owner (Apartment)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-ao-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-ao-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n          <div class=\"form-row\"><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\"><input class=\"f-ao-location\" placeholder=\"City - District\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-ao-location-id\"><div class=\"ac-dropdown\"></div></div></div><div class=\"form-group\"><label>Price</label><input class=\"f-ao-price\" placeholder=\"مثلاً 500,000 ج.م\"></div><div class=\"form-group\"><label>Area</label><input class=\"f-ao-area\" placeholder=\"m²\"></div></div>\n          <div class=\"form-group\"><label>Details</label><textarea class=\"f-ao-details\" placeholder=\"Property description (rooms, floor, finish...)\"></textarea></div>\n          <div class=\"form-group\"><label>Status</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"finish-ao\" value=\"unfinished\" checked> 🔧 Unfinished</label><label><input type=\"radio\" name=\"finish-ao\" value=\"finished\"> ✅ Finished</label><label><input type=\"radio\" name=\"finish-ao\" value=\"both\"> ✅🔧 Both</label></div></div>\n        <div class=\"form-group\"><label>Photos / Video</label><label class=\"upload-btn\" data-type=\"apartments\" data-cat=\"owner\">📤 Choose images or video<input type=\"file\" accept=\"image/*,video/*\" multiple hidden onchange=\"handleUpload(this,\'apartments\',\'owner\')\"></label><div class=\"preview\" id=\"preview-ao\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addOwner(\'apartments\')\">💾 Save Owner</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>👤 Owners <span class=\"count-badge\" id=\"count-ao\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search by name, phone or location...\" oninput=\"filterTable(\'apartments\',\'owners\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:4%\">#</th><th style=\"width:13%\">Name</th><th style=\"width:11%\">Phone</th><th style=\"width:12%\">Location</th><th style=\"width:10%\">Price</th><th style=\"width:8%\">Area</th><th style=\"width:16%\">Details</th><th style=\"width:8%\">Media</th><th style=\"width:10%\"></th></tr></thead><tbody id=\"tbl-ao\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-ao\"></div>\n    </div>\n  </div>\n  <div id=\"sub-apartments-customers\" class=\"hidden\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Customer (Apartment)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-ac-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-ac-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n        <div class=\"form-row\"><div class=\"form-group\"><label>Requirement</label><textarea class=\"f-ac-need\" placeholder=\"e.g. 3BR apartment + hall\" style=\"min-height:50px;\"></textarea></div><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\" data-multi=\"true\"><div class=\"ac-tags\"></div><input class=\"f-ac-location\" placeholder=\"Type to search...\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-ac-location-id\"><div class=\"ac-dropdown\"></div></div></div></div>\n        <div class=\"form-group\"><label>Budget</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"budget-type-a\" value=\"fixed\" checked onchange=\"toggleBudgetMode(\'a\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"budget-type-a\" value=\"range\" onchange=\"toggleBudgetMode(\'a\',\'range\')\"> Range</label></div><div id=\"bf-a\"><input class=\"f-ac-budget\" placeholder=\"Amount\"></div><div id=\"br-a\" class=\"budget-range\" style=\"display:none\"><input class=\"f-ac-budget-min\" placeholder=\"From\"><input class=\"f-ac-budget-max\" placeholder=\"To\"></div></div>\n        <div class=\"form-group\"><label>Required Area</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"area-type-a\" value=\"fixed\" checked onchange=\"toggleAreaMode(\'a\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"area-type-a\" value=\"range\" onchange=\"toggleAreaMode(\'a\',\'range\')\"> Range</label></div><div id=\"af-a\"><input class=\"f-ac-area\" placeholder=\"m²\"></div><div id=\"ar-a\" class=\"budget-range\" style=\"display:none\"><input class=\"f-ac-area-min\" placeholder=\"From m²\"><input class=\"f-ac-area-max\" placeholder=\"To m²\"></div></div>\n        <div class=\"form-group\"><label>Status</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"finish-ac\" value=\"unfinished\" checked> 🔧 Unfinished</label><label><input type=\"radio\" name=\"finish-ac\" value=\"finished\"> ✅ Finished</label><label><input type=\"radio\" name=\"finish-ac\" value=\"both\"> ✅🔧 Both</label></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addCustomer(\'apartments\')\">💾 Save Customer</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>🤝 Clients <span class=\"count-badge\" id=\"count-ac\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search by name or phone...\" oninput=\"filterTable(\'apartments\',\'customers\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:5%\">#</th><th style=\"width:16%\">Name</th><th style=\"width:12%\">Phone</th><th style=\"width:16%\">Requirement</th><th style=\"width:14%\">Location</th><th style=\"width:12%\">Budget</th><th style=\"width:8%\">Area</th><th style=\"width:12%\"></th></tr></thead><tbody id=\"tbl-ac\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-ac\"></div>\n    </div>\n  </div>\n</div>\n\n<!-- ====================== HOUSES ====================== -->\n<div id=\"page-houses\" class=\"page-content hidden\">\n  <div class=\"sub-tabs\">\n    <div class=\"sub-tab active\" data-sub=\"owners\">👤 Owners</div>\n    <div class=\"sub-tab\" data-sub=\"customers\">🤝 Clients</div>\n  </div>\n  <div id=\"sub-houses-owners\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Owner (House)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-ho-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-ho-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n          <div class=\"form-row\"><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\"><input class=\"f-ho-location\" placeholder=\"City - District\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-ho-location-id\"><div class=\"ac-dropdown\"></div></div></div><div class=\"form-group\"><label>Price</label><input class=\"f-ho-price\" placeholder=\"مثلاً 800,000 ج.م\"></div><div class=\"form-group\"><label>Area</label><input class=\"f-ho-area\" placeholder=\"m²\"></div></div>\n          <div class=\"form-group\"><label>Details</label><textarea class=\"f-ho-details\" placeholder=\"House description\"></textarea></div>\n        <div class=\"form-group\"><label>Photos / Video</label><label class=\"upload-btn\" data-type=\"houses\" data-cat=\"owner\">📤 Choose images or video<input type=\"file\" accept=\"image/*,video/*\" multiple hidden onchange=\"handleUpload(this,\'houses\',\'owner\')\"></label><div class=\"preview\" id=\"preview-ho\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addOwner(\'houses\')\">💾 Save Owner</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>👤 Owners <span class=\"count-badge\" id=\"count-ho\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'houses\',\'owners\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:4%\">#</th><th style=\"width:13%\">Name</th><th style=\"width:11%\">Phone</th><th style=\"width:12%\">Location</th><th style=\"width:10%\">Price</th><th style=\"width:8%\">Area</th><th style=\"width:16%\">Details</th><th style=\"width:8%\">Media</th><th style=\"width:10%\"></th></tr></thead><tbody id=\"tbl-ho\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-ho\"></div>\n    </div>\n  </div>\n  <div id=\"sub-houses-customers\" class=\"hidden\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Customer (House)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-hc-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-hc-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n        <div class=\"form-row\"><div class=\"form-group\"><label>Requirement</label><textarea class=\"f-hc-need\" placeholder=\"e.g. 2-storey villa\" style=\"min-height:50px;\"></textarea></div><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\" data-multi=\"true\"><div class=\"ac-tags\"></div><input class=\"f-hc-location\" placeholder=\"Type to search...\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-hc-location-id\"><div class=\"ac-dropdown\"></div></div></div></div>\n        <div class=\"form-group\"><label>Budget</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"budget-type-h\" value=\"fixed\" checked onchange=\"toggleBudgetMode(\'h\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"budget-type-h\" value=\"range\" onchange=\"toggleBudgetMode(\'h\',\'range\')\"> Range</label></div><div id=\"bf-h\"><input class=\"f-hc-budget\" placeholder=\"Amount\"></div><div id=\"br-h\" class=\"budget-range\" style=\"display:none\"><input class=\"f-hc-budget-min\" placeholder=\"From\"><input class=\"f-hc-budget-max\" placeholder=\"To\"></div></div>\n        <div class=\"form-group\"><label>Required Area</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"area-type-h\" value=\"fixed\" checked onchange=\"toggleAreaMode(\'h\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"area-type-h\" value=\"range\" onchange=\"toggleAreaMode(\'h\',\'range\')\"> Range</label></div><div id=\"af-h\"><input class=\"f-hc-area\" placeholder=\"m²\"></div><div id=\"ar-h\" class=\"budget-range\" style=\"display:none\"><input class=\"f-hc-area-min\" placeholder=\"From m²\"><input class=\"f-hc-area-max\" placeholder=\"To m²\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addCustomer(\'houses\')\">💾 Save Customer</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>🤝 Clients <span class=\"count-badge\" id=\"count-hc\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'houses\',\'customers\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:5%\">#</th><th style=\"width:16%\">Name</th><th style=\"width:12%\">Phone</th><th style=\"width:16%\">Requirement</th><th style=\"width:14%\">Location</th><th style=\"width:12%\">Budget</th><th style=\"width:8%\">Area</th><th style=\"width:12%\"></th></tr></thead><tbody id=\"tbl-hc\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-hc\"></div>\n    </div>\n  </div>\n</div>\n\n<!-- ====================== LANDS ====================== -->\n<div id=\"page-lands\" class=\"page-content hidden\">\n  <div class=\"sub-tabs\">\n    <div class=\"sub-tab active\" data-sub=\"owners\">👤 Owners</div>\n    <div class=\"sub-tab\" data-sub=\"customers\">🤝 Clients</div>\n  </div>\n  <div id=\"sub-lands-owners\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Owner (Land)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-lo-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-lo-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n          <div class=\"form-row\"><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\"><input class=\"f-lo-location\" placeholder=\"City - District\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-lo-location-id\"><div class=\"ac-dropdown\"></div></div></div><div class=\"form-group\"><label>Price</label><input class=\"f-lo-price\" placeholder=\"مثلاً 200,000 ج.م\"></div><div class=\"form-group\"><label>Area</label><input class=\"f-lo-area\" placeholder=\"m²\"></div></div>\n          <div class=\"form-group\"><label>Details</label><textarea class=\"f-lo-details\" placeholder=\"Land description (area, permit...)\"></textarea></div>\n        <div class=\"form-group\"><label>Photos / Video</label><label class=\"upload-btn\" data-type=\"lands\" data-cat=\"owner\">📤 Choose images or video<input type=\"file\" accept=\"image/*,video/*\" multiple hidden onchange=\"handleUpload(this,\'lands\',\'owner\')\"></label><div class=\"preview\" id=\"preview-lo\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addOwner(\'lands\')\">💾 Save Owner</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>👤 Owners <span class=\"count-badge\" id=\"count-lo\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'lands\',\'owners\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:4%\">#</th><th style=\"width:13%\">Name</th><th style=\"width:11%\">Phone</th><th style=\"width:12%\">Location</th><th style=\"width:10%\">Price</th><th style=\"width:8%\">Area</th><th style=\"width:16%\">Details</th><th style=\"width:8%\">Media</th><th style=\"width:10%\"></th></tr></thead><tbody id=\"tbl-lo\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-lo\"></div>\n    </div>\n  </div>\n  <div id=\"sub-lands-customers\" class=\"hidden\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Customer (Land)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-lc-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-lc-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n        <div class=\"form-row\"><div class=\"form-group\"><label>Requirement</label><textarea class=\"f-lc-need\" placeholder=\"e.g. residential land 500m²\" style=\"min-height:50px;\"></textarea></div><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\" data-multi=\"true\"><div class=\"ac-tags\"></div><input class=\"f-lc-location\" placeholder=\"Type to search...\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-lc-location-id\"><div class=\"ac-dropdown\"></div></div></div></div>\n        <div class=\"form-group\"><label>Budget</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"budget-type-l\" value=\"fixed\" checked onchange=\"toggleBudgetMode(\'l\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"budget-type-l\" value=\"range\" onchange=\"toggleBudgetMode(\'l\',\'range\')\"> Range</label></div><div id=\"bf-l\"><input class=\"f-lc-budget\" placeholder=\"Amount\"></div><div id=\"br-l\" class=\"budget-range\" style=\"display:none\"><input class=\"f-lc-budget-min\" placeholder=\"From\"><input class=\"f-lc-budget-max\" placeholder=\"To\"></div></div>\n        <div class=\"form-group\"><label>Required Area</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"area-type-l\" value=\"fixed\" checked onchange=\"toggleAreaMode(\'l\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"area-type-l\" value=\"range\" onchange=\"toggleAreaMode(\'l\',\'range\')\"> Range</label></div><div id=\"af-l\"><input class=\"f-lc-area\" placeholder=\"m²\"></div><div id=\"ar-l\" class=\"budget-range\" style=\"display:none\"><input class=\"f-lc-area-min\" placeholder=\"From m²\"><input class=\"f-lc-area-max\" placeholder=\"To m²\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addCustomer(\'lands\')\">💾 Save Customer</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>🤝 Clients <span class=\"count-badge\" id=\"count-lc\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'lands\',\'customers\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:5%\">#</th><th style=\"width:16%\">Name</th><th style=\"width:12%\">Phone</th><th style=\"width:16%\">Requirement</th><th style=\"width:14%\">Location</th><th style=\"width:12%\">Budget</th><th style=\"width:8%\">Area</th><th style=\"width:12%\"></th></tr></thead><tbody id=\"tbl-lc\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-lc\"></div>\n    </div>\n  </div>\n</div>\n\n<!-- ====================== SHOPS ====================== -->\n<div id=\"page-shops\" class=\"page-content hidden\">\n  <div class=\"sub-tabs\">\n    <div class=\"sub-tab active\" data-sub=\"owners\">👤 Owners</div>\n    <div class=\"sub-tab\" data-sub=\"customers\">🤝 Clients</div>\n  </div>\n  <div id=\"sub-shops-owners\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Owner (Shop)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-so-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-so-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n          <div class=\"form-row\"><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\"><input class=\"f-so-location\" placeholder=\"City - District\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-so-location-id\"><div class=\"ac-dropdown\"></div></div></div><div class=\"form-group\"><label>Price</label><input class=\"f-so-price\" placeholder=\"مثلاً 150,000 ج.م\"></div><div class=\"form-group\"><label>Area</label><input class=\"f-so-area\" placeholder=\"m²\"></div></div>\n          <div class=\"form-group\"><label>Details</label><textarea class=\"f-so-details\" placeholder=\"Shop description (area, activity...)\"></textarea></div>\n        <div class=\"form-group\"><label>Photos / Video</label><label class=\"upload-btn\" data-type=\"shops\" data-cat=\"owner\">📤 Choose images or video<input type=\"file\" accept=\"image/*,video/*\" multiple hidden onchange=\"handleUpload(this,\'shops\',\'owner\')\"></label><div class=\"preview\" id=\"preview-so\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addOwner(\'shops\')\">💾 Save Owner</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>👤 Owners <span class=\"count-badge\" id=\"count-so\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'shops\',\'owners\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:4%\">#</th><th style=\"width:13%\">Name</th><th style=\"width:11%\">Phone</th><th style=\"width:13%\">Location</th><th style=\"width:11%\">Price</th><th style=\"width:8%\">Area</th><th style=\"width:15%\">Details</th><th style=\"width:8%\">Media</th><th style=\"width:10%\"></th></tr></thead><tbody id=\"tbl-so\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-so\"></div>\n    </div>\n  </div>\n  <div id=\"sub-shops-customers\" class=\"hidden\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Customer (Shop)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-sc-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-sc-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n        <div class=\"form-row\"><div class=\"form-group\"><label>Requirement</label><textarea class=\"f-sc-need\" placeholder=\"e.g. shop 100m²\" style=\"min-height:50px;\"></textarea></div><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\" data-multi=\"true\"><div class=\"ac-tags\"></div><input class=\"f-sc-location\" placeholder=\"Type to search...\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-sc-location-id\"><div class=\"ac-dropdown\"></div></div></div></div>\n        <div class=\"form-group\"><label>Budget</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"budget-type-s\" value=\"fixed\" checked onchange=\"toggleBudgetMode(\'s\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"budget-type-s\" value=\"range\" onchange=\"toggleBudgetMode(\'s\',\'range\')\"> Range</label></div><div id=\"bf-s\"><input class=\"f-sc-budget\" placeholder=\"Amount\"></div><div id=\"br-s\" class=\"budget-range\" style=\"display:none\"><input class=\"f-sc-budget-min\" placeholder=\"From\"><input class=\"f-sc-budget-max\" placeholder=\"To\"></div></div>\n        <div class=\"form-group\"><label>Required Area</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"area-type-s\" value=\"fixed\" checked onchange=\"toggleAreaMode(\'s\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"area-type-s\" value=\"range\" onchange=\"toggleAreaMode(\'s\',\'range\')\"> Range</label></div><div id=\"af-s\"><input class=\"f-sc-area\" placeholder=\"m²\"></div><div id=\"ar-s\" class=\"budget-range\" style=\"display:none\"><input class=\"f-sc-area-min\" placeholder=\"From m²\"><input class=\"f-sc-area-max\" placeholder=\"To m²\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addCustomer(\'shops\')\">💾 Save Customer</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>🤝 Clients <span class=\"count-badge\" id=\"count-sc\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'shops\',\'customers\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:5%\">#</th><th style=\"width:16%\">Name</th><th style=\"width:12%\">Phone</th><th style=\"width:16%\">Requirement</th><th style=\"width:14%\">Location</th><th style=\"width:12%\">Budget</th><th style=\"width:8%\">Area</th><th style=\"width:12%\"></th></tr></thead><tbody id=\"tbl-sc\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-sc\"></div>\n    </div>\n  </div>\n</div>\n\n<!-- ====================== SHOPS FOR RENT ====================== -->\n<div id=\"page-shopsrent\" class=\"page-content hidden\">\n  <div class=\"sub-tabs\">\n    <div class=\"sub-tab active\" data-sub=\"owners\">👤 Owners</div>\n    <div class=\"sub-tab\" data-sub=\"customers\">🤝 Clients</div>\n  </div>\n  <div id=\"sub-shopsrent-owners\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Owner (Shop for Rent)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-ro-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-ro-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n          <div class=\"form-row\"><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\"><input class=\"f-ro-location\" placeholder=\"City - District\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-ro-location-id\"><div class=\"ac-dropdown\"></div></div></div><div class=\"form-group\"><label>Rent</label><input class=\"f-ro-price\" placeholder=\"مثلاً 10,000 ج.م/شهر\"></div><div class=\"form-group\"><label>Area</label><input class=\"f-ro-area\" placeholder=\"m²\"></div></div>\n          <div class=\"form-group\"><label>Details</label><textarea class=\"f-ro-details\" placeholder=\"Shop description (area, activity...)\"></textarea></div>\n        <div class=\"form-group\"><label>Photos / Video</label><label class=\"upload-btn\" data-type=\"shopsrent\" data-cat=\"owner\">📤 Choose images or video<input type=\"file\" accept=\"image/*,video/*\" multiple hidden onchange=\"handleUpload(this,\'shopsrent\',\'owner\')\"></label><div class=\"preview\" id=\"preview-ro\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addOwner(\'shopsrent\')\">💾 Save Owner</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>👤 Owners <span class=\"count-badge\" id=\"count-ro\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'shopsrent\',\'owners\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:4%\">#</th><th style=\"width:13%\">Name</th><th style=\"width:11%\">Phone</th><th style=\"width:13%\">Location</th><th style=\"width:11%\">Rent</th><th style=\"width:8%\">Area</th><th style=\"width:15%\">Details</th><th style=\"width:8%\">Media</th><th style=\"width:10%\"></th></tr></thead><tbody id=\"tbl-ro\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-ro\"></div>\n    </div>\n  </div>\n  <div id=\"sub-shopsrent-customers\" class=\"hidden\">\n    <div class=\"card\">\n      <button class=\"btn btn-success toggle-form-btn\" onclick=\"toggleForm(this)\">➕ Add Customer (Shop for Rent)</button>\n      <div class=\"form-fields hidden\">\n        <div class=\"form-row\"><div class=\"form-group\"><label>Name</label><input class=\"f-rc-name\" placeholder=\"Full name\"></div><div class=\"form-group\"><label>Phone</label><input class=\"f-rc-phone\" placeholder=\"05xxxxxxxx\"></div></div>\n        <div class=\"form-row\"><div class=\"form-group\"><label>Requirement</label><textarea class=\"f-rc-need\" placeholder=\"e.g. shop 100m²\" style=\"min-height:50px;\"></textarea></div><div class=\"form-group\"><label>Location</label><div class=\"ac-wrapper\" data-multi=\"true\"><div class=\"ac-tags\"></div><input class=\"f-rc-location\" placeholder=\"Type to search...\" autocomplete=\"off\"><input type=\"hidden\" class=\"f-rc-location-id\"><div class=\"ac-dropdown\"></div></div></div></div>\n        <div class=\"form-group\"><label>Rent Budget</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"budget-type-r\" value=\"fixed\" checked onchange=\"toggleBudgetMode(\'r\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"budget-type-r\" value=\"range\" onchange=\"toggleBudgetMode(\'r\',\'range\')\"> Range</label></div><div id=\"bf-r\"><input class=\"f-rc-budget\" placeholder=\"Amount\"></div><div id=\"br-r\" class=\"budget-range\" style=\"display:none\"><input class=\"f-rc-budget-min\" placeholder=\"From\"><input class=\"f-rc-budget-max\" placeholder=\"To\"></div></div>\n        <div class=\"form-group\"><label>Required Area</label><div class=\"budget-toggle\"><label><input type=\"radio\" name=\"area-type-r\" value=\"fixed\" checked onchange=\"toggleAreaMode(\'r\',\'fixed\')\"> Fixed</label><label><input type=\"radio\" name=\"area-type-r\" value=\"range\" onchange=\"toggleAreaMode(\'r\',\'range\')\"> Range</label></div><div id=\"af-r\"><input class=\"f-rc-area\" placeholder=\"m²\"></div><div id=\"ar-r\" class=\"budget-range\" style=\"display:none\"><input class=\"f-rc-area-min\" placeholder=\"From m²\"><input class=\"f-rc-area-max\" placeholder=\"To m²\"></div></div>\n        <button class=\"btn btn-primary\" style=\"width:100%;margin-top:4px;\" onclick=\"addCustomer(\'shopsrent\')\">💾 Save Customer</button>\n      </div>\n    </div>\n    <div class=\"card\">\n      <h3>🤝 Clients <span class=\"count-badge\" id=\"count-rc\">0</span></h3>\n      <div class=\"search-row\"><input placeholder=\"🔍 Search...\" oninput=\"filterTable(\'shopsrent\',\'customers\')\"></div>\n      <div class=\"table-wrap\"><table><thead><tr><th style=\"width:5%\">#</th><th style=\"width:16%\">Name</th><th style=\"width:12%\">Phone</th><th style=\"width:16%\">Requirement</th><th style=\"width:14%\">Location</th><th style=\"width:14%\">Rent Budget</th><th style=\"width:8%\">Area</th><th style=\"width:12%\"></th></tr></thead><tbody id=\"tbl-rc\"></tbody></table></div>\n      <div class=\"mobile-cards\" id=\"cards-rc\"></div>\n    </div>\n  </div>\n</div>\n\n<!-- ====================== MATCHES ====================== -->\n<div id=\"page-matches\" class=\"page-content hidden\">\n  <div class=\"card\">\n    <div style=\"display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;\">\n      <h3 style=\"margin:0;border:none;padding:0;\">🔗 Property Matches</h3>\n      <div class=\"form-row\" style=\"gap:6px;flex-wrap:wrap;\">\n        <button class=\"btn btn-primary\" onclick=\"generateAllMatches(\'apartments\')\" style=\"font-size:13px;padding:6px 14px;\">🏢 Apartments</button>\n        <button class=\"btn btn-primary\" onclick=\"generateAllMatches(\'houses\')\" style=\"font-size:13px;padding:6px 14px;\">🏠 Houses</button>\n        <button class=\"btn btn-primary\" onclick=\"generateAllMatches(\'lands\')\" style=\"font-size:13px;padding:6px 14px;\">🗺️ Lands</button>\n        <button class=\"btn btn-primary\" onclick=\"generateAllMatches(\'shops\')\" style=\"font-size:13px;padding:6px 14px;\">🏪 Shops</button>\n        <button class=\"btn btn-primary\" onclick=\"generateAllMatches(\'shopsrent\')\" style=\"font-size:13px;padding:6px 14px;\">🏪 Shops for Rent</button>\n      </div>\n    </div>\n    <div class=\"search-row\"><input id=\"matchFilter\" placeholder=\"🔍 Search by name, phone, location...\" oninput=\"renderMatches()\"></div>\n    <div id=\"matches-results\"></div>\n  </div>\n</div>\n\n<div id=\"page-report\" class=\"page-content hidden\">\n  <div class=\"card\">\n    <h3>📄 Export Word Report</h3>\n    <div class=\"form-row\" style=\"align-items:end;\">\n      <div class=\"form-group\"><label>Property Type</label>\n        <select id=\"report-type\">\n          <option value=\"all\">All Types</option>\n          <option value=\"apartments\">🏢 Apartments</option>\n          <option value=\"houses\">🏠 Houses</option>\n          <option value=\"lands\">🗺️ Lands</option>\n          <option value=\"shops\">🏪 Shops</option>\n          <option value=\"shopsrent\">🏪 Shops for Rent</option>\n        </select>\n      </div>\n      <div class=\"form-group\"><label>Section</label>\n        <select id=\"report-cat\">\n          <option value=\"all\">All (Owners + Clients)</option>\n          <option value=\"owners\">👤 Owners</option>\n          <option value=\"customers\">🤝 Clients</option>\n        </select>\n      </div>\n      <div class=\"form-group\"><label>From Date</label><input type=\"date\" id=\"report-from\"></div>\n      <div class=\"form-group\"><label>To Date</label><input type=\"date\" id=\"report-to\"></div>\n      <div>\n        <button class=\"btn btn-primary\" onclick=\"generateReport()\" style=\"font-size:14px;padding:10px 30px;\">📥 Download Report</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script src=\"supabase.min.js\"></script>\n<script>\nvar CACHE_KEY = \'realestate_data\';\n\nfunction loadCachedData() {\n  try {\n    var saved = localStorage.getItem(CACHE_KEY);\n    if (!saved) return false;\n    var data = JSON.parse(saved);\n    if (!data || !data._DATA) return false;\n    types.forEach(function(t){\n      DATA[t] = data._DATA[t];\n      if (DATA[t].owners) DATA[t].owners.sort(function(a,b){ return a.id - b.id; });\n      if (DATA[t].customers) DATA[t].customers.sort(function(a,b){ return a.id - b.id; });\n    });\n    types.forEach(function(t) { renderTable(t, \'owners\'); renderTable(t, \'customers\'); });\n    document.getElementById(\'loading-overlay\').style.display = \'none\';\n    return true;\n  } catch(e){ return false; }\n}\n\nfunction saveDataCache() {\n  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ _DATA: DATA, _ts: Date.now() })); } catch(e){}\n}\n\nvar DEBUG = document.getElementById(\'app\');\nif (!window.supabase) {\n  DEBUG.innerHTML = \'<div class=\"card\" style=\"padding:30px;text-align:center;\"><h3 style=\"color:#c00;\">⚠️ خطأ</h3><p style=\"margin-top:10px;color:#555;\">Supabase SDK لم يتم تحميله</p></div>\';\n  throw new Error(\'Supabase SDK not loaded\');\n}\nif (window.location.protocol === \'file:\') {\n  document.body.innerHTML = \'<div style=\"padding:40px;text-align:center;font-size:20px;\">⚠️ افتح الصفحة عن طريق <b>http://localhost:3000</b> مش كـ file<br><br>شغّل السيرفر first: <b>node server.js</b></div>\';\n  throw new Error(\'Page must be served via localhost\');\n}\nconst SUPABASE_URL = \'https://omdbdtyysgwcznskrlsa.supabase.co\';\nconst SUPABASE_ANON = \'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tZGJkdHl5c2d3Y3puc2tybHNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxODk3ODksImV4cCI6MjA5ODc2NTc4OX0.YUta5414ktWx1N2nD6Wk_UZvJNXyc3jWMsRxe_XC-h0\';\nconst supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);\nif (!supabase) {\n  DEBUG.innerHTML = \'<div class=\"card\" style=\"padding:30px;text-align:center;\"><h3 style=\"color:#c00;\">⚠️ خطأ</h3><p style=\"margin-top:10px;color:#555;\">Supabase Client فشل في البدء</p></div>\';\n  throw new Error(\'Supabase client init failed\');\n}\n\nconst types = [\'apartments\',\'houses\',\'lands\',\'shops\',\'shopsrent\'];\nconst typeNames = { apartments:\'Apartments\', houses:\'Houses\', lands:\'Lands\', shops:\'Shops\', shopsrent:\'Shops for Rent\' };\nconst typeLetters = { apartments:\'a\', houses:\'h\', lands:\'l\', shops:\'s\', shopsrent:\'r\' };\nconst DATA = {};\ntypes.forEach(t => { DATA[t] = { owners: [], customers: [] }; });\n\nconst tempMedia = {};\n\n/* ==================== LOCATIONS SYSTEM ==================== */\nwindow._LOCATIONS = {};      // id → name\nwindow._LOCATIONS_BY_NAME = {}; // name → id\nwindow._LOCATIONS_ARR = [];  // [{id, name}]\n\nasync function loadLocations() {\n  var res = await supabase.from(\'locations\').select(\'id,name\');\n  if (res.error) throw new Error(res.error.message);\n  window._LOCATIONS = {};\n  window._LOCATIONS_BY_NAME = {};\n  window._LOCATIONS_ARR = (res.data||[]).map(function(r){\n    window._LOCATIONS[r.id] = r.name;\n    window._LOCATIONS_BY_NAME[r.name.toLowerCase().trim()] = r.id;\n    return r;\n  });\n}\n\nasync function ensureLocation(name) {\n  if (!name) return null;\n  var key = name.toLowerCase().trim();\n  if (window._LOCATIONS_BY_NAME[key]) return window._LOCATIONS_BY_NAME[key];\n  var id = Date.now() + Math.floor(Math.random()*1000);\n  var res = await supabase.from(\'locations\').insert({ id: id, name: name.trim() });\n  if (res.error) throw new Error(res.error.message);\n  window._LOCATIONS[id] = name.trim();\n  window._LOCATIONS_BY_NAME[key] = id;\n  window._LOCATIONS_ARR.push({ id: id, name: name.trim() });\n  return id;\n}\n\nasync function migrateLocations() {\n  var names = {};\n  types.forEach(function(t){\n    DATA[t].owners.forEach(function(x){\n      if (x.location && !x.location_id) names[x.location.trim()] = true;\n    });\n    DATA[t].customers.forEach(function(x){\n      if (x.location && !x.location_id) names[x.location.trim()] = true;\n    });\n  });\n  var unique = Object.keys(names).filter(Boolean);\n  if (!unique.length) return;\n  for (var i = 0; i < unique.length; i++) {\n    var lid = await ensureLocation(unique[i]);\n    if (!lid) continue;\n    types.forEach(function(t){\n      DATA[t].owners.forEach(function(x){\n        if (x.location && x.location.trim() === unique[i] && !x.location_id) {\n          x.location_id = lid;\n          supabase.from(\'owners\').update({ location_id: lid }).eq(\'id\', x.id).then(function(){});\n        }\n      });\n      DATA[t].customers.forEach(function(x){\n        if (x.location && x.location.trim() === unique[i] && !x.location_id) {\n          x.location_id = lid;\n          supabase.from(\'customers\').update({ location_id: lid }).eq(\'id\', x.id).then(function(){});\n        }\n      });\n    });\n  }\n}\n\nfunction parseLocIds(item) {\n  if (!item || !item.location_id) return [];\n  if (Array.isArray(item.location_id)) return item.location_id;\n  try { var p = JSON.parse(item.location_id); if (Array.isArray(p)) return p; } catch(e){}\n  return [item.location_id];\n}\n\nfunction getLocationName(item) {\n  if (!item) return \'-\';\n  var ids = parseLocIds(item);\n  if (ids.length) {\n    var names = ids.map(function(id){ return window._LOCATIONS[id]; }).filter(Boolean);\n    if (names.length) return names.join(\', \');\n  }\n  return item.location || \'\';\n}\n\nfunction hasLocation(item) {\n  if (!item) return false;\n  if (item.location) return true;\n  var ids = parseLocIds(item);\n  return ids.length > 0 && ids.some(function(id){ return !!window._LOCATIONS[id]; });\n}\nfunction getFinishStatus(item) {\n  if (item.finish_status) return item.finish_status;\n  if (item.finished === true) return \'finished\';\n  if (item.finished === false) return \'unfinished\';\n  return \'unfinished\';\n}\nfunction finishBadge(s) {\n  if (s === \'finished\') return \'<span class=\"badge match\">✅ Finished</span>\';\n  if (s === \'both\') return \'<span class=\"badge both\">✅🔧 Both</span>\';\n  return \'<span class=\"badge nomatch\">🔧 Unfinished</span>\';\n}\n\nfunction getLocIds(hidden) {\n  if (!hidden || !hidden.value) return [];\n  try { return JSON.parse(hidden.value); } catch(e){}\n  return hidden.value ? [hidden.value] : [];\n}\n\nfunction setLocIds(hidden, ids) {\n  hidden.value = JSON.stringify(ids);\n}\n\nfunction renderTags(wrapper) {\n  var tagsEl = wrapper.querySelector(\'.ac-tags\');\n  if (!tagsEl) return;\n  var hidden = wrapper.querySelector(\'input[type=\"hidden\"]\');\n  var ids = getLocIds(hidden);\n  tagsEl.innerHTML = ids.map(function(id){\n    var name = window._LOCATIONS[id] || id;\n    return \'<span class=\"ac-tag\">\'+name+\'<button onclick=\"removeLocationTag(this,\'+id+\')\">✕</button></span>\';\n  }).join(\'\');\n}\n\nfunction removeLocationTag(btn, id) {\n  var wrapper = btn.closest(\'.ac-wrapper\');\n  if (!wrapper) return;\n  var hidden = wrapper.querySelector(\'input[type=\"hidden\"]\');\n  var ids = getLocIds(hidden).filter(function(x){ return x != id; });\n  setLocIds(hidden, ids);\n  renderTags(wrapper);\n}\n\nfunction setupAutocomplete(input, hiddenInput) {\n  var wrapper = input.closest(\'.ac-wrapper\');\n  if (!wrapper) return;\n  var isMulti = wrapper.getAttribute(\'data-multi\') === \'true\';\n  var dropdown = wrapper.querySelector(\'.ac-dropdown\');\n  input.addEventListener(\'input\', function(){\n    var q = input.value.toLowerCase().trim();\n    if (!q) { dropdown.style.display = \'none\'; if (!isMulti) hiddenInput.value = \'\'; return; }\n    var existing = getLocIds(hiddenInput);\n    var matches = window._LOCATIONS_ARR.filter(function(r){ return r.name.toLowerCase().includes(q) && existing.indexOf(String(r.id)) < 0; });\n    var html = \'\';\n    if (matches.length) {\n      html = matches.map(function(r){\n        return \'<div onclick=\"selectLocation(this,\\\'\'+r.id+\'\\\',\\\'\'+escAttr(r.name)+\'\\\')\">\'+r.name+\'</div>\';\n      }).join(\'\');\n    } else {\n      html = \'<div class=\"no-result\">No locations found</div>\';\n    }\n    html += \'<div class=\"ac-add\" onclick=\"addLocationFromAutocomplete(this)\" style=\"color:#1a3a5c;font-weight:600;border-top:1px solid #e0e0e0;\">➕ Add location</div>\';\n    dropdown.innerHTML = html;\n    dropdown.style.display = \'block\';\n  });\n  input.addEventListener(\'blur\', function(){\n    setTimeout(function(){ dropdown.style.display = \'none\'; }, 200);\n  });\n  input.addEventListener(\'focus\', function(){\n    if (input.value.trim()) input.dispatchEvent(new Event(\'input\'));\n  });\n  dropdown.addEventListener(\'mousedown\', function(e){ e.preventDefault(); });\n}\n\nfunction selectLocation(el, id, name) {\n  var wrapper = el.closest(\'.ac-wrapper\');\n  if (!wrapper) return;\n  var input = wrapper.querySelector(\'input[type=\"text\"]\') || wrapper.querySelector(\'input:not([type=\"hidden\"])\');\n  var hidden = wrapper.querySelector(\'input[type=\"hidden\"]\');\n  if (!input || !hidden) return;\n  var isMulti = wrapper.getAttribute(\'data-multi\') === \'true\';\n  if (isMulti) {\n    var ids = getLocIds(hidden);\n    if (ids.indexOf(String(id)) < 0) ids.push(String(id));\n    setLocIds(hidden, ids);\n    input.value = \'\';\n    renderTags(wrapper);\n  } else {\n    input.value = name;\n    hidden.value = id;\n  }\n  wrapper.querySelector(\'.ac-dropdown\').style.display = \'none\';\n  input.focus();\n}\n\nasync function addLocationFromAutocomplete(el) {\n  var wrapper = el.closest(\'.ac-wrapper\');\n  if (!wrapper) return;\n  var input = wrapper.querySelector(\'input[type=\"text\"]\') || wrapper.querySelector(\'input:not([type=\"hidden\"])\');\n  var hidden = wrapper.querySelector(\'input[type=\"hidden\"]\');\n  if (!input || !hidden) return;\n  var name = input.value.trim();\n  if (!name) return;\n  var id = await ensureLocation(name);\n  if (id) {\n    await loadLocations();\n    selectLocation(el, id, name);\n  }\n}\n\nfunction escAttr(s) { return String(s).replace(/&/g,\'&amp;\').replace(/\"/g,\'&quot;\').replace(/\'/g,\'&#39;\'); }\n\nasync function loadData() {\n  var hasCache = loadCachedData();\n  try {\n    var o = await supabase.from(\'owners\').select(\'*\').order(\'id\');\n    if (o.error) throw new Error(o.error.message);\n    var c = await supabase.from(\'customers\').select(\'*\').order(\'id\');\n    if (c.error) throw new Error(c.error.message);\n    types.forEach(function(t) {\n      DATA[t].owners = (o.data||[]).filter(function(x) { return x.type === t; });\n      DATA[t].customers = (c.data||[]).filter(function(x) { return x.type === t; });\n    });\n    await loadLocations();\n    await migrateLocations();\n    types.forEach(function(t) { renderTable(t, \'owners\'); renderTable(t, \'customers\'); });\n    document.querySelectorAll(\'.ac-wrapper\').forEach(function(w){\n      var inp = w.querySelector(\'input[type=\"text\"]\') || w.querySelector(\'input:not([type=\"hidden\"])\');\n      var hid = w.querySelector(\'input[type=\"hidden\"]\');\n      if (inp && hid) setupAutocomplete(inp, hid);\n    });\n    document.getElementById(\'loading-overlay\').style.display = \'none\';\n    saveDataCache();\n  } catch(e) {\n    if (!hasCache) {\n      var app = document.getElementById(\'app\');\n      if (app) app.innerHTML = \'<div class=\"card\" style=\"padding:30px;text-align:center;\"><h3 style=\"color:#c00;\">⚠️ خطأ</h3><p style=\"margin-top:10px;color:#555;font-size:14px;direction:ltr;\">\' + e.message + \'</p></div>\';\n    }\n  }\n}\n\nfunction uploadWithProgress(file, key, idx) {\n  return new Promise((resolve, reject) => {\n    const ext = file.name.split(\'.\').pop();\n    const fileName = Date.now() + \'-\' + Math.random().toString(36).slice(2) + \'.\' + ext;\n    const xhr = new XMLHttpRequest();\n    xhr.open(\'POST\', SUPABASE_URL + \'/storage/v1/object/uploads/\' + fileName);\n    xhr.setRequestHeader(\'apikey\', SUPABASE_ANON);\n    xhr.setRequestHeader(\'Authorization\', \'Bearer \' + SUPABASE_ANON);\n    xhr.setRequestHeader(\'Content-Type\', file.type);\n    xhr.upload.onprogress = e => {\n      if (e.lengthComputable) {\n        const pct = Math.round(e.loaded / e.total * 100);\n        const el = document.querySelector(\'.pr-item-\' + key + \'-\' + idx + \' .upload-progress p\');\n        if (el) el.textContent = pct + \'%\';\n        const bar = document.querySelector(\'.pr-item-\' + key + \'-\' + idx + \' .upload-progress .bar span\');\n        if (bar) bar.style.width = pct + \'%\';\n      }\n    };\n    xhr.onload = () => {\n      if (xhr.status >= 200 && xhr.status < 300) {\n        const { data: { publicUrl } } = supabase.storage.from(\'uploads\').getPublicUrl(fileName);\n        resolve({ type: file.type.startsWith(\'image/\') ? \'image\' : \'video\', data: publicUrl, name: file.name });\n      } else {\n        reject(new Error(xhr.status + \' \' + xhr.statusText));\n      }\n    };\n    xhr.onerror = () => reject(new Error(\'Network error\'));\n    xhr.send(file);\n  });\n}\n\nasync function handleUpload(input, type, cat) {\n  const key = type + \'-\' + cat;\n  if (!tempMedia[key]) tempMedia[key] = [];\n  const files = input.files || input;\n  if (!files || !files.length) return;\n  for (const file of Array.from(files)) {\n    const idx = tempMedia[key].length;\n    const isVideo = file.type.startsWith(\'video/\');\n    tempMedia[key].push({ type: isVideo ? \'video\' : \'image\', data: \'\', name: file.name, uploading: true });\n    showPreview(key);\n    try {\n      const result = await uploadWithProgress(file, key, idx);\n      tempMedia[key][idx] = result;\n    } catch (e) {\n      tempMedia[key][idx] = { type: file.type.startsWith(\'image/\') ? \'image\' : \'video\', data: \'\', name: file.name, error: e.message };\n    }\n    showPreview(key);\n  }\n  if (input.files) input.value = \'\';\n}\n\nfunction showPreview(key) {\n  const [type, cat] = key.split(\'-\');\n  const l = getLetter(type);\n  const s = cat === \'owner\' ? \'o\' : \'c\';\n  const el = document.getElementById(\'preview-\' + l + s);\n  if (!el) return;\n  el.innerHTML = (tempMedia[key]||[]).map((m,i) => {\n    if (m.uploading) {\n      return \'<div class=\"thumb pr-item-\' + key + \'-\' + i + \'\"><div class=\"upload-progress\"><p style=\"font-size:11px;font-weight:700;\">0%</p><div class=\"bar\"><span style=\"width:0%\"></span></div></div></div>\';\n    }\n    if (m.error) {\n      return \'<div class=\"thumb\" style=\"background:#ffe0e0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c00;\">Failed</div>\';\n    }\n    var delBtn = \'<button onclick=\"removeMedia(\\\'\'+key+\'\\\',\'+i+\')\" style=\"position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:none;background:#c0392b;color:#fff;font-size:12px;line-height:20px;text-align:center;cursor:pointer;padding:0;\">✕</button>\';\n    return m.type === \'image\'\n      ? \'<div class=\"thumb\" style=\"position:relative;\">\'+delBtn+\'<img src=\"\'+m.data+\'\" alt=\"\"></div>\'\n      : \'<div class=\"thumb\" style=\"position:relative;\">\'+delBtn+\'<div class=\"vid-icon\">🎬</div></div>\';\n  }).join(\'\');\n}\n\nfunction removeMedia(key, idx) {\n  if (!tempMedia[key]) return;\n  tempMedia[key].splice(idx, 1);\n  showPreview(key);\n}\n\n// Drag & drop for upload\ndocument.addEventListener(\'dragover\', e => {\n  const btn = e.target.closest(\'.upload-btn\');\n  if (btn) { e.preventDefault(); btn.classList.add(\'dragover\'); }\n});\ndocument.addEventListener(\'dragleave\', e => {\n  const btn = e.target.closest(\'.upload-btn\');\n  if (btn && !btn.contains(e.relatedTarget)) btn.classList.remove(\'dragover\');\n});\ndocument.addEventListener(\'drop\', e => {\n  const btn = e.target.closest(\'.upload-btn\');\n  if (!btn) return;\n  e.preventDefault();\n  btn.classList.remove(\'dragover\');\n  const type = btn.dataset.type;\n  const cat = btn.dataset.cat;\n  if (e.dataTransfer.files.length) {\n    handleUpload(e.dataTransfer.files, type, cat);\n  }\n});\n\nfunction mediaToHtml(media) {\n  if (!media || !media.length) return \'<div style=\"color:#bbb;\">-</div>\';\n  return \'<div class=\"media-thumbs\">\' + media.map((m,i) => {\n    const enc = encodeURIComponent(m.data);\n    if (m.type === \'image\') {\n      return \'<div style=\"cursor:pointer;\" onclick=\"openMedia(\\\'\'+enc+\'\\\',\\\'image\\\')\"><img src=\"\'+m.data+\'\" style=\"width:100%;height:100%;object-fit:cover;\"></div>\';\n    } else {\n      return \'<div style=\"cursor:pointer;\" onclick=\"openMedia(\\\'\'+enc+\'\\\',\\\'video\\\')\">🎬</div>\';\n    }\n  }).join(\'\') + \'</div>\';\n}\n\nfunction openMedia(encSrc, type) {\n  const src = decodeURIComponent(encSrc);\n  const overlay = document.createElement(\'div\');\n  overlay.className = \'modal-overlay\';\n  overlay.onclick = e => { if (e.target===overlay) overlay.remove(); };\n  const close = document.createElement(\'button\');\n  close.className = \'modal-close\'; close.textContent = \'✕\';\n  close.onclick = () => overlay.remove();\n  overlay.appendChild(close);\n  if (type === \'image\') {\n    const img = document.createElement(\'img\');\n    img.src = src; overlay.appendChild(img);\n  } else {\n    const vid = document.createElement(\'video\');\n    vid.src = src; vid.controls = true; vid.autoplay = true;\n    vid.style.width = \'90vw\'; vid.style.maxHeight = \'80vh\';\n    overlay.appendChild(vid);\n    const share = document.createElement(\'button\');\n    share.className = \'modal-share\';\n    share.textContent = \'📤 Share via WhatsApp\';\n    share.onclick = () => {\n      const wa = \'https://wa.me/?text=\' + encodeURIComponent(src);\n      window.open(wa, \'_blank\');\n    };\n    overlay.appendChild(share);\n  }\n  document.body.appendChild(overlay);\n}\n\n/* Main tabs */\ndocument.querySelectorAll(\'.main-tab\').forEach(el => {\n  el.addEventListener(\'click\', () => {\n    document.querySelectorAll(\'.main-tab\').forEach(x => x.classList.remove(\'active\'));\n    el.classList.add(\'active\');\n    const tab = el.dataset.tab;\n    types.forEach(t => document.getElementById(\'page-\'+t).classList.toggle(\'hidden\', t !== tab));\n    document.getElementById(\'page-report\').classList.toggle(\'hidden\', tab !== \'report\');\n    document.getElementById(\'page-matches\').classList.toggle(\'hidden\', tab !== \'matches\');\n    if (tab === \'matches\') renderMatches();\n  });\n});\n\n/* Sub tabs */\ndocument.querySelectorAll(\'.sub-tab\').forEach(el => {\n  el.addEventListener(\'click\', () => {\n    const parent = el.closest(\'.page-content\');\n    parent.querySelectorAll(\'.sub-tab\').forEach(x => x.classList.remove(\'active\'));\n    el.classList.add(\'active\');\n    const page = parent.id.replace(\'page-\',\'\');\n    const sub = el.dataset.sub;\n    parent.querySelectorAll(\'[id^=\"sub-\'+page+\'\"]\').forEach(x => x.classList.add(\'hidden\'));\n    document.getElementById(\'sub-\'+page+\'-\'+sub).classList.remove(\'hidden\');\n  });\n});\n\nfunction getLetter(type) { return typeLetters[type] || type[0]; }\n\nfunction extractNum(s) {\n  if (!s) return null;\n  const m = s.replace(/[,\\s]/g,\'\').match(/(\\d+)/);\n  return m ? parseFloat(m[1]) : null;\n}\n\nasync function addOwner(type) {\n  const l = getLetter(type);\n  const key = type + \'-owner\';\n  var locInput = document.querySelector(\'.f-\'+l+\'o-location\');\n  var locIdInput = document.querySelector(\'.f-\'+l+\'o-location-id\');\n  var locName = locInput ? locInput.value.trim() : \'\';\n  var locId = locIdInput ? locIdInput.value : \'\';\n  if (locName && !locId) locId = await ensureLocation(locName);\n  const obj = {\n    id: Date.now(),\n    type: type,\n    name: document.querySelector(\'.f-\'+l+\'o-name\').value.trim(),\n    phone: document.querySelector(\'.f-\'+l+\'o-phone\').value.trim(),\n    location: locName,\n    location_id: locId || null,\n    price: document.querySelector(\'.f-\'+l+\'o-price\').value.trim(),\n    area: document.querySelector(\'.f-\'+l+\'o-area\').value.trim(),\n    rent: type === \'shopsrent\' ? document.querySelector(\'.f-\'+l+\'o-rent\').value.trim() : \'\',\n    details: document.querySelector(\'.f-\'+l+\'o-details\').value.trim(),\n    media: tempMedia[key] || [],\n    finish_status: type === \'apartments\' ? (document.querySelector(\'[name=\"finish-\'+l+\'o\"]:checked\')||{}).value || \'unfinished\' : \'unfinished\',\n  };\n  delete tempMedia[key];\n  const pv = document.getElementById(\'preview-\'+l+\'o\');\n  if (pv) pv.innerHTML = \'\';\n  if (!obj.name) return alert(\'Name is required\');\n  const { error } = await supabase.from(\'owners\').insert(obj);\n  if (error) return alert(\'Error: \' + error.message);\n  DATA[type].owners.push(obj);\n  document.querySelectorAll(\'.f-\'+l+\'o-name, .f-\'+l+\'o-phone, .f-\'+l+\'o-location, .f-\'+l+\'o-price, .f-\'+l+\'o-area, .f-\'+l+\'o-details\' + (type === \'shopsrent\' ? \', .f-\'+l+\'o-rent\' : \'\')).forEach(x => x.value = \'\');\n  if (locIdInput) locIdInput.value = \'\';\n  if (type === \'apartments\') document.querySelector(\'[name=\"finish-\'+l+\'o\"][value=\"unfinished\"]\').checked = true;\n  renderTable(type, \'owners\');\n  generateMatchesForType(type);\n}\n\nfunction toggleBudgetMode(l, mode) {\n  document.getElementById(\'bf-\'+l).style.display = mode === \'fixed\' ? \'block\' : \'none\';\n  document.getElementById(\'br-\'+l).style.display = mode === \'range\' ? \'flex\' : \'none\';\n}\n\nfunction getBudgetInput(l) {\n  const mode = document.querySelector(\'[name=\"budget-type-\'+l+\'\"]:checked\');\n  if (!mode || mode.value === \'fixed\') return document.querySelector(\'.f-\'+l+\'c-budget\').value.trim();\n  var a = document.querySelector(\'.f-\'+l+\'c-budget-min\').value.trim();\n  var b = document.querySelector(\'.f-\'+l+\'c-budget-max\').value.trim();\n  if (a && b) {\n    var na = parseFloat(a.replace(/[^0-9]/g,\'\')), nb = parseFloat(b.replace(/[^0-9]/g,\'\'));\n    if (na > nb) return b + \' - \' + a;\n    return a + \' - \' + b;\n  }\n  return a || b;\n}\n\nfunction setBudgetInput(l, val) {\n  if (!val) { document.querySelector(\'.f-\'+l+\'c-budget\').value = \'\'; document.querySelector(\'.f-\'+l+\'c-budget-min\').value = \'\'; document.querySelector(\'.f-\'+l+\'c-budget-max\').value = \'\'; return; }\n  var parts = val.split(\'-\').map(function(s){ return s.trim(); }).filter(Boolean);\n  if (parts.length >= 2) {\n    document.querySelector(\'[name=\"budget-type-\'+l+\'\"][value=\"range\"]\').checked = true;\n    toggleBudgetMode(l, \'range\');\n    document.querySelector(\'.f-\'+l+\'c-budget-min\').value = parts[0];\n    document.querySelector(\'.f-\'+l+\'c-budget-max\').value = parts[1];\n  } else {\n    document.querySelector(\'[name=\"budget-type-\'+l+\'\"][value=\"fixed\"]\').checked = true;\n    toggleBudgetMode(l, \'fixed\');\n    document.querySelector(\'.f-\'+l+\'c-budget\').value = val;\n  }\n}\n\nfunction toggleAreaMode(l, mode) {\n  document.getElementById(\'af-\'+l).style.display = mode === \'fixed\' ? \'block\' : \'none\';\n  document.getElementById(\'ar-\'+l).style.display = mode === \'range\' ? \'flex\' : \'none\';\n}\n\nfunction getAreaInput(l) {\n  var mode = document.querySelector(\'[name=\"area-type-\'+l+\'\"]:checked\');\n  if (!mode || mode.value === \'fixed\') return document.querySelector(\'.f-\'+l+\'c-area\').value.trim();\n  var a = document.querySelector(\'.f-\'+l+\'c-area-min\').value.trim();\n  var b = document.querySelector(\'.f-\'+l+\'c-area-max\').value.trim();\n  if (a && b) {\n    var na = parseFloat(a.replace(/[^0-9]/g,\'\')), nb = parseFloat(b.replace(/[^0-9]/g,\'\'));\n    if (na > nb) return b + \' - \' + a;\n    return a + \' - \' + b;\n  }\n  return a || b;\n}\n\nfunction setAreaInput(l, val) {\n  if (!val) { document.querySelector(\'.f-\'+l+\'c-area\').value = \'\'; document.querySelector(\'.f-\'+l+\'c-area-min\').value = \'\'; document.querySelector(\'.f-\'+l+\'c-area-max\').value = \'\'; return; }\n  var parts = val.split(\'-\').map(function(s){ return s.trim(); }).filter(Boolean);\n  if (parts.length >= 2) {\n    document.querySelector(\'[name=\"area-type-\'+l+\'\"][value=\"range\"]\').checked = true;\n    toggleAreaMode(l, \'range\');\n    document.querySelector(\'.f-\'+l+\'c-area-min\').value = parts[0];\n    document.querySelector(\'.f-\'+l+\'c-area-max\').value = parts[1];\n  } else {\n    document.querySelector(\'[name=\"area-type-\'+l+\'\"][value=\"fixed\"]\').checked = true;\n    toggleAreaMode(l, \'fixed\');\n    document.querySelector(\'.f-\'+l+\'c-area\').value = val;\n  }\n}\n\nasync function addCustomer(type) {\n  const l = getLetter(type);\n  var locInput = document.querySelector(\'.f-\'+l+\'c-location\');\n  var locIdInput = document.querySelector(\'.f-\'+l+\'c-location-id\');\n  var locName = locInput ? locInput.value.trim() : \'\';\n  var locIds = getLocIds(locIdInput);\n  if (locName && !locIds.length) {\n    var nid = await ensureLocation(locName);\n    if (nid) locIds.push(String(nid));\n  }\n  const obj = {\n    id: Date.now(),\n    type: type,\n    name: document.querySelector(\'.f-\'+l+\'c-name\').value.trim(),\n    phone: document.querySelector(\'.f-\'+l+\'c-phone\').value.trim(),\n    need: document.querySelector(\'.f-\'+l+\'c-need\').value.trim(),\n    location: locName,\n    location_id: locIds.length ? JSON.stringify(locIds) : null,\n    budget: getBudgetInput(l),\n    area: getAreaInput(l),\n    rent: type === \'shopsrent\' ? document.querySelector(\'.f-\'+l+\'c-rent\').value.trim() : \'\',\n    finish_status: type === \'apartments\' ? (document.querySelector(\'[name=\"finish-\'+l+\'c\"]:checked\')||{}).value || \'unfinished\' : \'unfinished\',\n  };\n  if (!obj.name) return alert(\'Name is required\');\n  const { error } = await supabase.from(\'customers\').insert(obj);\n  if (error) return alert(\'Error: \' + error.message);\n  DATA[type].customers.push(obj);\n  document.querySelectorAll(\'.f-\'+l+\'c-name, .f-\'+l+\'c-phone, .f-\'+l+\'c-need, .f-\'+l+\'c-location, .f-\'+l+\'c-area\' + (type === \'shopsrent\' ? \', .f-\'+l+\'c-rent\' : \'\')).forEach(x => x.value = \'\');\n  if (locIdInput) { locIdInput.value = \'\'; renderTags(locIdInput.closest(\'.ac-wrapper\')); }\n  document.querySelector(\'.f-\'+l+\'c-budget\').value = \'\';\n  document.querySelector(\'.f-\'+l+\'c-budget-min\').value = \'\';\n  document.querySelector(\'.f-\'+l+\'c-budget-max\').value = \'\';\n  document.querySelector(\'[name=\"budget-type-\'+l+\'\"][value=\"fixed\"]\').checked = true;\n  toggleBudgetMode(l, \'fixed\');\n  document.querySelector(\'.f-\'+l+\'c-area-min\').value = \'\';\n  document.querySelector(\'.f-\'+l+\'c-area-max\').value = \'\';\n  document.querySelector(\'[name=\"area-type-\'+l+\'\"][value=\"fixed\"]\').checked = true;\n  toggleAreaMode(l, \'fixed\');\n  if (type === \'apartments\') document.querySelector(\'[name=\"finish-\'+l+\'c\"][value=\"unfinished\"]\').checked = true;\n  renderTable(type, \'customers\');\n  generateMatchesForType(type);\n}\n\nasync function delEntry(type, cat, id) {\n  const { error } = await supabase.from(cat).delete().eq(\'id\', id);\n  if (error) return alert(\'Error: \' + error.message);\n  DATA[type][cat] = DATA[type][cat].filter(x => x.id !== id);\n  renderTable(type, cat);\n  saveDataCache();\n}\n\n\nfunction renderMobileCards(type, cat, arr) {\n  const l = getLetter(type);\n  const s = cat === \'owners\' ? \'o\' : \'c\';\n  const container = document.getElementById(\'cards-\' + l + s);\n  if (!container) return;\n  if (!arr.length) {\n    container.innerHTML = \'<div class=\"mobile-card\" style=\"text-align:center;color:#888;\">No data</div>\';\n    return;\n  }\n  container.innerHTML = arr.map((item, i) => {\n    const rows = [];\n    rows.push(`<div class=\"row\"><span class=\"label\">Name</span><span class=\"value\">${item.name || \'-\'}</span></div>`);\n    rows.push(`<div class=\"row\"><span class=\"label\">Phone</span><span class=\"value\">${item.phone || \'-\'}</span></div>`);\n    if (hasLocation(item)) rows.push(`<div class=\"row\"><span class=\"label\">Location</span><span class=\"value\">${getLocationName(item)}</span></div>`);\n    if (cat === \'owners\') {\n      if (item.price) rows.push(`<div class=\"row\"><span class=\"label\">Price</span><span class=\"value\">${item.price}</span></div>`);\n      if (item.area) rows.push(`<div class=\"row\"><span class=\"label\">Area</span><span class=\"value\">${item.area}</span></div>`);\n      if (type === \'apartments\') rows.push(`<div class=\"row\"><span class=\"label\">Status</span><span class=\"value\">${finishBadge(getFinishStatus(item))}</span></div>`);\n      if (item.details) rows.push(`<div class=\"row\"><span class=\"label\">Details</span><span class=\"value\">${item.details}</span></div>`);\n    } else {\n      if (item.need) rows.push(`<div class=\"row\"><span class=\"label\">Need</span><span class=\"value\">${item.need}${type === \'apartments\' ? \' \' + finishBadge(getFinishStatus(item)) : \'\'}</span></div>`);\n      if (item.budget) rows.push(`<div class=\"row\"><span class=\"label\">Budget</span><span class=\"value\">${item.budget}</span></div>`);\n      if (item.area) rows.push(`<div class=\"row\"><span class=\"label\">Area</span><span class=\"value\">${item.area}</span></div>`);\n    }\n    const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\')}` : \'#\';\n    var findBtnMob = cat === \'customers\' ? `<button class=\"btn-sm match-find\" onclick=\"showCustomerMatches(\'${type}\',${item.id},this)\">Find Matches</button>` : `<button class=\"btn-sm match-find\" onclick=\"showOwnerMatches(\'${type}\',${item.id},this)\">Find Matches</button>`;\n    return `\n      <div class=\"mobile-card\">\n        <div class=\"title\">${i+1}. ${typeNames[type] || type}</div>\n        ${rows.join(\'\')}\n        <div class=\"actions\">\n          ${findBtnMob}\n          <button class=\"btn-sm edit\" onclick=\"editEntry(\'${type}\',\'${cat}\',${item.id},this)\">Edit</button>\n          <a href=\"${wa}\" target=\"_blank\" class=\"btn-sm whatsapp\">WhatsApp</a>\n          <button class=\"btn-sm del\" onclick=\"delEntry(\'${type}\',\'${cat}\',${item.id})\">Delete</button>\n        </div>\n      </div>\n    `;\n  }).join(\'\');\n}\n\nfunction renderTable(type, cat) {\n  const arr = DATA[type][cat];\n  const l = getLetter(type);\n  const s = cat === \'owners\' ? \'o\' : \'c\';\n  const tbody = document.getElementById(\'tbl-\'+l+s);\n  const count = document.getElementById(\'count-\'+l+s);\n  if (!tbody) return;\n  count.textContent = arr.length;\n  let cols = cat === \'owners\' ? 9 : 8;\n  if (type === \'shopsrent\') cols++;\n  if (!arr.length) { tbody.innerHTML = \'<tr><td colspan=\"\' + cols + \'\" style=\"text-align:center;color:#aaa;\">No data</td></tr>\'; return; }\n  const fields = cat === \'owners\'\n    ? (type === \'shopsrent\' ? [\'name\',\'phone\',\'location\',\'price\',\'area\',\'rent\',\'details\'] : [\'name\',\'phone\',\'location\',\'price\',\'area\',\'details\'])\n    : (type === \'shopsrent\' ? [\'name\',\'phone\',\'need\',\'location\',\'budget\',\'area\',\'rent\'] : [\'name\',\'phone\',\'need\',\'location\',\'budget\',\'area\']);\n  renderMobileCards(type, cat, arr);\n  tbody.innerHTML = arr.map((item, i) => {\n    const cells = fields.map(f => {\n      let val = f === \'location\' ? (getLocationName(item) || \'-\') : (item[f] || \'-\');\n      if (f === \'details\') {\n        var fin = type === \'apartments\' ? finishBadge(getFinishStatus(item)) + \' \' : \'\';\n        val = fin + val.replace(/\\n/g, \'<br>\');\n      }\n      if (f === \'need\' && type === \'apartments\') {\n        val = finishBadge(getFinishStatus(item)) + \' \' + val;\n      }\n      return \'<td style=\"white-space:pre-wrap;\">\' + val + \'</td>\';\n    }).join(\'\');\n    const media = cat === \'owners\' ? \'<td>\' + mediaToHtml(item.media) + \'</td>\' : \'\';\n    const wa = \'https://wa.me/\' + item.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n    var findBtn = cat === \'customers\' ? \'<button class=\"btn-sm match-find\" onclick=\"showCustomerMatches(\\\'\'+type+\'\\\',\'+item.id+\',this)\">Find Matches</button>\' : \'<button class=\"btn-sm match-find\" onclick=\"showOwnerMatches(\\\'\'+type+\'\\\',\'+item.id+\',this)\">Find Matches</button>\';\n    return `<tr><td>${i+1}</td>${cells}${media}<td class=\"actions\">${findBtn}<button class=\"btn-sm edit\" onclick=\"editEntry(\'${type}\',\'${cat}\',${item.id},this)\">Edit</button><a href=\"${wa}\" target=\"_blank\" class=\"btn-sm whatsapp\">WhatsApp</a><button class=\"btn-sm del\" onclick=\"delEntry(\'${type}\',\'${cat}\',${item.id})\">Delete</button></td></tr>`;\n  }).join(\'\');\n}\n\nfunction esc(s) { return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\').replace(/\"/g,\'&quot;\').replace(/\'/g,\'&#39;\'); }\n\nfunction editEntry(type, cat, id, el) {\n  const item = DATA[type][cat].find(x => x.id === id);\n  if (!item) return;\n  const existing = document.querySelector(\'.inline-edit[data-id=\"\'+id+\'\"]\');\n  if (existing) { existing.remove(); return; }\n  const parent = el ? (el.closest(\'tr\') || el.closest(\'.mobile-card\')) : null;\n  if (!parent) return;\n  const isOwner = cat === \'owners\';\n  const isSR = type === \'shopsrent\';\n  const cols = parent.tagName === \'TR\' ? (parent.querySelectorAll(\'td\').length || 9) : null;\n  var html = \'<div class=\"inline-edit\" data-id=\"\'+id+\'\" style=\"background:#f7f9fc;padding:15px;border-radius:8px;margin:6px 0;\">\';\n  html += \'<div style=\"display:flex;flex-wrap:wrap;gap:10px;\">\';\n  html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Name</label><input class=\"ie-name\" value=\"\'+esc(item.name)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n  html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Phone</label><input class=\"ie-phone\" value=\"\'+esc(item.phone)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n  if (isOwner) {\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Location</label><div class=\"ac-wrapper\"><input class=\"ie-location\" value=\"\'+esc(getLocationName(item))+\'\" autocomplete=\"off\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"><input type=\"hidden\" class=\"ie-location-id\" value=\"\'+(item.location_id||\'\')+\'\"><div class=\"ac-dropdown\"></div></div></div>\';\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Price</label><input class=\"ie-price\" value=\"\'+esc(item.price)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Area</label><input class=\"ie-area\" value=\"\'+esc(item.area)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    if (isSR) html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Rent</label><input class=\"ie-rent\" value=\"\'+esc(item.rent)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    if (type===\'apartments\') html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Status</label><div style=\"display:flex;gap:12px;flex-wrap:wrap;\"><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-f-\'+id+\'\" value=\"unfinished\"\'+(getFinishStatus(item)===\'unfinished\'?\' checked\':\'\')+\'> 🔧 Unfinished</label><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-f-\'+id+\'\" value=\"finished\"\'+(getFinishStatus(item)===\'finished\'?\' checked\':\'\')+\'> ✅ Finished</label><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-f-\'+id+\'\" value=\"both\"\'+(getFinishStatus(item)===\'both\'?\' checked\':\'\')+\'> ✅🔧 Both</label></div></div>\';\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Details</label><textarea class=\"ie-details\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;min-height:50px;\">\'+esc(item.details)+\'</textarea></div>\';\n  } else {\n    var curBudget = item.budget||\'\', curArea = item.area||\'\';\n    var bRange = curBudget.indexOf(\' - \') > 0;\n    var aRange = curArea.indexOf(\' - \') > 0;\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Need</label><textarea class=\"ie-need\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;min-height:50px;\">\'+esc(item.need)+\'</textarea></div>\';\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Location</label><div class=\"ac-wrapper\" data-multi=\"true\"><div class=\"ac-tags\"></div><input class=\"ie-location\" value=\"\" placeholder=\"Type to search...\" autocomplete=\"off\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"><input type=\"hidden\" class=\"ie-location-id\" value=\"\'+esc(JSON.stringify(parseLocIds(item)))+\'\"><div class=\"ac-dropdown\"></div></div></div>\';\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Budget</label>\';\n    html += \'<div style=\"display:flex;gap:10px;margin-bottom:4px;\"><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-bt-\'+id+\'\" value=\"fixed\"\'+(bRange?\'\':\' checked\')+\' onchange=\"document.getElementById(\\\'ie-bf-\'+id+\'\\\').style.display=\\\'block\\\';document.getElementById(\\\'ie-br-\'+id+\'\\\').style.display=\\\'none\\\'\"> Fixed</label><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-bt-\'+id+\'\" value=\"range\"\'+(bRange?\' checked\':\'\')+\' onchange=\"document.getElementById(\\\'ie-bf-\'+id+\'\\\').style.display=\\\'none\\\';document.getElementById(\\\'ie-br-\'+id+\'\\\').style.display=\\\'flex\\\'\"> Range</label></div>\';\n    if (bRange) {\n      var bParts = curBudget.split(\' - \').map(function(s){return s.trim();});\n      html += \'<div id=\"ie-bf-\'+id+\'\" style=\"display:none\"><input class=\"ie-budget\" value=\"\'+esc(bParts[0]||\'\')+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n      html += \'<div id=\"ie-br-\'+id+\'\" style=\"display:flex;gap:6px;\"><input class=\"ie-budget-min\" value=\"\'+esc(bParts[0]||\'\')+\'\" placeholder=\"From\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"><input class=\"ie-budget-max\" value=\"\'+esc(bParts[1]||\'\')+\'\" placeholder=\"To\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    } else {\n      html += \'<div id=\"ie-bf-\'+id+\'\"><input class=\"ie-budget\" value=\"\'+esc(curBudget)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n      html += \'<div id=\"ie-br-\'+id+\'\" style=\"display:none;gap:6px;\"><input class=\"ie-budget-min\" placeholder=\"From\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"><input class=\"ie-budget-max\" placeholder=\"To\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    }\n    html += \'</div>\';\n    html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Area</label><div style=\"display:flex;gap:10px;margin-bottom:4px;\"><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-at-\'+id+\'\" value=\"fixed\"\'+(aRange?\'\':\' checked\')+\' onchange=\"document.getElementById(\\\'ie-af-\'+id+\'\\\').style.display=\\\'block\\\';document.getElementById(\\\'ie-ar-\'+id+\'\\\').style.display=\\\'none\\\'\"> Fixed</label><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-at-\'+id+\'\" value=\"range\"\'+(aRange?\' checked\':\'\')+\' onchange=\"document.getElementById(\\\'ie-af-\'+id+\'\\\').style.display=\\\'none\\\';document.getElementById(\\\'ie-ar-\'+id+\'\\\').style.display=\\\'flex\\\'\"> Range</label></div>\';\n    if (aRange) {\n      var aParts = curArea.split(\' - \').map(function(s){return s.trim();});\n      html += \'<div id=\"ie-af-\'+id+\'\" style=\"display:none\"><input class=\"ie-area\" value=\"\'+esc(aParts[0]||\'\')+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n      html += \'<div id=\"ie-ar-\'+id+\'\" style=\"display:flex;gap:6px;\"><input class=\"ie-area-min\" value=\"\'+esc(aParts[0]||\'\')+\'\" placeholder=\"From\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"><input class=\"ie-area-max\" value=\"\'+esc(aParts[1]||\'\')+\'\" placeholder=\"To\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    } else {\n      html += \'<div id=\"ie-af-\'+id+\'\"><input class=\"ie-area\" value=\"\'+esc(curArea)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n      html += \'<div id=\"ie-ar-\'+id+\'\" style=\"display:none;gap:6px;\"><input class=\"ie-area-min\" placeholder=\"From\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"><input class=\"ie-area-max\" placeholder=\"To\" style=\"flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n    }\n    html += \'</div>\';\n    if (type===\'apartments\') html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Status</label><div style=\"display:flex;gap:12px;flex-wrap:wrap;\"><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-f-\'+id+\'\" value=\"unfinished\"\'+(getFinishStatus(item)===\'unfinished\'?\' checked\':\'\')+\'> 🔧 Unfinished</label><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-f-\'+id+\'\" value=\"finished\"\'+(getFinishStatus(item)===\'finished\'?\' checked\':\'\')+\'> ✅ Finished</label><label style=\"font-size:14px;cursor:pointer;\"><input type=\"radio\" name=\"ie-f-\'+id+\'\" value=\"both\"\'+(getFinishStatus(item)===\'both\'?\' checked\':\'\')+\'> ✅🔧 Both</label></div></div>\';\n    if (isSR) html += \'<div style=\"width:100%;\"><label style=\"font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;\">Rent</label><input class=\"ie-rent\" value=\"\'+esc(item.rent)+\'\" style=\"width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;\"></div>\';\n  }\n  html += \'</div><div style=\"display:flex;gap:8px;margin-top:6px;\"><button class=\"btn btn-primary\" style=\"padding:8px 18px;font-size:14px;\" onclick=\"saveInlineEdit(\\\'\'+type+\'\\\',\\\'\'+cat+\'\\\',\'+id+\')\">💾 Save</button><button class=\"btn\" style=\"padding:8px 18px;font-size:14px;background:#ddd;\" onclick=\"this.closest(\\\'.inline-edit\\\').remove()\">Cancel</button></div></div>\';\n  if (parent.tagName === \'TR\') {\n    var tr = document.createElement(\'tr\'); tr.className = \'inline-edit\'; tr.setAttribute(\'data-id\',id);\n    var td = document.createElement(\'td\'); td.colSpan = cols; td.innerHTML = html; tr.appendChild(td);\n    parent.parentNode.insertBefore(tr, parent.nextSibling);\n  } else {\n    var wrap = document.createElement(\'div\'); wrap.innerHTML = html; wrap.className = \'inline-edit\'; wrap.setAttribute(\'data-id\',id);\n    parent.parentNode.insertBefore(wrap, parent.nextSibling);\n  }\n  setTimeout(function(){var ie=document.querySelector(\'.inline-edit[data-id=\"\'+id+\'\"]\');if(ie)ie.scrollIntoView({block:\'nearest\',behavior:\'smooth\'});},50);\n  // Initialize autocomplete for the new inline edit\n  var newCon = document.querySelector(\'.inline-edit[data-id=\"\'+id+\'\"]\');\n  if (newCon) {\n    var w = newCon.querySelector(\'.ac-wrapper\');\n    if (w) {\n      var inp = w.querySelector(\'input[type=\"text\"]\') || w.querySelector(\'input:not([type=\"hidden\"])\');\n      var hid = w.querySelector(\'input[type=\"hidden\"]\');\n      if (inp && hid) { setupAutocomplete(inp, hid); renderTags(w); }\n    }\n  }\n}\n\nasync function saveInlineEdit(type, cat, id) {\n  const item = DATA[type][cat].find(x => x.id === id);\n  if (!item) return;\n  const con = document.querySelector(\'.inline-edit[data-id=\"\'+id+\'\"]\');\n  if (!con) return;\n  const isOwner = cat === \'owners\';\n  var locIdEl = con.querySelector(\'.ie-location-id\');\n  var locName = con.querySelector(\'.ie-location\').value.trim();\n  if (isOwner) {\n    var locId = locIdEl ? locIdEl.value : \'\';\n    if (locName && !locId) locId = await ensureLocation(locName);\n    item.name = con.querySelector(\'.ie-name\').value.trim();\n    item.phone = con.querySelector(\'.ie-phone\').value.trim();\n    item.location = locName;\n    item.location_id = locId || null;\n    item.price = con.querySelector(\'.ie-price\').value.trim();\n    item.area = con.querySelector(\'.ie-area\').value.trim();\n    if (type===\'shopsrent\') item.rent = con.querySelector(\'.ie-rent\').value.trim();\n    item.details = con.querySelector(\'.ie-details\').value.trim();\n    if (type===\'apartments\') item.finish_status = (document.querySelector(\'[name=\"ie-f-\'+id+\'\"]:checked\')||{}).value || \'unfinished\';\n  } else {\n    item.name = con.querySelector(\'.ie-name\').value.trim();\n    item.phone = con.querySelector(\'.ie-phone\').value.trim();\n    item.need = con.querySelector(\'.ie-need\').value.trim();\n    item.location = locName;\n    var cLocIds = locIdEl ? getLocIds(locIdEl) : [];\n    if (locName && !cLocIds.length) {\n      var newId = await ensureLocation(locName);\n      if (newId) cLocIds.push(String(newId));\n    }\n    item.location_id = cLocIds.length ? JSON.stringify(cLocIds) : null;\n    var modeEl = document.querySelector(\'[name=\"ie-bt-\'+id+\'\"]:checked\');\n    if (modeEl && modeEl.value === \'range\') {\n      var mn = con.querySelector(\'.ie-budget-min\').value.trim();\n      var mx = con.querySelector(\'.ie-budget-max\').value.trim();\n      item.budget = mn && mx ? mn + \' - \' + mx : (mn || mx);\n    } else {\n      item.budget = con.querySelector(\'.ie-budget\').value.trim();\n    }\n    var areaModeEl = document.querySelector(\'[name=\"ie-at-\'+id+\'\"]:checked\');\n    if (areaModeEl && areaModeEl.value === \'range\') {\n      var amn = con.querySelector(\'.ie-area-min\').value.trim();\n      var amx = con.querySelector(\'.ie-area-max\').value.trim();\n      item.area = amn && amx ? amn + \' - \' + amx : (amn || amx);\n    } else {\n      item.area = con.querySelector(\'.ie-area\').value.trim();\n    }\n    if (type===\'shopsrent\') item.rent = con.querySelector(\'.ie-rent\').value.trim();\n    if (type===\'apartments\') item.finish_status = (document.querySelector(\'[name=\"ie-f-\'+id+\'\"]:checked\')||{}).value || \'unfinished\';\n  }\n  const { error } = await supabase.from(cat).update(item).eq(\'id\', item.id);\n  if (error) return alert(\'Error: \' + error.message);\n  con.remove();\n  renderTable(type, cat);\n  generateMatchesForType(type);\n}\n\nfunction filterTable(type, cat) {\n  const l = getLetter(type);\n  const s = cat === \'owners\' ? \'o\' : \'c\';\n  const input = document.querySelector(\'#sub-\'+type+\'-\'+cat+\' .search-row input\');\n  if (!input) return;\n  const q = input.value.toLowerCase();\n  const arr = DATA[type][cat];\n  const tbody = document.getElementById(\'tbl-\'+l+s);\n  const filtered = arr.filter(x => x.name.toLowerCase().includes(q) || x.phone.includes(q) || getLocationName(x).toLowerCase().includes(q) || (x.details||\'\').toLowerCase().includes(q) || (x.area||\'\').toLowerCase().includes(q) || (x.rent||\'\').toLowerCase().includes(q));\n  const fields = cat === \'owners\'\n    ? (type === \'shopsrent\' ? [\'name\',\'phone\',\'location\',\'price\',\'area\',\'rent\',\'details\'] : [\'name\',\'phone\',\'location\',\'price\',\'area\',\'details\'])\n    : (type === \'shopsrent\' ? [\'name\',\'phone\',\'need\',\'location\',\'budget\',\'area\',\'rent\'] : [\'name\',\'phone\',\'need\',\'location\',\'budget\',\'area\']);\n  let cols = cat === \'owners\' ? 9 : 8;\n  if (type === \'shopsrent\') cols++;\n  if (!filtered.length) { tbody.innerHTML = \'<tr><td colspan=\"\' + cols + \'\" style=\"text-align:center;color:#aaa;\">No results</td></tr>\'; return; }\n  tbody.innerHTML = filtered.map((item, i) => {\n    const cells = fields.map(f => {\n      let val = f === \'location\' ? (getLocationName(item) || \'-\') : (item[f] || \'-\');\n      if (f === \'details\') {\n        var fin = type === \'apartments\' ? finishBadge(getFinishStatus(item)) + \' \' : \'\';\n        val = fin + val.replace(/\\n/g, \'<br>\');\n      }\n      if (f === \'need\' && type === \'apartments\') {\n        val = finishBadge(getFinishStatus(item)) + \' \' + val;\n      }\n      return \'<td style=\"white-space:pre-wrap;\">\' + val + \'</td>\';\n    }).join(\'\');\n    const media = cat === \'owners\' ? \'<td>\' + mediaToHtml(item.media) + \'</td>\' : \'\';\n    const wa = \'https://wa.me/\' + item.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n    var findBtn = cat === \'customers\' ? \'<button class=\"btn-sm match-find\" onclick=\"showCustomerMatches(\\\'\'+type+\'\\\',\'+item.id+\',this)\">Find Matches</button>\' : \'<button class=\"btn-sm match-find\" onclick=\"showOwnerMatches(\\\'\'+type+\'\\\',\'+item.id+\',this)\">Find Matches</button>\';\n    return `<tr><td>${i+1}</td>${cells}${media}<td class=\"actions\">${findBtn}<button class=\"btn-sm edit\" onclick=\"editEntry(\'${type}\',\'${cat}\',${item.id},this)\">Edit</button><a href=\"${wa}\" target=\"_blank\" class=\"btn-sm whatsapp\">WhatsApp</a><button class=\"btn-sm del\" onclick=\"delEntry(\'${type}\',\'${cat}\',${item.id})\">Delete</button></td></tr>`;\n  }).join(\'\');\n}\n\n/* ==================== RENDERMATCHES ==================== */\n\nfunction generateReport() {\n  const type = document.getElementById(\'report-type\').value;\n  const cat = document.getElementById(\'report-cat\').value;\n  const fromDate = document.getElementById(\'report-from\').value;\n  const toDate = document.getElementById(\'report-to\').value;\n  const targetTypes = type === \'all\' ? types : [type];\n  const targetCats = cat === \'all\' ? [\'owners\',\'customers\'] : [cat];\n\n  const fromTs = fromDate ? new Date(fromDate).setHours(0,0,0,0) : 0;\n  const toTs = toDate ? new Date(toDate).setHours(23,59,59,999) : Infinity;\n\n  let html = \'<html><head><meta charset=\"utf-8\"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:\"Cairo\",\"Inter\",Arial;font-size:13px}th,td{border:1px solid #999;padding:8px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:\"Cairo\",\"Inter\",Arial}\'\n  + \'/* Mobile cards */\'\n  + \'.mobile-cards{display:none;}\'\n  + \'.mobile-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);}\'\n  + \'.mobile-card .title{font-weight:700;color:#1a3a5c;margin-bottom:8px;display:flex;align-items:center;gap:6px;}\'\n  + \'.mobile-card .row{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;font-size:13px;}\'\n  + \'.mobile-card .label{color:#666;min-width:70px;}\'\n  + \'.mobile-card .value{font-weight:600;text-align:left;flex:1;}\'\n  + \'.mobile-card .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}\'\n  + \'@media (max-width:768px){body{padding:10px;}.header{flex-direction:column;align-items:flex-start;gap:10px;padding:16px;}.main-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;}.main-tab{flex:0 0 auto;padding:8px 16px;font-size:13px;}.sub-tabs{width:100%;justify-content:space-between;}.sub-tab{flex:1;text-align:center;}.form-row{flex-direction:column;}.table-wrap{overflow:visible;}.table-wrap table{display:none;}.mobile-cards{display:block;}}\'\n  + \'</style></head><body>\';\n  html += \'<h1>Real Estate Management Report</h1>\';\n  html += \'<p>Generated: \' + new Date().toLocaleString(\'en-EG\') + \'</p>\';\n  if (fromDate || toDate) html += \'<p>Date range: \' + (fromDate || \'∞\') + \' → \' + (toDate || \'∞\') + \'</p>\';\n\n  targetTypes.forEach(t => {\n    targetCats.forEach(c => {\n      let arr = DATA[t][c].filter(item => item.id >= fromTs && item.id <= toTs);\n      if (!arr.length) return;\n      html += \'<h2>\' + typeNames[t] + \' - \' + (c === \'owners\' ? \'Owners\' : \'Clients\') + \' (\' + arr.length + \')</h2>\';\n      html += \'<table><thead><tr>\';\n      if (c === \'owners\') {\n        html += \'<th>#</th><th>Name</th><th>Phone</th><th>Location</th><th>Price</th><th>Area</th>\' + (t === \'shopsrent\' ? \'<th>Rent</th>\' : \'\') + \'<th>Details</th>\';\n      } else {\n        html += \'<th>#</th><th>Name</th><th>Phone</th><th>Requirement</th><th>Location</th><th>Budget</th><th>Area</th>\' + (t === \'shopsrent\' ? \'<th>Rent</th>\' : \'\');\n      }\n      html += \'</tr></thead><tbody>\';\n      arr.forEach((item, i) => {\n        html += \'<tr>\';\n        html += \'<td>\' + (i + 1) + \'</td>\';\n        html += \'<td>\' + (item.name || \'-\') + \'</td>\';\n        html += \'<td>\' + (item.phone || \'-\') + \'</td>\';\n        if (c === \'owners\') {\n          html += \'<td>\' + (getLocationName(item) || \'-\') + \'</td>\';\n          html += \'<td>\' + (item.price || \'-\') + \'</td>\';\n          html += \'<td>\' + (item.area || \'-\') + \'</td>\';\n          if (t === \'shopsrent\') html += \'<td>\' + (item.rent || \'-\') + \'</td>\';\n          html += \'<td>\' + (item.details || \'-\') + \'</td>\';\n        } else {\n          html += \'<td>\' + (item.need || \'-\') + \'</td>\';\n          html += \'<td>\' + (getLocationName(item) || \'-\') + \'</td>\';\n          html += \'<td>\' + (item.budget || \'-\') + \'</td>\';\n          html += \'<td>\' + (item.area || \'-\') + \'</td>\';\n          if (t === \'shopsrent\') html += \'<td>\' + (item.rent || \'-\') + \'</td>\';\n        }\n        html += \'</tr>\';\n      });\n      html += \'</tbody></table><br>\';\n    });\n  });\n\n  html += \'</body></html>\';\n  const blob = new Blob([html], { type: \'application/msword\' });\n  const a = document.createElement(\'a\');\n  a.href = URL.createObjectURL(blob);\n  a.download = \'real_estate_report.doc\';\n  a.click();\n  URL.revokeObjectURL(a.href);\n}\n\nfunction toggleForm(btn) {\n  const form = btn.nextElementSibling;\n  form.classList.toggle(\'hidden\');\n  btn.textContent = form.classList.contains(\'hidden\') ? btn.textContent.replace(\'✕ \', \'➕ \') : btn.textContent.replace(\'➕ \', \'✕ \');\n  if (!form.classList.contains(\'hidden\')) {\n    const saveBtn = form.querySelector(\'.btn-primary\');\n    const isEdit = saveBtn && saveBtn.textContent.includes(\'Save Changes\');\n    if (!isEdit) form.querySelectorAll(\'input, textarea\').forEach(el => el.value = \'\');\n  }\n}\n\n\n\n/* ==================== MATCHES ENGINE ==================== */\n\nfunction getNum(v) { return parseFloat(String(v||\'\').replace(/[^0-9.]/g,\'\')) || 0; }\n\nfunction calcMatchScore(owner, customer) {\n  var score = 0;\n  // Price (up to 35 pts)\n  var owPrice = getNum(owner.price);\n  var cuRaw = (customer.budget||\'\').trim();\n  var parts = cuRaw.split(\' - \').map(function(s){ return getNum(s); }).filter(Boolean);\n  if (owPrice && parts.length) {\n    if (parts.length >= 2 && parts[0] && parts[1]) {\n      var minB = parts[0], maxB = parts[1];\n      if (owPrice <= maxB) { score += 35; }\n      else { var over = owPrice - maxB; score += Math.round(35 * Math.max(0, 1 - over / 200000)); }\n    } else if (parts[0]) {\n      var budget = parts[0], tol = budget * 0.15, diff = Math.abs(owPrice - budget);\n      if (diff <= tol) score += Math.round(35 * (1 - diff / tol));\n    }\n  }\n  // Finish status (up to 25 pts)\n  var owFinish = getFinishStatus(owner);\n  var cuFinish = getFinishStatus(customer);\n  if (owFinish && cuFinish && cuFinish !== \'unfinished\') {\n    if (cuFinish === \'both\' || owFinish === cuFinish || owFinish === \'both\') {\n      score += 25;\n    }\n  } else if (owFinish && cuFinish && cuFinish === \'unfinished\') {\n    if (owFinish === \'unfinished\' || owFinish === \'both\') {\n      score += 25;\n    }\n  }\n  // Location (up to 20 pts)\n  if (owner.location_id && customer.location_id) {\n    var oLoc = String(owner.location_id);\n    var cIds = parseLocIds(customer);\n    if (cIds.indexOf(oLoc) >= 0) { score += 20; }\n    else if (cIds.length) {\n      var owLoc = (owner.location||getLocationName(owner)||\'\').toLowerCase(), cuLoc = (customer.location||getLocationName(customer)||\'\').toLowerCase();\n      if (owLoc && cuLoc) {\n        var owP = owLoc.split(/[\\s\\/\\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\\s\\/\\-،,]+/).filter(Boolean);\n        var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });\n        if (common.length) score += Math.min(20, common.length * 10);\n        else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;\n      }\n    }\n  } else {\n    var owLoc = (owner.location||getLocationName(owner)||\'\').toLowerCase(), cuLoc = (customer.location||getLocationName(customer)||\'\').toLowerCase();\n    if (owLoc && cuLoc) {\n      var owP = owLoc.split(/[\\s\\/\\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\\s\\/\\-،,]+/).filter(Boolean);\n      var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });\n      if (common.length) score += Math.min(20, common.length * 10);\n      else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;\n    }\n  }\n  // Area (up to 20 pts)\n  var owArea = getNum(owner.area);\n  var cuRawArea = (customer.area||\'\').trim();\n  if (owArea && cuRawArea) {\n    var aParts = cuRawArea.split(\' - \').map(function(s){ return getNum(s); }).filter(Boolean);\n    if (aParts.length >= 2 && aParts[0] && aParts[1]) {\n      var minA = aParts[0], maxA = aParts[1];\n      if (owArea >= minA && owArea <= maxA) { score += 20; }\n      else {\n        var dist = Math.min(Math.abs(owArea - minA), Math.abs(owArea - maxA));\n        score += Math.round(20 * Math.max(0, 1 - dist / Math.max(maxA, 1)));\n      }\n    } else if (aParts[0]) {\n      var cuArea = aParts[0];\n      var maxA = Math.max(owArea, cuArea);\n      score += Math.round(20 * Math.max(0, 1 - Math.abs(owArea - cuArea) / maxA * 2));\n    }\n  }\n  if (score < 1) score = 0;\n  return score;\n}\n\nfunction generateMatchesForType(type) {\n  if (!window._MATCHES) window._MATCHES = {};\n  var owners = DATA[type].owners, customers = DATA[type].customers;\n  var list = [];\n  owners.forEach(function(ow) {\n    customers.forEach(function(cu) {\n      var score = calcMatchScore(ow, cu);\n      if (score < 1) return;\n      list.push({ type: type, ownerId: ow.id, customerId: cu.id, score: score, sent: false, hidden: false });\n    });\n  });\n  list.sort(function(a,b){ return b.score - a.score; });\n  window._MATCHES[type] = list;\n  try { localStorage.setItem(\'_matches\', JSON.stringify(window._MATCHES)); } catch(e){}\n}\n\nfunction generateAllMatches(type) {\n  if (!window._MATCHES) window._MATCHES = {};\n  if (type) {   generateMatchesForType(type);\n  saveDataCache();\n}\n\n  else { types.forEach(function(t){ generateMatchesForType(t); }); }\n  renderMatches();\n}\n\nfunction getMatchKey(m) { return m.type+\'-\'+m.ownerId+\'-\'+m.customerId; }\n\nfunction showCustomerMatches(type, customerId, btn) {\n  var customer = DATA[type].customers.find(function(x){ return x.id === customerId; });\n  if (!customer) return;\n  var owners = DATA[type].owners;\n  var matches = [];\n  owners.forEach(function(ow){\n    var score = calcMatchScore(ow, customer);\n    if (score < 1) return;\n    matches.push({ owner: ow, score: score });\n  });\n  matches.sort(function(a,b){ return b.score - a.score; });\n  var tableWrap = btn.closest(\'.table-wrap\') || btn.closest(\'.mobile-cards\');\n  var card = btn.closest(\'.card\');\n  if (!card) return;\n  var existing = card.querySelector(\'.customer-matches\');\n  if (existing) { existing.remove(); return; }\n  var div = document.createElement(\'div\');\n  div.className = \'customer-matches\';\n  if (!matches.length) {\n    div.innerHTML = \'<div class=\"match-count\">No matches found for this customer.</div>\';\n    card.appendChild(div);\n    return;\n  }\n  div.innerHTML = \'<div class=\"match-count\">\' + matches.length + \' match(s) found:</div>\'\n    + matches.map(function(m){\n      var ow = m.owner;\n      var waO = \'https://wa.me/\' + ow.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n      var waC = \'https://wa.me/\' + customer.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n      var sendMsg = \'عقار متاح: \' + typeNames[type] + \'\\nالموقع: \' + (getLocationName(ow)||\'-\') + \'\\nالسعر: \' + (ow.price||\'-\') + \'\\nالمساحة: \' + (ow.area||\'-\') + (ow.rent ? \'\\nالإيجار: \' + ow.rent : \'\') + \'\\nالتفاصيل: \' + (ow.details||\'-\');\n      var waSend = \'https://wa.me/\' + customer.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\') + \'?text=\' + encodeURIComponent(sendMsg);\n      return \'<div class=\"match-card\" style=\"margin-bottom:8px;padding:12px;\">\'\n        + \'<div class=\"header-match\" style=\"margin-bottom:6px;\"><div><span class=\"percent\" style=\"font-size:16px;\">\'+m.score+\'%</span> Match</div>\'\n        + \'<button onclick=\"this.closest(\\\'.match-card\\\').remove()\" style=\"background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;\">✕</button></div>\'\n        + \'<div style=\"margin:6px 0;line-height:1.5;font-size:13px;\">\'\n        + \'<span class=\"match-badge\">\'+typeNames[type]+\'</span>\'\n        + \'<div style=\"margin-top:4px;\"><span style=\"color:#555;\">Location:</span> <strong>\'+(getLocationName(ow)||\'-\')+\'</strong></div>\'\n        + \'<div><span style=\"color:#555;\">Price:</span> <strong>\'+(ow.price||\'-\')+\'</strong></div>\'\n        + \'<div><span style=\"color:#555;\">Area:</span> <strong>\'+(ow.area||\'-\')+\' m²</strong></div>\'\n        + (ow.rent ? \'<div><span style=\"color:#555;\">Rent:</span> <strong>\'+ow.rent+\'</strong></div>\' : \'\')\n        + (ow.details ? \'<div style=\"margin-top:4px;padding:4px 8px;background:#f7f9fc;border-radius:4px;font-size:12px;color:#666;\">📋 \'+ow.details+\'</div>\' : \'\')\n        + \'<div style=\"margin:6px 0;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:4px;\">👤 <strong>\'+ow.name+\'</strong> &nbsp;|&nbsp; 📞 \'+ow.phone+\'</div>\'\n        + \'</div>\'\n        + \'<div style=\"display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;\">\'\n        + \'<a href=\"\'+waO+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"padding:5px 10px;font-size:12px;\">💬 Contact Owner</a>\'\n        + \'<a href=\"\'+waSend+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"background:#075E54;color:#fff;border-color:#075E54;padding:5px 10px;font-size:12px;\">📤 Send Details to Client</a>\'\n        + \'<a href=\"\'+waC+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"padding:5px 10px;font-size:12px;\">💬 Contact Client</a>\'\n        + \'<button onclick=\"this.closest(\\\'.match-card\\\').remove()\" class=\"btn-sm del\" style=\"padding:5px 10px;font-size:12px;\">Delete</button>\'\n        + \'</div></div>\';\n    }).join(\'\');\n  card.appendChild(div);\n}\n\nfunction showOwnerMatches(type, ownerId, btn) {\n  var owner = DATA[type].owners.find(function(x){ return x.id === ownerId; });\n  if (!owner) return;\n  var customers = DATA[type].customers;\n  var matches = [];\n  customers.forEach(function(cu){\n    var score = calcMatchScore(owner, cu);\n    if (score < 1) return;\n    matches.push({ customer: cu, score: score });\n  });\n  matches.sort(function(a,b){ return b.score - a.score; });\n  var card = btn.closest(\'.card\');\n  if (!card) return;\n  var existing = card.querySelector(\'.customer-matches\');\n  if (existing) { existing.remove(); return; }\n  var div = document.createElement(\'div\');\n  div.className = \'customer-matches\';\n  if (!matches.length) {\n    div.innerHTML = \'<div class=\"match-count\">No matching customers found.</div>\';\n    card.appendChild(div);\n    return;\n  }\n  div.innerHTML = \'<div class=\"match-count\">\' + matches.length + \' matching customer(s):</div>\'\n    + matches.map(function(m){\n      var cu = m.customer;\n      var oWa = \'https://wa.me/\' + owner.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n      var cWa = \'https://wa.me/\' + cu.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n      var sendMsg = \'عقار متاح: \' + typeNames[type] + \'\\nالموقع: \' + (getLocationName(owner)||\'-\') + \'\\nالسعر: \' + (owner.price||\'-\') + \'\\nالمساحة: \' + (owner.area||\'-\') + (owner.rent ? \'\\nالإيجار: \' + owner.rent : \'\') + \'\\nالتفاصيل: \' + (owner.details||\'-\');\n      var waSend = \'https://wa.me/\' + cu.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\') + \'?text=\' + encodeURIComponent(sendMsg);\n      return \'<div class=\"match-card\" style=\"margin-bottom:8px;padding:12px;\">\'\n        + \'<div class=\"header-match\" style=\"margin-bottom:6px;\"><div><span class=\"percent\" style=\"font-size:16px;\">\'+m.score+\'%</span> Match</div>\'\n        + \'<button onclick=\"this.closest(\\\'.match-card\\\').remove()\" style=\"background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;\">✕</button></div>\'\n        + \'<div style=\"margin:6px 0;line-height:1.5;font-size:13px;\">\'\n        + \'<span class=\"match-badge\">\'+typeNames[type]+\'</span>\'\n        + \'<div style=\"margin-top:4px;\"><span style=\"color:#555;\">Customer:</span> <strong>\'+cu.name+\'</strong></div>\'\n        + \'<div><span style=\"color:#555;\">Location:</span> <strong>\'+(getLocationName(cu)||\'-\')+\'</strong></div>\'\n        + \'<div><span style=\"color:#555;\">Budget:</span> <strong>\'+(cu.budget||\'-\')+\'</strong></div>\'\n        + \'<div><span style=\"color:#555;\">Area:</span> <strong>\'+(cu.area||\'-\')+\'</strong></div>\'\n        + (cu.need ? \'<div style=\"margin-top:4px;padding:4px 8px;background:#f7f9fc;border-radius:4px;font-size:12px;color:#666;\">📋 \'+cu.need+\'</div>\' : \'\')\n        + \'<div style=\"margin:6px 0;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:4px;\">👤 <strong>\'+cu.name+\'</strong> &nbsp;|&nbsp; 📞 \'+cu.phone+\'</div>\'\n        + \'</div>\'\n        + \'<div style=\"display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;\">\'\n        + \'<a href=\"\'+cWa+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"padding:5px 10px;font-size:12px;\">💬 Contact Customer</a>\'\n        + \'<a href=\"\'+waSend+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"background:#075E54;color:#fff;border-color:#075E54;padding:5px 10px;font-size:12px;\">📤 Send Details</a>\'\n        + \'<a href=\"\'+oWa+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"padding:5px 10px;font-size:12px;\">💬 Contact Owner</a>\'\n        + \'<button onclick=\"this.closest(\\\'.match-card\\\').remove()\" class=\"btn-sm del\" style=\"padding:5px 10px;font-size:12px;\">Close</button>\'\n        + \'</div></div>\';\n    }).join(\'\');\n  card.appendChild(div);\n}\n\nfunction renderMatches() {\n  var container = document.getElementById(\'matches-results\');\n  if (!container) return;\n  if (!window._MATCHES) window._MATCHES = {};\n  try { var saved = localStorage.getItem(\'_matches\'); if (saved) window._MATCHES = JSON.parse(saved); } catch(e){}\n  var q = (document.getElementById(\'matchFilter\').value||\'\').toLowerCase();\n  var all = [];\n  types.forEach(function(t){\n    (window._MATCHES[t]||[]).forEach(function(m){\n      if (m.hidden) return;\n      if (q) {\n        var ow = DATA[t].owners.find(function(x){ return x.id === m.ownerId; });\n        var cu = DATA[t].customers.find(function(x){ return x.id === m.customerId; });\n        if (!ow || !cu) return;\n        var txt = (ow.name+\' \'+ow.phone+\' \'+getLocationName(ow)+\' \'+cu.name+\' \'+cu.phone+\' \'+getLocationName(cu)).toLowerCase();\n        if (txt.indexOf(q) < 0) return;\n      }\n      all.push(m);\n    });\n  });\n  all.sort(function(a,b){ return b.score - a.score; });\n  if (!all.length) { container.innerHTML = \'<div class=\"card\" style=\"text-align:center;color:#888;\">\'+(q?\'No matches match your search\':\'No matches yet. Click \"Generate All Matches\" to start.\')+\'</div>\'; return; }\n  container.innerHTML = all.map(function(m, idx){\n    var ow = DATA[m.type].owners.find(function(x){ return x.id === m.ownerId; });\n    var cu = DATA[m.type].customers.find(function(x){ return x.id === m.customerId; });\n    if (!ow || !cu) return \'\';\n    var key = getMatchKey(m);\n    var isSent = m.sent;\n    var waO = \'https://wa.me/\' + ow.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n    var waC = \'https://wa.me/\' + cu.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\');\n    var sendMsg = \'عقار متاح: \' + typeNames[m.type] + \'\\nالموقع: \' + (getLocationName(ow)||\'-\') + \'\\nالسعر: \' + (ow.price||\'-\') + \'\\nالمساحة: \' + (ow.area||\'-\') + (ow.rent ? \'\\nالإيجار: \' + ow.rent : \'\') + \'\\nالتفاصيل: \' + (ow.details||\'-\');\n    var waSend = \'https://wa.me/\' + cu.phone.replace(/^0/,\'20\').replace(/[^0-9]/g,\'\') + \'?text=\' + encodeURIComponent(sendMsg);\n    return \'<div class=\"match-card\'+(isSent?\' sent\':\'\')+\'\" id=\"mc-\'+key+\'\">\'\n      + \'<div class=\"header-match\" style=\"margin-bottom:8px;\"><div><span class=\"percent\" style=\"font-size:18px;\">\'+m.score+\'%</span> Match\'+(isSent?\'<span class=\"match-sent-dot\"></span>\':\'\')+\'</div><button onclick=\"hideMatch(\\\'\'+key+\'\\\')\" style=\"background:none;border:none;color:#c0392b;font-size:20px;cursor:pointer;padding:0;line-height:1;\">✕</button></div>\'\n      + \'<div style=\"margin:10px 0;border-top:2px solid #e0e0e0;\"></div>\'\n      + \'<div style=\"margin:8px 0;line-height:1.7;\"><strong style=\"color:#1a3a5c;font-size:14px;\">🏢 Property Details</strong><br>\'\n      + \'<span class=\"match-badge\">\'+typeNames[m.type]+\'</span>\'\n      + \'<div style=\"margin-top:4px;\"><span style=\"color:#555;\">Location:</span> <strong>\'+(getLocationName(ow)||\'-\')+\'</strong></div>\'\n      + \'<div><span style=\"color:#555;\">Price:</span> <strong>\'+(ow.price||\'-\')+\'</strong></div>\'\n      + \'<div><span style=\"color:#555;\">Area:</span> <strong>\'+(ow.area||\'-\')+\' m²</strong></div>\'\n      + (ow.rent ? \'<div><span style=\"color:#555;\">Rent:</span> <strong>\'+ow.rent+\'</strong></div>\' : \'\')\n      + (ow.details ? \'<div style=\"margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:13px;color:#666;\">📋 \'+ow.details+\'</div>\' : \'\')\n      + \'</div>\'\n      + \'<div style=\"margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;\">👤 <strong>\'+ow.name+\'</strong> &nbsp;|&nbsp; 📞 \'+ow.phone+\'</div>\'\n      + \'<div style=\"margin:12px 0;border-top:2px dashed #b0d4b8;\"></div>\'\n      + \'<div style=\"margin:8px 0;line-height:1.7;\"><strong style=\"color:#1a3a5c;font-size:14px;\">🤝 Customer Request</strong><br>\'\n      + \'<span class=\"match-badge\">\'+typeNames[m.type]+\'</span>\'\n      + \'<div style=\"margin-top:4px;\"><span style=\"color:#555;\">Location:</span> <strong>\'+(getLocationName(cu)||\'-\')+\'</strong></div>\'\n      + \'<div><span style=\"color:#555;\">Budget:</span> <strong>\'+(cu.budget||\'-\')+\'</strong></div>\'\n      + \'<div><span style=\"color:#555;\">Area:</span> <strong>\'+(cu.area||\'-\')+\' m²</strong></div>\'\n      + (cu.need ? \'<div style=\"margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:13px;color:#666;\">📋 \'+cu.need+\'</div>\' : \'\')\n      + \'</div>\'\n      + \'<div style=\"margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;\">👤 <strong>\'+cu.name+\'</strong> &nbsp;|&nbsp; 📞 \'+cu.phone+\'</div>\'\n      + \'<div style=\"margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;\">\'\n      + \'<a href=\"\'+waO+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"padding:6px 14px;\">💬 Contact Owner</a>\'\n      + \'<a href=\"\'+waC+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"padding:6px 14px;\">💬 Contact Client</a>\'\n      + \'<a href=\"\'+waSend+\'\" target=\"_blank\" class=\"btn-sm whatsapp\" style=\"background:#075E54;color:#fff;border-color:#075E54;padding:6px 14px;\" onclick=\"markSent(\\\'\'+key+\'\\\')\">📤 Send Details to Client</a>\'\n      + \'<button onclick=\"hideMatch(\\\'\'+key+\'\\\')\" class=\"btn-sm\" style=\"color:#888;padding:6px 14px;\">Hide</button>\'\n      + \'</div></div>\';\n  }).join(\'\');\n}\n\nfunction hideMatch(key) {\n  var parts = key.split(\'-\');\n  var type = parts[0];\n  var matches = window._MATCHES[type];\n  if (!matches) return;\n  for (var i = 0; i < matches.length; i++) {\n    if (getMatchKey(matches[i]) === key) { matches[i].hidden = true; break; }\n  }\n  try { localStorage.setItem(\'_matches\', JSON.stringify(window._MATCHES)); } catch(e){}\n  var el = document.getElementById(\'mc-\'+key);\n  if (el) el.style.display = \'none\';\n}\n\nfunction markSent(key) {\n  var parts = key.split(\'-\');\n  var type = parts[0];\n  var matches = window._MATCHES[type];\n  if (!matches) return;\n  for (var i = 0; i < matches.length; i++) {\n    if (getMatchKey(matches[i]) === key) { matches[i].sent = true; break; }\n  }\n  try { localStorage.setItem(\'_matches\', JSON.stringify(window._MATCHES)); } catch(e){}\n}\n\n// Auto-resize textarea\ndocument.addEventListener(\'input\', function(e) {\n  if (e.target.tagName === \'TEXTAREA\') {\n    e.target.style.height = \'auto\';\n    e.target.style.height = e.target.scrollHeight + \'px\';\n  }\n});\n\n// Load data from server on startup\nloadData();\n</script>\n</body>\n</html>\n";
+const HTML = `<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Inter', 'Segoe UI', Tahoma, sans-serif; }
+body { background: #f0f2f5; padding: 20px; direction: rtl; color: #222; }
+.container { max-width: 1200px; margin: auto; padding-bottom: 80px; }
+.header { background: linear-gradient(135deg, #1a3a5c, #2d6a9f); color: #fff; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 26px; }
+.header .sub { font-size: 14px; opacity: .7; }
+.main-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.main-tab { padding: 10px 28px; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; color: #555; border: 1px solid #d0d5dd; transition: .2s; }
+.main-tab:hover { border-color: #2d6a9f; }
+.main-tab.active { background: #1a3a5c; color: #fff; border-color: #1a3a5c; }
+.sub-tabs { display: flex; gap: 0; margin-bottom: 18px; background: #e8edf2; border-radius: 8px; padding: 4px; width: fit-content; }
+.sub-tab { padding: 8px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px; color: #555; transition: .2s; user-select: none; }
+.sub-tab.active { background: #fff; color: #1a3a5c; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow-wrap: break-word; word-break: break-word; }
+.card h3 { font-size: 17px; margin-bottom: 14px; color: #1a3a5c; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-weight: 600; font-size: 13px; color: #444; margin-bottom: 3px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 14px; outline: none; }
+.form-group input:focus, .form-group textarea:focus { border-color: #2d6a9f; }
+.form-group textarea { min-height: 70px; resize: vertical; }
+.form-row { display: flex; gap: 8px; }
+.form-row .form-group { flex: 1; }
+.upload-btn { border: 2px dashed #b0c4d9; border-radius: 6px; padding: 14px; text-align: center; color: #888; cursor: pointer; font-size: 14px; display:block; }
+.upload-btn:hover { border-color: #1a3a5c; background: #f8faff; }
+.upload-btn.dragover { border-color: #1a7a3c; background: #e6f9ed; }
+.preview { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.preview .thumb { width: 56px; height: 56px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; position: relative; }
+.preview .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.preview .thumb .vid-icon { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; font-size: 11px; }
+.preview .thumb .upload-progress { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 10px; line-height: 1.4; }
+.preview .thumb .upload-progress .bar { width: 40px; height: 4px; background: #555; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.preview .thumb .upload-progress .bar span { display: block; height: 100%; background: #25D366; transition: width .2s; }
+.btn { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; font-size: 14px; }
+.btn-primary { background: #1a3a5c; color: #fff; }
+.btn-primary:hover { background: #2d6a9f; }
+.btn-success { background: #1a7a3c; color: #fff; }
+.btn-success:hover { background: #249c4e; }
+.toggle-form-btn { display: block; width: 100%; padding: 12px; font-size: 16px; font-weight: 700; margin: 0; }
+.form-fields { margin-top: 14px; }
+.btn-sm { padding: 5px 12px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.btn-sm.edit { color: #2d6a9f; border-color: #2d6a9f; }
+.btn-sm.del { color: #c0392b; border-color: #c0392b; }
+.btn-sm.whatsapp { color: #25D366; border-color: #25D366; text-decoration: none; display: inline-block; }
+.btn-sm.match-find { color: #1a7a3c; border-color: #1a7a3c; }
+.customer-matches { margin-top: 10px; padding: 10px; background: #f7f9fc; border-radius: 8px; border: 1px solid #d0d5dd; word-break: normal; overflow-wrap: normal; }
+.customer-matches .match-count { font-size: 13px; color: #555; margin-bottom: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+th { background: #f7f9fc; padding: 8px 10px; text-align: right; color: #555; border-bottom: 2px solid #e8edf2; word-break: break-word; }
+td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; word-break: break-word; white-space: normal; text-align: right; }
+.badge { display: inline-block; background: #e8f0fe; color: #1a3a5c; padding: 3px 10px; border-radius: 10px; font-size: 12px; }
+.badge.match { background: #e6f9ed; color: #1a7a3c; }
+.badge.nomatch { background: #fef3e2; color: #b86b00; }
+.badge.both { background: #e8f0fe; color: #1a3a5c; }
+.media-thumbs { display: flex; gap: 4px; flex-wrap: wrap; }
+.media-thumbs div { width: 36px; height: 36px; border-radius: 4px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid #ddd; }
+.search-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-row input { flex: 1; padding: 7px 10px; border: 1px solid #d0d5dd; border-radius: 5px; font-size: 14px; }
+.budget-toggle { display:flex; gap:10px; margin-bottom:4px; }
+.budget-toggle label { cursor:pointer; font-weight:400; font-size:14px; }
+.budget-range { display:flex; gap:6px; }
+.budget-range input { flex:1; }
+.table-wrap { overflow-x: auto; }
+.actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.count-badge { background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 6px; }
+.hidden { display: none !important; }
+.page-content { }
+.match-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 16px; background: #fff; line-height: 1.6; word-break: normal; overflow-wrap: normal; }
+.match-card.sent { border-color: #25D366; background: #f6fff9; }
+.match-card .header-match { display: flex; justify-content: space-between; align-items: center; }
+.match-detail { font-size: 14px; color: #555; margin-top: 6px; }
+.match-type { font-size: 13px; background: #1a3a5c; color: #fff; padding: 2px 10px; border-radius: 10px; display: inline-block; }
+.percent { font-weight: 700; color: #1a7a3c; }
+.match-sent-dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#25D366; margin-left:4px; }
+.match-badge { display:inline-block; background:#1a3a5c; color:#fff; font-size:12px; padding:3px 12px; border-radius:8px; }
+/* Location autocomplete */
+.ac-wrapper { position: relative; }
+.ac-wrapper input { width:100%; padding:8px 10px; border:1px solid #d0d5dd; border-radius:5px; font-size:14px; outline:none; }
+.ac-wrapper input:focus { border-color:#2d6a9f; }
+.ac-dropdown { position:absolute; top:100%; left:0; right:0; z-index:100; background:#fff; border:1px solid #d0d5dd; border-radius:0 0 5px 5px; max-height:200px; overflow-y:auto; display:none; box-shadow:0 4px 12px rgba(0,0,0,.1); }
+.ac-dropdown div { padding:8px 10px; cursor:pointer; font-size:14px; border-bottom:1px solid #f0f0f0; }
+.ac-dropdown div:hover, .ac-dropdown div.active { background:#e8f0fe; }
+.ac-dropdown div:last-child { border-bottom:none; }
+.ac-dropdown .no-result { color:#999; cursor:default; }
+.ac-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px; }
+.ac-tag { display:inline-flex; align-items:center; gap:4px; background:#e8f0fe; color:#1a3a5c; padding:3px 10px; border-radius:10px; font-size:13px; }
+.ac-tag button { background:none; border:none; color:#c0392b; cursor:pointer; font-size:14px; line-height:1; padding:0; }
+/* Matches Drawer */
+.match-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;opacity:0;transition:opacity .3s;direction:ltr;}
+.match-drawer-overlay.open{display:block;opacity:1;}
+.match-drawer{position:fixed;top:0;right:-500px;width:460px;max-width:100vw;height:100vh;background:#f0f2f5;z-index:2001;box-shadow:-4px 0 24px rgba(0,0,0,.2);transition:right .3s ease;display:flex;flex-direction:column;direction:ltr;}
+.match-drawer.open{right:0;}
+.match-drawer-header{background:linear-gradient(135deg,#1a3a5c,#2d6a9f);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.match-drawer-header h3{font-size:17px;font-weight:700;margin:0;}
+.match-drawer-header .match-count-text{font-size:13px;opacity:.85;margin-top:2px;}
+.match-drawer-close{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.match-drawer-close:hover{background:rgba(255,255,255,.35);}
+.match-drawer-body{flex:1;overflow-y:auto;padding:14px;}
+.match-drawer-body .drawer-match-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);word-break:normal;overflow-wrap:break-word;}
+.drawer-match-card .dm-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;}
+.drawer-match-card .dm-score{font-size:28px;font-weight:700;line-height:1;}
+.drawer-match-card .dm-score.high{color:#1a7a3c;}
+.drawer-match-card .dm-score.mid{color:#b86b00;}
+.drawer-match-card .dm-score.low{color:#c0392b;}
+.drawer-match-card .dm-name{font-size:15px;font-weight:700;color:#1a3a5c;margin-bottom:4px;}
+.drawer-match-card .dm-badge{display:inline-block;background:#1a3a5c;color:#fff;font-size:11px;padding:2px 10px;border-radius:8px;margin-bottom:8px;}
+.drawer-match-card .dm-info{font-size:13px;color:#555;line-height:1.8;margin-bottom:10px;}
+.drawer-match-card .dm-info span{display:block;}
+.drawer-match-card .dm-info b{color:#333;min-width:70px;display:inline-block;}
+.drawer-match-card .dm-btns{display:flex;gap:6px;flex-wrap:wrap;}
+.drawer-match-card .dm-btns a,.drawer-match-card .dm-btns button{padding:7px 14px;font-size:12px;font-weight:600;border-radius:6px;text-decoration:none;cursor:pointer;border:1px solid #ddd;background:#fff;color:#333;display:inline-flex;align-items:center;gap:4px;transition:all .2s;}
+.drawer-match-card .dm-btns .dm-whatsapp{color:#25D366;border-color:#25D366;background:#fff;}
+.drawer-match-card .dm-btns .dm-wa-send{color:#fff;border-color:#075E54;background:#075E54;}
+.drawer-match-card .dm-btns .dm-close-btn{color:#c0392b;border-color:#c0392b;}
+@media(max-width:768px){
+  .match-drawer{width:100vw;right:-100vw;}
+  .match-drawer.open{right:0;}
+}
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:flex; align-items:center; justify-content:center; direction:ltr; }
+.modal-overlay video { max-width:90vw; max-height:90vh; border-radius:8px; }
+.modal-overlay img { max-width:90vw; max-height:90vh; border-radius:8px; }
+.modal-close { position:absolute; top:20px; left:20px; color:#fff; font-size:30px; cursor:pointer; background:rgba(0,0,0,.5); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; }
+.modal-share { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); padding:10px 24px; background:#25D366; color:#fff; border:none; border-radius:8px; font-size:15px; cursor:pointer; font-weight:600; }
+
+/* Mobile cards */
+.mobile-cards{display:none;}
+.mobile-card{
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.mobile-card .title{
+  font-weight:700;
+  color:#1a3a5c;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.mobile-card .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  font-size:14px;
+}
+.mobile-card .label{
+  color:#666;
+  min-width:70px;
+}
+.mobile-card .value{
+  font-weight:600;
+  text-align:left;
+  flex:1;
+  color:#222;
+}
+.mobile-card .actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+@media (max-width:768px){
+  body{padding:10px;}
+  .container{display:flex;flex-direction:column;}
+  .main-tabs{order:-1;overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;margin-bottom:10px;}
+  .header{
+    order:0;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:16px;
+  }
+  .main-tab{
+    flex:0 0 auto;
+    padding:8px 16px;
+    font-size:14px;
+    color:#1a3a5c;
+  }
+  .sub-tabs{
+    width:100%;
+    justify-content:space-between;
+  }
+  .sub-tab{
+    flex:1;
+    text-align:center;
+    color:#1a3a5c;
+  }
+  .form-row{
+    flex-direction:column;
+  }
+  .table-wrap{
+    overflow:visible;
+  }
+  .table-wrap table{
+    display:none;
+  }
+  .mobile-cards{
+    display:block;
+  }
+}
+
+</style>
+</head>
+<body>
+<div id="match-drawer-overlay" class="match-drawer-overlay" onclick="closeMatchDrawer()"></div>
+<div id="match-drawer" class="match-drawer">
+  <div class="match-drawer-header">
+    <div><h3 id="drawer-title">Matches</h3><div class="match-count-text" id="drawer-count"></div></div>
+    <button class="match-drawer-close" onclick="closeMatchDrawer()">&times;</button>
+  </div>
+  <div class="match-drawer-body" id="drawer-body"></div>
+</div>
+<div id="loading-overlay" style="position:fixed;inset:0;background:#f0f2f5;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+  <div style="width:40px;height:40px;border:4px solid #d0d5dd;border-top-color:#1a3a5c;border-radius:50%;animation:spin .8s linear infinite;"></div>
+  <div style="font-size:16px;color:#555;">جاري تحميل البيانات...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div class="container" id="app">
+
+<div class="header">
+  <div><h1>🏢 Real Estate Management</h1><div class="sub">Company — Staff Only</div></div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span style="opacity:.7;font-size:13px;">Staff: Admin</span>
+    <span style="background:#ffffff22;padding:5px 12px;border-radius:6px;font-size:13px;cursor:default;">Logout</span>
+  </div>
+</div>
+
+<div class="main-tabs">
+  <div class="main-tab active" data-tab="apartments">🏢 Apartments</div>
+  <div class="main-tab" data-tab="houses">🏠 Houses</div>
+  <div class="main-tab" data-tab="lands">🗺️ Lands</div>
+  <div class="main-tab" data-tab="shops">🏪 Shops</div>
+  <div class="main-tab" data-tab="shopsrent">🏪 Shops for Rent</div>
+  <div class="main-tab" data-tab="report">📄 Report</div>
+  <div class="main-tab" data-tab="matches">🔗 Matches</div>
+</div>
+
+<!-- ====================== APARTMENTS ====================== -->
+<div id="page-apartments" class="page-content">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-apartments-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Apartment)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ao-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ao-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ao-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ao-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-ao-price" placeholder="مثلاً 500,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ao-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-ao-details" placeholder="Property description (rooms, floor, finish...)"></textarea></div>
+          <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ao" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ao" value="finished"> ✅ Finished</label><label><input type="radio" name="finish-ao" value="both"> ✅🔧 Both</label></div></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="apartments" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'apartments','owner')"></label><div class="preview" id="preview-ao"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('apartments')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-ao">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search by name, phone or location..." oninput="filterTable('apartments','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ao"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ao"></div>
+    </div>
+  </div>
+  <div id="sub-apartments-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Apartment)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ac-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ac-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-ac-need" placeholder="e.g. 3BR apartment + hall" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="f-ac-location" placeholder="Type to search..." autocomplete="off"><input type="hidden" class="f-ac-location-id"><div class="ac-dropdown"></div></div></div></div>
+        <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-a" value="fixed" checked onchange="toggleBudgetMode('a','fixed')"> Fixed</label><label><input type="radio" name="budget-type-a" value="range" onchange="toggleBudgetMode('a','range')"> Range</label></div><div id="bf-a"><input class="f-ac-budget" placeholder="Amount"></div><div id="br-a" class="budget-range" style="display:none"><input class="f-ac-budget-min" placeholder="From"><input class="f-ac-budget-max" placeholder="To"></div></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-a" value="fixed" checked onchange="toggleAreaMode('a','fixed')"> Fixed</label><label><input type="radio" name="area-type-a" value="range" onchange="toggleAreaMode('a','range')"> Range</label></div><div id="af-a"><input class="f-ac-area" placeholder="m²"></div><div id="ar-a" class="budget-range" style="display:none"><input class="f-ac-area-min" placeholder="From m²"><input class="f-ac-area-max" placeholder="To m²"></div></div>
+        <div class="form-group"><label>Status</label><div class="budget-toggle"><label><input type="radio" name="finish-ac" value="unfinished" checked> 🔧 Unfinished</label><label><input type="radio" name="finish-ac" value="finished"> ✅ Finished</label><label><input type="radio" name="finish-ac" value="both"> ✅🔧 Both</label></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('apartments')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-ac">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search by name or phone..." oninput="filterTable('apartments','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-ac"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ac"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== HOUSES ====================== -->
+<div id="page-houses" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-houses-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (House)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ho-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ho-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ho-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ho-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-ho-price" placeholder="مثلاً 800,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-ho-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-ho-details" placeholder="House description"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="houses" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'houses','owner')"></label><div class="preview" id="preview-ho"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('houses')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-ho">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('houses','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ho"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ho"></div>
+    </div>
+  </div>
+  <div id="sub-houses-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (House)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-hc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-hc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-hc-need" placeholder="e.g. 2-storey villa" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="f-hc-location" placeholder="Type to search..." autocomplete="off"><input type="hidden" class="f-hc-location-id"><div class="ac-dropdown"></div></div></div></div>
+        <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-h" value="fixed" checked onchange="toggleBudgetMode('h','fixed')"> Fixed</label><label><input type="radio" name="budget-type-h" value="range" onchange="toggleBudgetMode('h','range')"> Range</label></div><div id="bf-h"><input class="f-hc-budget" placeholder="Amount"></div><div id="br-h" class="budget-range" style="display:none"><input class="f-hc-budget-min" placeholder="From"><input class="f-hc-budget-max" placeholder="To"></div></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-h" value="fixed" checked onchange="toggleAreaMode('h','fixed')"> Fixed</label><label><input type="radio" name="area-type-h" value="range" onchange="toggleAreaMode('h','range')"> Range</label></div><div id="af-h"><input class="f-hc-area" placeholder="m²"></div><div id="ar-h" class="budget-range" style="display:none"><input class="f-hc-area-min" placeholder="From m²"><input class="f-hc-area-max" placeholder="To m²"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('houses')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-hc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('houses','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-hc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-hc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== LANDS ====================== -->
+<div id="page-lands" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-lands-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Land)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lo-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lo-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-lo-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-lo-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-lo-price" placeholder="مثلاً 200,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-lo-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-lo-details" placeholder="Land description (area, permit...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="lands" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'lands','owner')"></label><div class="preview" id="preview-lo"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('lands')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-lo">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('lands','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:12%">Location</th><th style="width:10%">Price</th><th style="width:8%">Area</th><th style="width:16%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-lo"></tbody></table></div>
+      <div class="mobile-cards" id="cards-lo"></div>
+    </div>
+  </div>
+  <div id="sub-lands-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Land)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-lc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-lc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-lc-need" placeholder="e.g. residential land 500m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="f-lc-location" placeholder="Type to search..." autocomplete="off"><input type="hidden" class="f-lc-location-id"><div class="ac-dropdown"></div></div></div></div>
+        <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-l" value="fixed" checked onchange="toggleBudgetMode('l','fixed')"> Fixed</label><label><input type="radio" name="budget-type-l" value="range" onchange="toggleBudgetMode('l','range')"> Range</label></div><div id="bf-l"><input class="f-lc-budget" placeholder="Amount"></div><div id="br-l" class="budget-range" style="display:none"><input class="f-lc-budget-min" placeholder="From"><input class="f-lc-budget-max" placeholder="To"></div></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-l" value="fixed" checked onchange="toggleAreaMode('l','fixed')"> Fixed</label><label><input type="radio" name="area-type-l" value="range" onchange="toggleAreaMode('l','range')"> Range</label></div><div id="af-l"><input class="f-lc-area" placeholder="m²"></div><div id="ar-l" class="budget-range" style="display:none"><input class="f-lc-area-min" placeholder="From m²"><input class="f-lc-area-max" placeholder="To m²"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('lands')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-lc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('lands','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-lc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-lc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== SHOPS ====================== -->
+<div id="page-shops" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-shops-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Shop)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-so-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-so-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-so-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-so-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Price</label><input class="f-so-price" placeholder="مثلاً 150,000 ج.م"></div><div class="form-group"><label>Area</label><input class="f-so-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-so-details" placeholder="Shop description (area, activity...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="shops" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'shops','owner')"></label><div class="preview" id="preview-so"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('shops')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-so">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shops','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:13%">Location</th><th style="width:11%">Price</th><th style="width:8%">Area</th><th style="width:15%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-so"></tbody></table></div>
+      <div class="mobile-cards" id="cards-so"></div>
+    </div>
+  </div>
+  <div id="sub-shops-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Shop)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-sc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-sc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-sc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="f-sc-location" placeholder="Type to search..." autocomplete="off"><input type="hidden" class="f-sc-location-id"><div class="ac-dropdown"></div></div></div></div>
+        <div class="form-group"><label>Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-s" value="fixed" checked onchange="toggleBudgetMode('s','fixed')"> Fixed</label><label><input type="radio" name="budget-type-s" value="range" onchange="toggleBudgetMode('s','range')"> Range</label></div><div id="bf-s"><input class="f-sc-budget" placeholder="Amount"></div><div id="br-s" class="budget-range" style="display:none"><input class="f-sc-budget-min" placeholder="From"><input class="f-sc-budget-max" placeholder="To"></div></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-s" value="fixed" checked onchange="toggleAreaMode('s','fixed')"> Fixed</label><label><input type="radio" name="area-type-s" value="range" onchange="toggleAreaMode('s','range')"> Range</label></div><div id="af-s"><input class="f-sc-area" placeholder="m²"></div><div id="ar-s" class="budget-range" style="display:none"><input class="f-sc-area-min" placeholder="From m²"><input class="f-sc-area-max" placeholder="To m²"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shops')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-sc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shops','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:12%">Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-sc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-sc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== SHOPS FOR RENT ====================== -->
+<div id="page-shopsrent" class="page-content hidden">
+  <div class="sub-tabs">
+    <div class="sub-tab active" data-sub="owners">👤 Owners</div>
+    <div class="sub-tab" data-sub="customers">🤝 Clients</div>
+  </div>
+  <div id="sub-shopsrent-owners">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Owner (Shop for Rent)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-ro-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-ro-phone" placeholder="05xxxxxxxx"></div></div>
+          <div class="form-row"><div class="form-group"><label>Location</label><div class="ac-wrapper"><input class="f-ro-location" placeholder="City - District" autocomplete="off"><input type="hidden" class="f-ro-location-id"><div class="ac-dropdown"></div></div></div><div class="form-group"><label>Rent</label><input class="f-ro-price" placeholder="مثلاً 10,000 ج.م/شهر"></div><div class="form-group"><label>Area</label><input class="f-ro-area" placeholder="m²"></div></div>
+          <div class="form-group"><label>Details</label><textarea class="f-ro-details" placeholder="Shop description (area, activity...)"></textarea></div>
+        <div class="form-group"><label>Photos / Video</label><label class="upload-btn" data-type="shopsrent" data-cat="owner">📤 Choose images or video<input type="file" accept="image/*,video/*" multiple hidden onchange="handleUpload(this,'shopsrent','owner')"></label><div class="preview" id="preview-ro"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addOwner('shopsrent')">💾 Save Owner</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>👤 Owners <span class="count-badge" id="count-ro">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shopsrent','owners')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:4%">#</th><th style="width:13%">Name</th><th style="width:11%">Phone</th><th style="width:13%">Location</th><th style="width:11%">Rent</th><th style="width:8%">Area</th><th style="width:15%">Details</th><th style="width:8%">Media</th><th style="width:10%"></th></tr></thead><tbody id="tbl-ro"></tbody></table></div>
+      <div class="mobile-cards" id="cards-ro"></div>
+    </div>
+  </div>
+  <div id="sub-shopsrent-customers" class="hidden">
+    <div class="card">
+      <button class="btn btn-success toggle-form-btn" onclick="toggleForm(this)">➕ Add Customer (Shop for Rent)</button>
+      <div class="form-fields hidden">
+        <div class="form-row"><div class="form-group"><label>Name</label><input class="f-rc-name" placeholder="Full name"></div><div class="form-group"><label>Phone</label><input class="f-rc-phone" placeholder="05xxxxxxxx"></div></div>
+        <div class="form-row"><div class="form-group"><label>Requirement</label><textarea class="f-rc-need" placeholder="e.g. shop 100m²" style="min-height:50px;"></textarea></div><div class="form-group"><label>Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="f-rc-location" placeholder="Type to search..." autocomplete="off"><input type="hidden" class="f-rc-location-id"><div class="ac-dropdown"></div></div></div></div>
+        <div class="form-group"><label>Rent Budget</label><div class="budget-toggle"><label><input type="radio" name="budget-type-r" value="fixed" checked onchange="toggleBudgetMode('r','fixed')"> Fixed</label><label><input type="radio" name="budget-type-r" value="range" onchange="toggleBudgetMode('r','range')"> Range</label></div><div id="bf-r"><input class="f-rc-budget" placeholder="Amount"></div><div id="br-r" class="budget-range" style="display:none"><input class="f-rc-budget-min" placeholder="From"><input class="f-rc-budget-max" placeholder="To"></div></div>
+        <div class="form-group"><label>Required Area</label><div class="budget-toggle"><label><input type="radio" name="area-type-r" value="fixed" checked onchange="toggleAreaMode('r','fixed')"> Fixed</label><label><input type="radio" name="area-type-r" value="range" onchange="toggleAreaMode('r','range')"> Range</label></div><div id="af-r"><input class="f-rc-area" placeholder="m²"></div><div id="ar-r" class="budget-range" style="display:none"><input class="f-rc-area-min" placeholder="From m²"><input class="f-rc-area-max" placeholder="To m²"></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="addCustomer('shopsrent')">💾 Save Customer</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Clients <span class="count-badge" id="count-rc">0</span></h3>
+      <div class="search-row"><input placeholder="🔍 Search..." oninput="filterTable('shopsrent','customers')"></div>
+      <div class="table-wrap"><table><thead><tr><th style="width:5%">#</th><th style="width:16%">Name</th><th style="width:12%">Phone</th><th style="width:16%">Requirement</th><th style="width:14%">Location</th><th style="width:14%">Rent Budget</th><th style="width:8%">Area</th><th style="width:12%"></th></tr></thead><tbody id="tbl-rc"></tbody></table></div>
+      <div class="mobile-cards" id="cards-rc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== MATCHES ====================== -->
+<div id="page-matches" class="page-content hidden">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+      <h3 style="margin:0;border:none;padding:0;">🔗 Property Matches</h3>
+      <div class="form-row" style="gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="generateAllMatches('apartments')" style="font-size:13px;padding:6px 14px;">🏢 Apartments</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('houses')" style="font-size:13px;padding:6px 14px;">🏠 Houses</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('lands')" style="font-size:13px;padding:6px 14px;">🗺️ Lands</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('shops')" style="font-size:13px;padding:6px 14px;">🏪 Shops</button>
+        <button class="btn btn-primary" onclick="generateAllMatches('shopsrent')" style="font-size:13px;padding:6px 14px;">🏪 Shops for Rent</button>
+      </div>
+    </div>
+    <div class="search-row"><input id="matchFilter" placeholder="🔍 Search by name, phone, location..." oninput="renderMatches()"></div>
+    <div id="matches-results"></div>
+  </div>
+</div>
+
+<div id="page-report" class="page-content hidden">
+  <div class="card">
+    <h3>📄 Export Word Report</h3>
+    <div class="form-row" style="align-items:end;">
+      <div class="form-group"><label>Property Type</label>
+        <select id="report-type">
+          <option value="all">All Types</option>
+          <option value="apartments">🏢 Apartments</option>
+          <option value="houses">🏠 Houses</option>
+          <option value="lands">🗺️ Lands</option>
+          <option value="shops">🏪 Shops</option>
+          <option value="shopsrent">🏪 Shops for Rent</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Section</label>
+        <select id="report-cat">
+          <option value="all">All (Owners + Clients)</option>
+          <option value="owners">👤 Owners</option>
+          <option value="customers">🤝 Clients</option>
+        </select>
+      </div>
+      <div class="form-group"><label>From Date</label><input type="date" id="report-from"></div>
+      <div class="form-group"><label>To Date</label><input type="date" id="report-to"></div>
+      <div>
+        <button class="btn btn-primary" onclick="generateReport()" style="font-size:14px;padding:10px 30px;">📥 Download Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="supabase.min.js"></script>
+<script>
+var CACHE_KEY = 'realestate_data';
+
+function loadCachedData() {
+  try {
+    var saved = localStorage.getItem(CACHE_KEY);
+    if (!saved) return false;
+    var data = JSON.parse(saved);
+    if (!data || !data._DATA) return false;
+    types.forEach(function(t){
+      DATA[t] = data._DATA[t];
+      if (DATA[t].owners) DATA[t].owners.sort(function(a,b){ return a.id - b.id; });
+      if (DATA[t].customers) DATA[t].customers.sort(function(a,b){ return a.id - b.id; });
+    });
+    types.forEach(function(t) { renderTable(t, 'owners'); renderTable(t, 'customers'); });
+    document.getElementById('loading-overlay').style.display = 'none';
+    return true;
+  } catch(e){ return false; }
+}
+
+function saveDataCache() {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ _DATA: DATA, _ts: Date.now() })); } catch(e){}
+}
+
+var DEBUG = document.getElementById('app');
+if (!window.supabase) {
+  DEBUG.innerHTML = '<div class="card" style="padding:30px;text-align:center;"><h3 style="color:#c00;">⚠️ خطأ</h3><p style="margin-top:10px;color:#555;">Supabase SDK لم يتم تحميله</p></div>';
+  throw new Error('Supabase SDK not loaded');
+}
+if (window.location.protocol === 'file:') {
+  document.body.innerHTML = '<div style="padding:40px;text-align:center;font-size:20px;">⚠️ افتح الصفحة عن طريق <b>http://localhost:3000</b> مش كـ file<br><br>شغّل السيرفر first: <b>node server.js</b></div>';
+  throw new Error('Page must be served via localhost');
+}
+const SUPABASE_URL = 'https://omdbdtyysgwcznskrlsa.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tZGJkdHl5c2d3Y3puc2tybHNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxODk3ODksImV4cCI6MjA5ODc2NTc4OX0.YUta5414ktWx1N2nD6Wk_UZvJNXyc3jWMsRxe_XC-h0';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+if (!supabase) {
+  DEBUG.innerHTML = '<div class="card" style="padding:30px;text-align:center;"><h3 style="color:#c00;">⚠️ خطأ</h3><p style="margin-top:10px;color:#555;">Supabase Client فشل في البدء</p></div>';
+  throw new Error('Supabase client init failed');
+}
+
+const types = ['apartments','houses','lands','shops','shopsrent'];
+const typeNames = { apartments:'Apartments', houses:'Houses', lands:'Lands', shops:'Shops', shopsrent:'Shops for Rent' };
+const typeLetters = { apartments:'a', houses:'h', lands:'l', shops:'s', shopsrent:'r' };
+const DATA = {};
+types.forEach(t => { DATA[t] = { owners: [], customers: [] }; });
+
+const tempMedia = {};
+
+/* ==================== LOCATIONS SYSTEM ==================== */
+window._LOCATIONS = {};      // id → name
+window._LOCATIONS_BY_NAME = {}; // name → id
+window._LOCATIONS_ARR = [];  // [{id, name}]
+
+async function loadLocations() {
+  var res = await supabase.from('locations').select('id,name');
+  if (res.error) throw new Error(res.error.message);
+  window._LOCATIONS = {};
+  window._LOCATIONS_BY_NAME = {};
+  window._LOCATIONS_ARR = (res.data||[]).map(function(r){
+    window._LOCATIONS[r.id] = r.name;
+    window._LOCATIONS_BY_NAME[r.name.toLowerCase().trim()] = r.id;
+    return r;
+  });
+}
+
+async function ensureLocation(name) {
+  if (!name) return null;
+  var key = name.toLowerCase().trim();
+  if (window._LOCATIONS_BY_NAME[key]) return window._LOCATIONS_BY_NAME[key];
+  var id = Date.now() + Math.floor(Math.random()*1000);
+  var res = await supabase.from('locations').insert({ id: id, name: name.trim() });
+  if (res.error) throw new Error(res.error.message);
+  window._LOCATIONS[id] = name.trim();
+  window._LOCATIONS_BY_NAME[key] = id;
+  window._LOCATIONS_ARR.push({ id: id, name: name.trim() });
+  return id;
+}
+
+async function migrateLocations() {
+  var names = {};
+  types.forEach(function(t){
+    DATA[t].owners.forEach(function(x){
+      if (x.location && !x.location_id) names[x.location.trim()] = true;
+    });
+    DATA[t].customers.forEach(function(x){
+      if (x.location && !x.location_id) names[x.location.trim()] = true;
+    });
+  });
+  var unique = Object.keys(names).filter(Boolean);
+  if (!unique.length) return;
+  for (var i = 0; i < unique.length; i++) {
+    var lid = await ensureLocation(unique[i]);
+    if (!lid) continue;
+    types.forEach(function(t){
+      DATA[t].owners.forEach(function(x){
+        if (x.location && x.location.trim() === unique[i] && !x.location_id) {
+          x.location_id = lid;
+          supabase.from('owners').update({ location_id: lid }).eq('id', x.id).then(function(){});
+        }
+      });
+      DATA[t].customers.forEach(function(x){
+        if (x.location && x.location.trim() === unique[i] && !x.location_id) {
+          x.location_id = lid;
+          supabase.from('customers').update({ location_id: lid }).eq('id', x.id).then(function(){});
+        }
+      });
+    });
+  }
+}
+
+function parseLocIds(item) {
+  if (!item || !item.location_id) return [];
+  if (Array.isArray(item.location_id)) return item.location_id;
+  try { var p = JSON.parse(item.location_id); if (Array.isArray(p)) return p; } catch(e){}
+  return [item.location_id];
+}
+
+function getLocationName(item) {
+  if (!item) return '-';
+  var ids = parseLocIds(item);
+  if (ids.length) {
+    var names = ids.map(function(id){ return window._LOCATIONS[id]; }).filter(Boolean);
+    if (names.length) return names.join(', ');
+  }
+  return item.location || '';
+}
+
+function hasLocation(item) {
+  if (!item) return false;
+  if (item.location) return true;
+  var ids = parseLocIds(item);
+  return ids.length > 0 && ids.some(function(id){ return !!window._LOCATIONS[id]; });
+}
+function getFinishStatus(item) {
+  if (item.finish_status) return item.finish_status;
+  if (item.finished === true) return 'finished';
+  if (item.finished === false) return 'unfinished';
+  return 'unfinished';
+}
+function finishBadge(s) {
+  if (s === 'finished') return '<span class="badge match">✅ Finished</span>';
+  if (s === 'both') return '<span class="badge both">✅🔧 Both</span>';
+  return '<span class="badge nomatch">🔧 Unfinished</span>';
+}
+
+function getLocIds(hidden) {
+  if (!hidden || !hidden.value) return [];
+  try { return JSON.parse(hidden.value); } catch(e){}
+  return hidden.value ? [hidden.value] : [];
+}
+
+function setLocIds(hidden, ids) {
+  hidden.value = JSON.stringify(ids);
+}
+
+function renderTags(wrapper) {
+  var tagsEl = wrapper.querySelector('.ac-tags');
+  if (!tagsEl) return;
+  var hidden = wrapper.querySelector('input[type="hidden"]');
+  var ids = getLocIds(hidden);
+  tagsEl.innerHTML = ids.map(function(id){
+    var name = window._LOCATIONS[id] || id;
+    return '<span class="ac-tag">'+name+'<button onclick="removeLocationTag(this,'+id+')">✕</button></span>';
+  }).join('');
+}
+
+function removeLocationTag(btn, id) {
+  var wrapper = btn.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var hidden = wrapper.querySelector('input[type="hidden"]');
+  var ids = getLocIds(hidden).filter(function(x){ return x != id; });
+  setLocIds(hidden, ids);
+  renderTags(wrapper);
+}
+
+function setupAutocomplete(input, hiddenInput) {
+  var wrapper = input.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var isMulti = wrapper.getAttribute('data-multi') === 'true';
+  var dropdown = wrapper.querySelector('.ac-dropdown');
+  input.addEventListener('input', function(){
+    var q = input.value.toLowerCase().trim();
+    if (!q) { dropdown.style.display = 'none'; if (!isMulti) hiddenInput.value = ''; return; }
+    var existing = getLocIds(hiddenInput);
+    var matches = window._LOCATIONS_ARR.filter(function(r){ return r.name.toLowerCase().includes(q) && existing.indexOf(String(r.id)) < 0; });
+    var html = '';
+    if (matches.length) {
+      html = matches.map(function(r){
+        return '<div onclick="selectLocation(this,\''+r.id+'\',\''+escAttr(r.name)+'\')">'+r.name+'</div>';
+      }).join('');
+    } else {
+      html = '<div class="no-result">No locations found</div>';
+    }
+    html += '<div class="ac-add" onclick="addLocationFromAutocomplete(this)" style="color:#1a3a5c;font-weight:600;border-top:1px solid #e0e0e0;">➕ Add location</div>';
+    dropdown.innerHTML = html;
+    dropdown.style.display = 'block';
+  });
+  input.addEventListener('blur', function(){
+    setTimeout(function(){ dropdown.style.display = 'none'; }, 200);
+  });
+  input.addEventListener('focus', function(){
+    if (input.value.trim()) input.dispatchEvent(new Event('input'));
+  });
+  dropdown.addEventListener('mousedown', function(e){ e.preventDefault(); });
+}
+
+function selectLocation(el, id, name) {
+  var wrapper = el.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var input = wrapper.querySelector('input[type="text"]') || wrapper.querySelector('input:not([type="hidden"])');
+  var hidden = wrapper.querySelector('input[type="hidden"]');
+  if (!input || !hidden) return;
+  var isMulti = wrapper.getAttribute('data-multi') === 'true';
+  if (isMulti) {
+    var ids = getLocIds(hidden);
+    if (ids.indexOf(String(id)) < 0) ids.push(String(id));
+    setLocIds(hidden, ids);
+    input.value = '';
+    renderTags(wrapper);
+  } else {
+    input.value = name;
+    hidden.value = id;
+  }
+  wrapper.querySelector('.ac-dropdown').style.display = 'none';
+  input.focus();
+}
+
+async function addLocationFromAutocomplete(el) {
+  var wrapper = el.closest('.ac-wrapper');
+  if (!wrapper) return;
+  var input = wrapper.querySelector('input[type="text"]') || wrapper.querySelector('input:not([type="hidden"])');
+  var hidden = wrapper.querySelector('input[type="hidden"]');
+  if (!input || !hidden) return;
+  var name = input.value.trim();
+  if (!name) return;
+  var id = await ensureLocation(name);
+  if (id) {
+    await loadLocations();
+    selectLocation(el, id, name);
+  }
+}
+
+function escAttr(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+async function loadData() {
+  var hasCache = loadCachedData();
+  try {
+    var o = await supabase.from('owners').select('*').order('id');
+    if (o.error) throw new Error(o.error.message);
+    var c = await supabase.from('customers').select('*').order('id');
+    if (c.error) throw new Error(c.error.message);
+    types.forEach(function(t) {
+      DATA[t].owners = (o.data||[]).filter(function(x) { return x.type === t; });
+      DATA[t].customers = (c.data||[]).filter(function(x) { return x.type === t; });
+    });
+    await loadLocations();
+    await migrateLocations();
+    types.forEach(function(t) { renderTable(t, 'owners'); renderTable(t, 'customers'); });
+    document.querySelectorAll('.ac-wrapper').forEach(function(w){
+      var inp = w.querySelector('input[type="text"]') || w.querySelector('input:not([type="hidden"])');
+      var hid = w.querySelector('input[type="hidden"]');
+      if (inp && hid) setupAutocomplete(inp, hid);
+    });
+    document.getElementById('loading-overlay').style.display = 'none';
+    saveDataCache();
+  } catch(e) {
+    if (!hasCache) {
+      var app = document.getElementById('app');
+      if (app) app.innerHTML = '<div class="card" style="padding:30px;text-align:center;"><h3 style="color:#c00;">⚠️ خطأ</h3><p style="margin-top:10px;color:#555;font-size:14px;direction:ltr;">' + e.message + '</p></div>';
+    }
+  }
+}
+
+function uploadWithProgress(file, key, idx) {
+  return new Promise((resolve, reject) => {
+    const ext = file.name.split('.').pop();
+    const fileName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', SUPABASE_URL + '/storage/v1/object/uploads/' + fileName);
+    xhr.setRequestHeader('apikey', SUPABASE_ANON);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + SUPABASE_ANON);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        const pct = Math.round(e.loaded / e.total * 100);
+        const el = document.querySelector('.pr-item-' + key + '-' + idx + ' .upload-progress p');
+        if (el) el.textContent = pct + '%';
+        const bar = document.querySelector('.pr-item-' + key + '-' + idx + ' .upload-progress .bar span');
+        if (bar) bar.style.width = pct + '%';
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const { data: { publicUrl } } = supabase.storage.from('uploads').getPublicUrl(fileName);
+        resolve({ type: file.type.startsWith('image/') ? 'image' : 'video', data: publicUrl, name: file.name });
+      } else {
+        reject(new Error(xhr.status + ' ' + xhr.statusText));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Network error'));
+    xhr.send(file);
+  });
+}
+
+async function handleUpload(input, type, cat) {
+  const key = type + '-' + cat;
+  if (!tempMedia[key]) tempMedia[key] = [];
+  const files = input.files || input;
+  if (!files || !files.length) return;
+  for (const file of Array.from(files)) {
+    const idx = tempMedia[key].length;
+    const isVideo = file.type.startsWith('video/');
+    tempMedia[key].push({ type: isVideo ? 'video' : 'image', data: '', name: file.name, uploading: true });
+    showPreview(key);
+    try {
+      const result = await uploadWithProgress(file, key, idx);
+      tempMedia[key][idx] = result;
+    } catch (e) {
+      tempMedia[key][idx] = { type: file.type.startsWith('image/') ? 'image' : 'video', data: '', name: file.name, error: e.message };
+    }
+    showPreview(key);
+  }
+  if (input.files) input.value = '';
+}
+
+function showPreview(key) {
+  const [type, cat] = key.split('-');
+  const l = getLetter(type);
+  const s = cat === 'owner' ? 'o' : 'c';
+  const el = document.getElementById('preview-' + l + s);
+  if (!el) return;
+  el.innerHTML = (tempMedia[key]||[]).map((m,i) => {
+    if (m.uploading) {
+      return '<div class="thumb pr-item-' + key + '-' + i + '"><div class="upload-progress"><p style="font-size:11px;font-weight:700;">0%</p><div class="bar"><span style="width:0%"></span></div></div></div>';
+    }
+    if (m.error) {
+      return '<div class="thumb" style="background:#ffe0e0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c00;">Failed</div>';
+    }
+    var delBtn = '<button onclick="removeMedia(\''+key+'\','+i+')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:none;background:#c0392b;color:#fff;font-size:12px;line-height:20px;text-align:center;cursor:pointer;padding:0;">✕</button>';
+    return m.type === 'image'
+      ? '<div class="thumb" style="position:relative;">'+delBtn+'<img src="'+m.data+'" alt=""></div>'
+      : '<div class="thumb" style="position:relative;">'+delBtn+'<div class="vid-icon">🎬</div></div>';
+  }).join('');
+}
+
+function removeMedia(key, idx) {
+  if (!tempMedia[key]) return;
+  tempMedia[key].splice(idx, 1);
+  showPreview(key);
+}
+
+// Drag & drop for upload
+document.addEventListener('dragover', e => {
+  const btn = e.target.closest('.upload-btn');
+  if (btn) { e.preventDefault(); btn.classList.add('dragover'); }
+});
+document.addEventListener('dragleave', e => {
+  const btn = e.target.closest('.upload-btn');
+  if (btn && !btn.contains(e.relatedTarget)) btn.classList.remove('dragover');
+});
+document.addEventListener('drop', e => {
+  const btn = e.target.closest('.upload-btn');
+  if (!btn) return;
+  e.preventDefault();
+  btn.classList.remove('dragover');
+  const type = btn.dataset.type;
+  const cat = btn.dataset.cat;
+  if (e.dataTransfer.files.length) {
+    handleUpload(e.dataTransfer.files, type, cat);
+  }
+});
+
+function mediaToHtml(media) {
+  if (!media || !media.length) return '<div style="color:#bbb;">-</div>';
+  return '<div class="media-thumbs">' + media.map((m,i) => {
+    const enc = encodeURIComponent(m.data);
+    if (m.type === 'image') {
+      return '<div style="cursor:pointer;" onclick="openMedia(\''+enc+'\',\'image\')"><img src="'+m.data+'" style="width:100%;height:100%;object-fit:cover;"></div>';
+    } else {
+      return '<div style="cursor:pointer;" onclick="openMedia(\''+enc+'\',\'video\')">🎬</div>';
+    }
+  }).join('') + '</div>';
+}
+
+function openMedia(encSrc, type) {
+  const src = decodeURIComponent(encSrc);
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.onclick = e => { if (e.target===overlay) overlay.remove(); };
+  const close = document.createElement('button');
+  close.className = 'modal-close'; close.textContent = '✕';
+  close.onclick = () => overlay.remove();
+  overlay.appendChild(close);
+  if (type === 'image') {
+    const img = document.createElement('img');
+    img.src = src; overlay.appendChild(img);
+  } else {
+    const vid = document.createElement('video');
+    vid.src = src; vid.controls = true; vid.autoplay = true;
+    vid.style.width = '90vw'; vid.style.maxHeight = '80vh';
+    overlay.appendChild(vid);
+    const share = document.createElement('button');
+    share.className = 'modal-share';
+    share.textContent = '📤 Share via WhatsApp';
+    share.onclick = () => {
+      const wa = 'https://wa.me/?text=' + encodeURIComponent(src);
+      window.open(wa, '_blank');
+    };
+    overlay.appendChild(share);
+  }
+  document.body.appendChild(overlay);
+}
+
+/* Main tabs */
+document.querySelectorAll('.main-tab').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.main-tab').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    const tab = el.dataset.tab;
+    types.forEach(t => document.getElementById('page-'+t).classList.toggle('hidden', t !== tab));
+    document.getElementById('page-report').classList.toggle('hidden', tab !== 'report');
+    document.getElementById('page-matches').classList.toggle('hidden', tab !== 'matches');
+    if (tab === 'matches') renderMatches();
+  });
+});
+
+/* Sub tabs */
+document.querySelectorAll('.sub-tab').forEach(el => {
+  el.addEventListener('click', () => {
+    const parent = el.closest('.page-content');
+    parent.querySelectorAll('.sub-tab').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    const page = parent.id.replace('page-','');
+    const sub = el.dataset.sub;
+    parent.querySelectorAll('[id^="sub-'+page+'"]').forEach(x => x.classList.add('hidden'));
+    document.getElementById('sub-'+page+'-'+sub).classList.remove('hidden');
+  });
+});
+
+function getLetter(type) { return typeLetters[type] || type[0]; }
+
+function extractNum(s) {
+  if (!s) return null;
+  const m = s.replace(/[,\s]/g,'').match(/(\d+)/);
+  return m ? parseFloat(m[1]) : null;
+}
+
+async function addOwner(type) {
+  const l = getLetter(type);
+  const key = type + '-owner';
+  var locInput = document.querySelector('.f-'+l+'o-location');
+  var locIdInput = document.querySelector('.f-'+l+'o-location-id');
+  var locName = locInput ? locInput.value.trim() : '';
+  var locId = locIdInput ? locIdInput.value : '';
+  if (locName && !locId) locId = await ensureLocation(locName);
+  const obj = {
+    id: Date.now(),
+    type: type,
+    name: document.querySelector('.f-'+l+'o-name').value.trim(),
+    phone: document.querySelector('.f-'+l+'o-phone').value.trim(),
+    location: locName,
+    location_id: locId || null,
+    price: document.querySelector('.f-'+l+'o-price').value.trim(),
+    area: document.querySelector('.f-'+l+'o-area').value.trim(),
+    rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'o-rent').value.trim() : '',
+    details: document.querySelector('.f-'+l+'o-details').value.trim(),
+    media: tempMedia[key] || [],
+    finish_status: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'o"]:checked')||{}).value || 'unfinished' : 'unfinished',
+  };
+  delete tempMedia[key];
+  const pv = document.getElementById('preview-'+l+'o');
+  if (pv) pv.innerHTML = '';
+  if (!obj.name) return alert('Name is required');
+  const { error } = await supabase.from('owners').insert(obj);
+  if (error) return alert('Error: ' + error.message);
+  DATA[type].owners.push(obj);
+  document.querySelectorAll('.f-'+l+'o-name, .f-'+l+'o-phone, .f-'+l+'o-location, .f-'+l+'o-price, .f-'+l+'o-area, .f-'+l+'o-details' + (type === 'shopsrent' ? ', .f-'+l+'o-rent' : '')).forEach(x => x.value = '');
+  if (locIdInput) locIdInput.value = '';
+  if (type === 'apartments') document.querySelector('[name="finish-'+l+'o"][value="unfinished"]').checked = true;
+  renderTable(type, 'owners');
+  generateMatchesForType(type);
+}
+
+function toggleBudgetMode(l, mode) {
+  document.getElementById('bf-'+l).style.display = mode === 'fixed' ? 'block' : 'none';
+  document.getElementById('br-'+l).style.display = mode === 'range' ? 'flex' : 'none';
+}
+
+function getBudgetInput(l) {
+  const mode = document.querySelector('[name="budget-type-'+l+'"]:checked');
+  if (!mode || mode.value === 'fixed') return document.querySelector('.f-'+l+'c-budget').value.trim();
+  var a = document.querySelector('.f-'+l+'c-budget-min').value.trim();
+  var b = document.querySelector('.f-'+l+'c-budget-max').value.trim();
+  if (a && b) {
+    var na = parseFloat(a.replace(/[^0-9]/g,'')), nb = parseFloat(b.replace(/[^0-9]/g,''));
+    if (na > nb) return b + ' - ' + a;
+    return a + ' - ' + b;
+  }
+  return a || b;
+}
+
+function setBudgetInput(l, val) {
+  if (!val) { document.querySelector('.f-'+l+'c-budget').value = ''; document.querySelector('.f-'+l+'c-budget-min').value = ''; document.querySelector('.f-'+l+'c-budget-max').value = ''; return; }
+  var parts = val.split('-').map(function(s){ return s.trim(); }).filter(Boolean);
+  if (parts.length >= 2) {
+    document.querySelector('[name="budget-type-'+l+'"][value="range"]').checked = true;
+    toggleBudgetMode(l, 'range');
+    document.querySelector('.f-'+l+'c-budget-min').value = parts[0];
+    document.querySelector('.f-'+l+'c-budget-max').value = parts[1];
+  } else {
+    document.querySelector('[name="budget-type-'+l+'"][value="fixed"]').checked = true;
+    toggleBudgetMode(l, 'fixed');
+    document.querySelector('.f-'+l+'c-budget').value = val;
+  }
+}
+
+function toggleAreaMode(l, mode) {
+  document.getElementById('af-'+l).style.display = mode === 'fixed' ? 'block' : 'none';
+  document.getElementById('ar-'+l).style.display = mode === 'range' ? 'flex' : 'none';
+}
+
+function getAreaInput(l) {
+  var mode = document.querySelector('[name="area-type-'+l+'"]:checked');
+  if (!mode || mode.value === 'fixed') return document.querySelector('.f-'+l+'c-area').value.trim();
+  var a = document.querySelector('.f-'+l+'c-area-min').value.trim();
+  var b = document.querySelector('.f-'+l+'c-area-max').value.trim();
+  if (a && b) {
+    var na = parseFloat(a.replace(/[^0-9]/g,'')), nb = parseFloat(b.replace(/[^0-9]/g,''));
+    if (na > nb) return b + ' - ' + a;
+    return a + ' - ' + b;
+  }
+  return a || b;
+}
+
+function setAreaInput(l, val) {
+  if (!val) { document.querySelector('.f-'+l+'c-area').value = ''; document.querySelector('.f-'+l+'c-area-min').value = ''; document.querySelector('.f-'+l+'c-area-max').value = ''; return; }
+  var parts = val.split('-').map(function(s){ return s.trim(); }).filter(Boolean);
+  if (parts.length >= 2) {
+    document.querySelector('[name="area-type-'+l+'"][value="range"]').checked = true;
+    toggleAreaMode(l, 'range');
+    document.querySelector('.f-'+l+'c-area-min').value = parts[0];
+    document.querySelector('.f-'+l+'c-area-max').value = parts[1];
+  } else {
+    document.querySelector('[name="area-type-'+l+'"][value="fixed"]').checked = true;
+    toggleAreaMode(l, 'fixed');
+    document.querySelector('.f-'+l+'c-area').value = val;
+  }
+}
+
+async function addCustomer(type) {
+  const l = getLetter(type);
+  var locInput = document.querySelector('.f-'+l+'c-location');
+  var locIdInput = document.querySelector('.f-'+l+'c-location-id');
+  var locName = locInput ? locInput.value.trim() : '';
+  var locIds = getLocIds(locIdInput);
+  if (locName && !locIds.length) {
+    var nid = await ensureLocation(locName);
+    if (nid) locIds.push(String(nid));
+  }
+  const obj = {
+    id: Date.now(),
+    type: type,
+    name: document.querySelector('.f-'+l+'c-name').value.trim(),
+    phone: document.querySelector('.f-'+l+'c-phone').value.trim(),
+    need: document.querySelector('.f-'+l+'c-need').value.trim(),
+    location: locName,
+    location_id: locIds.length ? JSON.stringify(locIds) : null,
+    budget: getBudgetInput(l),
+    area: getAreaInput(l),
+    rent: type === 'shopsrent' ? document.querySelector('.f-'+l+'c-rent').value.trim() : '',
+    finish_status: type === 'apartments' ? (document.querySelector('[name="finish-'+l+'c"]:checked')||{}).value || 'unfinished' : 'unfinished',
+  };
+  if (!obj.name) return alert('Name is required');
+  const { error } = await supabase.from('customers').insert(obj);
+  if (error) return alert('Error: ' + error.message);
+  DATA[type].customers.push(obj);
+  document.querySelectorAll('.f-'+l+'c-name, .f-'+l+'c-phone, .f-'+l+'c-need, .f-'+l+'c-location, .f-'+l+'c-area' + (type === 'shopsrent' ? ', .f-'+l+'c-rent' : '')).forEach(x => x.value = '');
+  if (locIdInput) { locIdInput.value = ''; renderTags(locIdInput.closest('.ac-wrapper')); }
+  document.querySelector('.f-'+l+'c-budget').value = '';
+  document.querySelector('.f-'+l+'c-budget-min').value = '';
+  document.querySelector('.f-'+l+'c-budget-max').value = '';
+  document.querySelector('[name="budget-type-'+l+'"][value="fixed"]').checked = true;
+  toggleBudgetMode(l, 'fixed');
+  document.querySelector('.f-'+l+'c-area-min').value = '';
+  document.querySelector('.f-'+l+'c-area-max').value = '';
+  document.querySelector('[name="area-type-'+l+'"][value="fixed"]').checked = true;
+  toggleAreaMode(l, 'fixed');
+  if (type === 'apartments') document.querySelector('[name="finish-'+l+'c"][value="unfinished"]').checked = true;
+  renderTable(type, 'customers');
+  generateMatchesForType(type);
+}
+
+async function delEntry(type, cat, id) {
+  const { error } = await supabase.from(cat).delete().eq('id', id);
+  if (error) return alert('Error: ' + error.message);
+  DATA[type][cat] = DATA[type][cat].filter(x => x.id !== id);
+  renderTable(type, cat);
+  saveDataCache();
+}
+
+
+function renderMobileCards(type, cat, arr) {
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const container = document.getElementById('cards-' + l + s);
+  if (!container) return;
+  if (!arr.length) {
+    container.innerHTML = '<div class="mobile-card" style="text-align:center;color:#888;">No data</div>';
+    return;
+  }
+  container.innerHTML = arr.map((item, i) => {
+    const rows = [];
+    rows.push(`<div class="row"><span class="label">Name</span><span class="value">${item.name || '-'}</span></div>`);
+    rows.push(`<div class="row"><span class="label">Phone</span><span class="value">${item.phone || '-'}</span></div>`);
+    if (hasLocation(item)) rows.push(`<div class="row"><span class="label">Location</span><span class="value">${getLocationName(item)}</span></div>`);
+    if (cat === 'owners') {
+      if (item.price) rows.push(`<div class="row"><span class="label">Price</span><span class="value">${item.price}</span></div>`);
+      if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
+      if (type === 'apartments') rows.push(`<div class="row"><span class="label">Status</span><span class="value">${finishBadge(getFinishStatus(item))}</span></div>`);
+      if (item.details) rows.push(`<div class="row"><span class="label">Details</span><span class="value">${item.details}</span></div>`);
+    } else {
+      if (item.need) rows.push(`<div class="row"><span class="label">Need</span><span class="value">${item.need}${type === 'apartments' ? ' ' + finishBadge(getFinishStatus(item)) : ''}</span></div>`);
+      if (item.budget) rows.push(`<div class="row"><span class="label">Budget</span><span class="value">${item.budget}</span></div>`);
+      if (item.area) rows.push(`<div class="row"><span class="label">Area</span><span class="value">${item.area}</span></div>`);
+    }
+    const wa = item.phone ? `https://wa.me/${item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'')}` : '#';
+    var findBtnMob = cat === 'customers' ? `<button class="btn-sm match-find" onclick="showCustomerMatches('${type}',${item.id},this)">Find Matches</button>` : `<button class="btn-sm match-find" onclick="showOwnerMatches('${type}',${item.id},this)">Find Matches</button>`;
+    return `
+      <div class="mobile-card">
+        <div class="title">${i+1}. ${typeNames[type] || type}</div>
+        ${rows.join('')}
+        <div class="actions">
+          ${findBtnMob}
+          <button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button>
+          <a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a>
+          <button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTable(type, cat) {
+  const arr = DATA[type][cat];
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const tbody = document.getElementById('tbl-'+l+s);
+  const count = document.getElementById('count-'+l+s);
+  if (!tbody) return;
+  count.textContent = arr.length;
+  let cols = cat === 'owners' ? 9 : 8;
+  if (type === 'shopsrent') cols++;
+  if (!arr.length) { tbody.innerHTML = '<tr><td colspan="' + cols + '" style="text-align:center;color:#aaa;">No data</td></tr>'; return; }
+  const fields = cat === 'owners'
+    ? (type === 'shopsrent' ? ['name','phone','location','price','area','rent','details'] : ['name','phone','location','price','area','details'])
+    : (type === 'shopsrent' ? ['name','phone','need','location','budget','area','rent'] : ['name','phone','need','location','budget','area']);
+  renderMobileCards(type, cat, arr);
+  tbody.innerHTML = arr.map((item, i) => {
+    const cells = fields.map(f => {
+      let val = f === 'location' ? (getLocationName(item) || '-') : (item[f] || '-');
+      if (f === 'details') {
+        var fin = type === 'apartments' ? finishBadge(getFinishStatus(item)) + ' ' : '';
+        val = fin + val.replace(/\n/g, '<br>');
+      }
+      if (f === 'need' && type === 'apartments') {
+        val = finishBadge(getFinishStatus(item)) + ' ' + val;
+      }
+      return '<td style="white-space:pre-wrap;">' + val + '</td>';
+    }).join('');
+    const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
+    const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var findBtn = cat === 'customers' ? '<button class="btn-sm match-find" onclick="showCustomerMatches(\''+type+'\','+item.id+',this)">Find Matches</button>' : '<button class="btn-sm match-find" onclick="showOwnerMatches(\''+type+'\','+item.id+',this)">Find Matches</button>';
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions">${findBtn}<button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+  }).join('');
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function editEntry(type, cat, id, el) {
+  const item = DATA[type][cat].find(x => x.id === id);
+  if (!item) return;
+  const existing = document.querySelector('.inline-edit[data-id="'+id+'"]');
+  if (existing) { existing.remove(); return; }
+  const parent = el ? (el.closest('tr') || el.closest('.mobile-card')) : null;
+  if (!parent) return;
+  const isOwner = cat === 'owners';
+  const isSR = type === 'shopsrent';
+  const cols = parent.tagName === 'TR' ? (parent.querySelectorAll('td').length || 9) : null;
+  var html = '<div class="inline-edit" data-id="'+id+'" style="background:#f7f9fc;padding:15px;border-radius:8px;margin:6px 0;">';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:10px;">';
+  html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Name</label><input class="ie-name" value="'+esc(item.name)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+  html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Phone</label><input class="ie-phone" value="'+esc(item.phone)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+  if (isOwner) {
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Location</label><div class="ac-wrapper"><input class="ie-location" value="'+esc(getLocationName(item))+'" autocomplete="off" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input type="hidden" class="ie-location-id" value="'+(item.location_id||'')+'"><div class="ac-dropdown"></div></div></div>';
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Price</label><input class="ie-price" value="'+esc(item.price)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Area</label><input class="ie-area" value="'+esc(item.area)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    if (isSR) html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    if (type==='apartments') html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Status</label><div style="display:flex;gap:12px;flex-wrap:wrap;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(getFinishStatus(item)==='unfinished'?' checked':'')+'> 🔧 Unfinished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(getFinishStatus(item)==='finished'?' checked':'')+'> ✅ Finished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="both"'+(getFinishStatus(item)==='both'?' checked':'')+'> ✅🔧 Both</label></div></div>';
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Details</label><textarea class="ie-details" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;min-height:50px;">'+esc(item.details)+'</textarea></div>';
+  } else {
+    var curBudget = item.budget||'', curArea = item.area||'';
+    var bRange = curBudget.indexOf(' - ') > 0;
+    var aRange = curArea.indexOf(' - ') > 0;
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Need</label><textarea class="ie-need" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;min-height:50px;">'+esc(item.need)+'</textarea></div>';
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Location</label><div class="ac-wrapper" data-multi="true"><div class="ac-tags"></div><input class="ie-location" value="" placeholder="Type to search..." autocomplete="off" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input type="hidden" class="ie-location-id" value="'+esc(JSON.stringify(parseLocIds(item)))+'"><div class="ac-dropdown"></div></div></div>';
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Budget</label>';
+    html += '<div style="display:flex;gap:10px;margin-bottom:4px;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="fixed"'+(bRange?'':' checked')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'block\';document.getElementById(\'ie-br-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-bt-'+id+'" value="range"'+(bRange?' checked':'')+' onchange="document.getElementById(\'ie-bf-'+id+'\').style.display=\'none\';document.getElementById(\'ie-br-'+id+'\').style.display=\'flex\'"> Range</label></div>';
+    if (bRange) {
+      var bParts = curBudget.split(' - ').map(function(s){return s.trim();});
+      html += '<div id="ie-bf-'+id+'" style="display:none"><input class="ie-budget" value="'+esc(bParts[0]||'')+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+      html += '<div id="ie-br-'+id+'" style="display:flex;gap:6px;"><input class="ie-budget-min" value="'+esc(bParts[0]||'')+'" placeholder="From" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input class="ie-budget-max" value="'+esc(bParts[1]||'')+'" placeholder="To" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    } else {
+      html += '<div id="ie-bf-'+id+'"><input class="ie-budget" value="'+esc(curBudget)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+      html += '<div id="ie-br-'+id+'" style="display:none;gap:6px;"><input class="ie-budget-min" placeholder="From" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input class="ie-budget-max" placeholder="To" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    }
+    html += '</div>';
+    html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Area</label><div style="display:flex;gap:10px;margin-bottom:4px;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="fixed"'+(aRange?'':' checked')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'block\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'none\'"> Fixed</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-at-'+id+'" value="range"'+(aRange?' checked':'')+' onchange="document.getElementById(\'ie-af-'+id+'\').style.display=\'none\';document.getElementById(\'ie-ar-'+id+'\').style.display=\'flex\'"> Range</label></div>';
+    if (aRange) {
+      var aParts = curArea.split(' - ').map(function(s){return s.trim();});
+      html += '<div id="ie-af-'+id+'" style="display:none"><input class="ie-area" value="'+esc(aParts[0]||'')+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+      html += '<div id="ie-ar-'+id+'" style="display:flex;gap:6px;"><input class="ie-area-min" value="'+esc(aParts[0]||'')+'" placeholder="From" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input class="ie-area-max" value="'+esc(aParts[1]||'')+'" placeholder="To" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    } else {
+      html += '<div id="ie-af-'+id+'"><input class="ie-area" value="'+esc(curArea)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+      html += '<div id="ie-ar-'+id+'" style="display:none;gap:6px;"><input class="ie-area-min" placeholder="From" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"><input class="ie-area-max" placeholder="To" style="flex:1;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+    }
+    html += '</div>';
+    if (type==='apartments') html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Status</label><div style="display:flex;gap:12px;flex-wrap:wrap;"><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="unfinished"'+(getFinishStatus(item)==='unfinished'?' checked':'')+'> 🔧 Unfinished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="finished"'+(getFinishStatus(item)==='finished'?' checked':'')+'> ✅ Finished</label><label style="font-size:14px;cursor:pointer;"><input type="radio" name="ie-f-'+id+'" value="both"'+(getFinishStatus(item)==='both'?' checked':'')+'> ✅🔧 Both</label></div></div>';
+    if (isSR) html += '<div style="width:100%;"><label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:3px;">Rent</label><input class="ie-rent" value="'+esc(item.rent)+'" style="width:100%;padding:7px 10px;border:1px solid #d0d5dd;border-radius:5px;font-size:14px;"></div>';
+  }
+  html += '</div><div style="display:flex;gap:8px;margin-top:6px;"><button class="btn btn-primary" style="padding:8px 18px;font-size:14px;" onclick="saveInlineEdit(\''+type+'\',\''+cat+'\','+id+')">💾 Save</button><button class="btn" style="padding:8px 18px;font-size:14px;background:#ddd;" onclick="this.closest(\'.inline-edit\').remove()">Cancel</button></div></div>';
+  if (parent.tagName === 'TR') {
+    var tr = document.createElement('tr'); tr.className = 'inline-edit'; tr.setAttribute('data-id',id);
+    var td = document.createElement('td'); td.colSpan = cols; td.innerHTML = html; tr.appendChild(td);
+    parent.parentNode.insertBefore(tr, parent.nextSibling);
+  } else {
+    var wrap = document.createElement('div'); wrap.innerHTML = html; wrap.className = 'inline-edit'; wrap.setAttribute('data-id',id);
+    parent.parentNode.insertBefore(wrap, parent.nextSibling);
+  }
+  setTimeout(function(){var ie=document.querySelector('.inline-edit[data-id="'+id+'"]');if(ie)ie.scrollIntoView({block:'nearest',behavior:'smooth'});},50);
+  // Initialize autocomplete for the new inline edit
+  var newCon = document.querySelector('.inline-edit[data-id="'+id+'"]');
+  if (newCon) {
+    var w = newCon.querySelector('.ac-wrapper');
+    if (w) {
+      var inp = w.querySelector('input[type="text"]') || w.querySelector('input:not([type="hidden"])');
+      var hid = w.querySelector('input[type="hidden"]');
+      if (inp && hid) { setupAutocomplete(inp, hid); renderTags(w); }
+    }
+  }
+}
+
+async function saveInlineEdit(type, cat, id) {
+  const item = DATA[type][cat].find(x => x.id === id);
+  if (!item) return;
+  const con = document.querySelector('.inline-edit[data-id="'+id+'"]');
+  if (!con) return;
+  const isOwner = cat === 'owners';
+  var locIdEl = con.querySelector('.ie-location-id');
+  var locName = con.querySelector('.ie-location').value.trim();
+  if (isOwner) {
+    var locId = locIdEl ? locIdEl.value : '';
+    if (locName && !locId) locId = await ensureLocation(locName);
+    item.name = con.querySelector('.ie-name').value.trim();
+    item.phone = con.querySelector('.ie-phone').value.trim();
+    item.location = locName;
+    item.location_id = locId || null;
+    item.price = con.querySelector('.ie-price').value.trim();
+    item.area = con.querySelector('.ie-area').value.trim();
+    if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
+    item.details = con.querySelector('.ie-details').value.trim();
+    if (type==='apartments') item.finish_status = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value || 'unfinished';
+  } else {
+    item.name = con.querySelector('.ie-name').value.trim();
+    item.phone = con.querySelector('.ie-phone').value.trim();
+    item.need = con.querySelector('.ie-need').value.trim();
+    item.location = locName;
+    var cLocIds = locIdEl ? getLocIds(locIdEl) : [];
+    if (locName && !cLocIds.length) {
+      var newId = await ensureLocation(locName);
+      if (newId) cLocIds.push(String(newId));
+    }
+    item.location_id = cLocIds.length ? JSON.stringify(cLocIds) : null;
+    var modeEl = document.querySelector('[name="ie-bt-'+id+'"]:checked');
+    if (modeEl && modeEl.value === 'range') {
+      var mn = con.querySelector('.ie-budget-min').value.trim();
+      var mx = con.querySelector('.ie-budget-max').value.trim();
+      item.budget = mn && mx ? mn + ' - ' + mx : (mn || mx);
+    } else {
+      item.budget = con.querySelector('.ie-budget').value.trim();
+    }
+    var areaModeEl = document.querySelector('[name="ie-at-'+id+'"]:checked');
+    if (areaModeEl && areaModeEl.value === 'range') {
+      var amn = con.querySelector('.ie-area-min').value.trim();
+      var amx = con.querySelector('.ie-area-max').value.trim();
+      item.area = amn && amx ? amn + ' - ' + amx : (amn || amx);
+    } else {
+      item.area = con.querySelector('.ie-area').value.trim();
+    }
+    if (type==='shopsrent') item.rent = con.querySelector('.ie-rent').value.trim();
+    if (type==='apartments') item.finish_status = (document.querySelector('[name="ie-f-'+id+'"]:checked')||{}).value || 'unfinished';
+  }
+  const { error } = await supabase.from(cat).update(item).eq('id', item.id);
+  if (error) return alert('Error: ' + error.message);
+  con.remove();
+  renderTable(type, cat);
+  generateMatchesForType(type);
+}
+
+function filterTable(type, cat) {
+  const l = getLetter(type);
+  const s = cat === 'owners' ? 'o' : 'c';
+  const input = document.querySelector('#sub-'+type+'-'+cat+' .search-row input');
+  if (!input) return;
+  const q = input.value.toLowerCase();
+  const arr = DATA[type][cat];
+  const tbody = document.getElementById('tbl-'+l+s);
+  const filtered = arr.filter(x => x.name.toLowerCase().includes(q) || x.phone.includes(q) || getLocationName(x).toLowerCase().includes(q) || (x.details||'').toLowerCase().includes(q) || (x.area||'').toLowerCase().includes(q) || (x.rent||'').toLowerCase().includes(q));
+  const fields = cat === 'owners'
+    ? (type === 'shopsrent' ? ['name','phone','location','price','area','rent','details'] : ['name','phone','location','price','area','details'])
+    : (type === 'shopsrent' ? ['name','phone','need','location','budget','area','rent'] : ['name','phone','need','location','budget','area']);
+  let cols = cat === 'owners' ? 9 : 8;
+  if (type === 'shopsrent') cols++;
+  if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="' + cols + '" style="text-align:center;color:#aaa;">No results</td></tr>'; return; }
+  tbody.innerHTML = filtered.map((item, i) => {
+    const cells = fields.map(f => {
+      let val = f === 'location' ? (getLocationName(item) || '-') : (item[f] || '-');
+      if (f === 'details') {
+        var fin = type === 'apartments' ? finishBadge(getFinishStatus(item)) + ' ' : '';
+        val = fin + val.replace(/\n/g, '<br>');
+      }
+      if (f === 'need' && type === 'apartments') {
+        val = finishBadge(getFinishStatus(item)) + ' ' + val;
+      }
+      return '<td style="white-space:pre-wrap;">' + val + '</td>';
+    }).join('');
+    const media = cat === 'owners' ? '<td>' + mediaToHtml(item.media) + '</td>' : '';
+    const wa = 'https://wa.me/' + item.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var findBtn = cat === 'customers' ? '<button class="btn-sm match-find" onclick="showCustomerMatches(\''+type+'\','+item.id+',this)">Find Matches</button>' : '<button class="btn-sm match-find" onclick="showOwnerMatches(\''+type+'\','+item.id+',this)">Find Matches</button>';
+    return `<tr><td>${i+1}</td>${cells}${media}<td class="actions">${findBtn}<button class="btn-sm edit" onclick="editEntry('${type}','${cat}',${item.id},this)">Edit</button><a href="${wa}" target="_blank" class="btn-sm whatsapp">WhatsApp</a><button class="btn-sm del" onclick="delEntry('${type}','${cat}',${item.id})">Delete</button></td></tr>`;
+  }).join('');
+}
+
+/* ==================== RENDERMATCHES ==================== */
+
+function generateReport() {
+  const type = document.getElementById('report-type').value;
+  const cat = document.getElementById('report-cat').value;
+  const fromDate = document.getElementById('report-from').value;
+  const toDate = document.getElementById('report-to').value;
+  const targetTypes = type === 'all' ? types : [type];
+  const targetCats = cat === 'all' ? ['owners','customers'] : [cat];
+
+  const fromTs = fromDate ? new Date(fromDate).setHours(0,0,0,0) : 0;
+  const toTs = toDate ? new Date(toDate).setHours(23,59,59,999) : Infinity;
+
+  let html = '<html><head><meta charset="utf-8"><title>Real Estate Report</title><style>table{border-collapse:collapse;width:100%;font-family:"Cairo","Inter",Arial;font-size:13px}th,td{border:1px solid #999;padding:8px;text-align:left}th{background:#1a3a5c;color:#fff}tr:nth-child(even){background:#f2f2f2}h2{color:#1a3a5c;font-family:"Cairo","Inter",Arial}'
+  + '/* Mobile cards */'
+  + '.mobile-cards{display:none;}'
+  + '.mobile-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);}'
+  + '.mobile-card .title{font-weight:700;color:#1a3a5c;margin-bottom:8px;display:flex;align-items:center;gap:6px;}'
+  + '.mobile-card .row{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;font-size:13px;}'
+  + '.mobile-card .label{color:#666;min-width:70px;}'
+  + '.mobile-card .value{font-weight:600;text-align:left;flex:1;}'
+  + '.mobile-card .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}'
+  + '@media (max-width:768px){body{padding:10px;}.header{flex-direction:column;align-items:flex-start;gap:10px;padding:16px;}.main-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;}.main-tab{flex:0 0 auto;padding:8px 16px;font-size:13px;}.sub-tabs{width:100%;justify-content:space-between;}.sub-tab{flex:1;text-align:center;}.form-row{flex-direction:column;}.table-wrap{overflow:visible;}.table-wrap table{display:none;}.mobile-cards{display:block;}}'
+  + '</style></head><body>';
+  html += '<h1>Real Estate Management Report</h1>';
+  html += '<p>Generated: ' + new Date().toLocaleString('en-EG') + '</p>';
+  if (fromDate || toDate) html += '<p>Date range: ' + (fromDate || '∞') + ' → ' + (toDate || '∞') + '</p>';
+
+  targetTypes.forEach(t => {
+    targetCats.forEach(c => {
+      let arr = DATA[t][c].filter(item => item.id >= fromTs && item.id <= toTs);
+      if (!arr.length) return;
+      html += '<h2>' + typeNames[t] + ' - ' + (c === 'owners' ? 'Owners' : 'Clients') + ' (' + arr.length + ')</h2>';
+      html += '<table><thead><tr>';
+      if (c === 'owners') {
+        html += '<th>#</th><th>Name</th><th>Phone</th><th>Location</th><th>Price</th><th>Area</th>' + (t === 'shopsrent' ? '<th>Rent</th>' : '') + '<th>Details</th>';
+      } else {
+        html += '<th>#</th><th>Name</th><th>Phone</th><th>Requirement</th><th>Location</th><th>Budget</th><th>Area</th>' + (t === 'shopsrent' ? '<th>Rent</th>' : '');
+      }
+      html += '</tr></thead><tbody>';
+      arr.forEach((item, i) => {
+        html += '<tr>';
+        html += '<td>' + (i + 1) + '</td>';
+        html += '<td>' + (item.name || '-') + '</td>';
+        html += '<td>' + (item.phone || '-') + '</td>';
+        if (c === 'owners') {
+          html += '<td>' + (getLocationName(item) || '-') + '</td>';
+          html += '<td>' + (item.price || '-') + '</td>';
+          html += '<td>' + (item.area || '-') + '</td>';
+          if (t === 'shopsrent') html += '<td>' + (item.rent || '-') + '</td>';
+          html += '<td>' + (item.details || '-') + '</td>';
+        } else {
+          html += '<td>' + (item.need || '-') + '</td>';
+          html += '<td>' + (getLocationName(item) || '-') + '</td>';
+          html += '<td>' + (item.budget || '-') + '</td>';
+          html += '<td>' + (item.area || '-') + '</td>';
+          if (t === 'shopsrent') html += '<td>' + (item.rent || '-') + '</td>';
+        }
+        html += '</tr>';
+      });
+      html += '</tbody></table><br>';
+    });
+  });
+
+  html += '</body></html>';
+  const blob = new Blob([html], { type: 'application/msword' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'real_estate_report.doc';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function toggleForm(btn) {
+  const form = btn.nextElementSibling;
+  form.classList.toggle('hidden');
+  btn.textContent = form.classList.contains('hidden') ? btn.textContent.replace('✕ ', '➕ ') : btn.textContent.replace('➕ ', '✕ ');
+  if (!form.classList.contains('hidden')) {
+    const saveBtn = form.querySelector('.btn-primary');
+    const isEdit = saveBtn && saveBtn.textContent.includes('Save Changes');
+    if (!isEdit) form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  }
+}
+
+
+
+/* ==================== MATCHES ENGINE ==================== */
+
+function getNum(v) { return parseFloat(String(v||'').replace(/[^0-9.]/g,'')) || 0; }
+
+function calcMatchScore(owner, customer) {
+  var score = 0;
+  // Price (up to 35 pts)
+  var owPrice = getNum(owner.price);
+  var cuRaw = (customer.budget||'').trim();
+  var parts = cuRaw.split(' - ').map(function(s){ return getNum(s); }).filter(Boolean);
+  if (owPrice && parts.length) {
+    if (parts.length >= 2 && parts[0] && parts[1]) {
+      var minB = parts[0], maxB = parts[1];
+      if (owPrice <= maxB) { score += 35; }
+      else { var over = owPrice - maxB; score += Math.round(35 * Math.max(0, 1 - over / 200000)); }
+    } else if (parts[0]) {
+      var budget = parts[0], tol = budget * 0.15, diff = Math.abs(owPrice - budget);
+      if (diff <= tol) score += Math.round(35 * (1 - diff / tol));
+    }
+  }
+  // Finish status (up to 25 pts)
+  var owFinish = getFinishStatus(owner);
+  var cuFinish = getFinishStatus(customer);
+  if (owFinish && cuFinish && cuFinish !== 'unfinished') {
+    if (cuFinish === 'both' || owFinish === cuFinish || owFinish === 'both') {
+      score += 25;
+    }
+  } else if (owFinish && cuFinish && cuFinish === 'unfinished') {
+    if (owFinish === 'unfinished' || owFinish === 'both') {
+      score += 25;
+    }
+  }
+  // Location (up to 20 pts)
+  if (owner.location_id && customer.location_id) {
+    var oLoc = String(owner.location_id);
+    var cIds = parseLocIds(customer);
+    if (cIds.indexOf(oLoc) >= 0) { score += 20; }
+    else if (cIds.length) {
+      var owLoc = (owner.location||getLocationName(owner)||'').toLowerCase(), cuLoc = (customer.location||getLocationName(customer)||'').toLowerCase();
+      if (owLoc && cuLoc) {
+        var owP = owLoc.split(/[\s\/\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\s\/\-،,]+/).filter(Boolean);
+        var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });
+        if (common.length) score += Math.min(20, common.length * 10);
+        else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
+      }
+    }
+  } else {
+    var owLoc = (owner.location||getLocationName(owner)||'').toLowerCase(), cuLoc = (customer.location||getLocationName(customer)||'').toLowerCase();
+    if (owLoc && cuLoc) {
+      var owP = owLoc.split(/[\s\/\-،,]+/).filter(Boolean), cuP = cuLoc.split(/[\s\/\-،,]+/).filter(Boolean);
+      var common = owP.filter(function(p){ return cuP.indexOf(p) >= 0; });
+      if (common.length) score += Math.min(20, common.length * 10);
+      else if (owLoc.indexOf(cuLoc) >= 0 || cuLoc.indexOf(owLoc) >= 0) score += 5;
+    }
+  }
+  // Area (up to 20 pts)
+  var owArea = getNum(owner.area);
+  var cuRawArea = (customer.area||'').trim();
+  if (owArea && cuRawArea) {
+    var aParts = cuRawArea.split(' - ').map(function(s){ return getNum(s); }).filter(Boolean);
+    if (aParts.length >= 2 && aParts[0] && aParts[1]) {
+      var minA = aParts[0], maxA = aParts[1];
+      if (owArea >= minA && owArea <= maxA) { score += 20; }
+      else {
+        var dist = Math.min(Math.abs(owArea - minA), Math.abs(owArea - maxA));
+        score += Math.round(20 * Math.max(0, 1 - dist / Math.max(maxA, 1)));
+      }
+    } else if (aParts[0]) {
+      var cuArea = aParts[0];
+      var maxA = Math.max(owArea, cuArea);
+      score += Math.round(20 * Math.max(0, 1 - Math.abs(owArea - cuArea) / maxA * 2));
+    }
+  }
+  if (score < 1) score = 0;
+  return score;
+}
+
+function generateMatchesForType(type) {
+  if (!window._MATCHES) window._MATCHES = {};
+  var owners = DATA[type].owners, customers = DATA[type].customers;
+  var list = [];
+  owners.forEach(function(ow) {
+    customers.forEach(function(cu) {
+      var score = calcMatchScore(ow, cu);
+      if (score < 1) return;
+      list.push({ type: type, ownerId: ow.id, customerId: cu.id, score: score, sent: false, hidden: false });
+    });
+  });
+  list.sort(function(a,b){ return b.score - a.score; });
+  window._MATCHES[type] = list;
+  try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
+}
+
+function generateAllMatches(type) {
+  if (!window._MATCHES) window._MATCHES = {};
+  if (type) {   generateMatchesForType(type);
+  saveDataCache();
+}
+
+  else { types.forEach(function(t){ generateMatchesForType(t); }); }
+  renderMatches();
+}
+
+function getMatchKey(m) { return m.type+'-'+m.ownerId+'-'+m.customerId; }
+
+function openMatchDrawer(title, countText, cardsHtml) {
+  var overlay = document.getElementById('match-drawer-overlay');
+  var drawer = document.getElementById('match-drawer');
+  document.getElementById('drawer-title').textContent = title;
+  document.getElementById('drawer-count').textContent = countText;
+  document.getElementById('drawer-body').innerHTML = cardsHtml;
+  overlay.classList.add('open');
+  drawer.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMatchDrawer() {
+  document.getElementById('match-drawer-overlay').classList.remove('open');
+  document.getElementById('match-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function scoreClass(s) { return s >= 70 ? 'high' : s >= 40 ? 'mid' : 'low'; }
+function escH(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showCustomerMatches(type, customerId, btn) {
+  try {
+  var customer = DATA[type].customers.find(function(x){ return x.id === customerId; });
+  if (!customer) return;
+  var owners = DATA[type].owners;
+  var matches = [];
+  owners.forEach(function(ow){
+    var score = calcMatchScore(ow, customer);
+    if (score < 1) return;
+    matches.push({ owner: ow, score: score });
+  });
+  matches.sort(function(a,b){ return b.score - a.score; });
+  if (!matches.length) {
+    openMatchDrawer('Matches for ' + escH(customer.name), '0 matches found', '<div style="text-align:center;padding:40px;color:#888;">No matches found for this customer.</div>');
+    return;
+  }
+  var cardsHtml = matches.map(function(m){
+    var ow = m.owner;
+    var phO = (ow.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var phC = (customer.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var waO = phO ? 'https://wa.me/'+phO : '#';
+    var waC = phC ? 'https://wa.me/'+phC : '#';
+    var sendMsg = 'Property: ' + typeNames[type] + '\nLocation: ' + (getLocationName(ow)||'-') + '\nPrice: ' + (ow.price||'-') + '\nArea: ' + (ow.area||'-') + (ow.rent ? '\nRent: ' + ow.rent : '') + '\nDetails: ' + (ow.details||'-');
+    var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
+    return '<div class="drawer-match-card">'
+      + '<div class="dm-top"><div><div class="dm-name">' + escH(ow.name) + '</div>'
+      + '<div class="dm-badge">' + escH(typeNames[type]) + '</div></div>'
+      + '<div class="dm-score ' + scoreClass(m.score) + '">' + m.score + '%</div></div>'
+      + '<div class="dm-info">'
+      + '<span><b>Location:</b> ' + escH(getLocationName(ow)||'-') + '</span>'
+      + '<span><b>Price:</b> ' + escH(ow.price||'-') + '</span>'
+      + '<span><b>Area:</b> ' + escH(ow.area||'-') + ' m&sup2;</span>'
+      + (ow.rent ? '<span><b>Rent:</b> ' + escH(ow.rent) + '</span>' : '')
+      + (ow.details ? '<span style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">' + escH(ow.details) + '</span>' : '')
+      + '<span style="margin-top:6px;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:6px;">&#128100; ' + escH(ow.name) + ' &nbsp;|&nbsp; &#128222; ' + escH(ow.phone||'-') + '</span>'
+      + '</div>'
+      + '<div class="dm-btns">'
+      + (phO ? '<a href="'+waO+'" target="_blank" class="dm-whatsapp">&#128172; Owner</a>' : '')
+      + (phC ? '<a href="'+waSend+'" target="_blank" class="dm-wa-send">&#128228; Send to Client</a>' : '')
+      + (phC ? '<a href="'+waC+'" target="_blank" class="dm-whatsapp">&#128172; Client</a>' : '')
+      + '</div></div>';
+  }).join('');
+  openMatchDrawer('Matches for ' + escH(customer.name), matches.length + ' match(es) found - Highest First', cardsHtml);
+  } catch(e) { console.error('showCustomerMatches error:', e); }
+}
+
+function showOwnerMatches(type, ownerId, btn) {
+  try {
+  var owner = DATA[type].owners.find(function(x){ return x.id === ownerId; });
+  if (!owner) return;
+  var customers = DATA[type].customers;
+  var matches = [];
+  customers.forEach(function(cu){
+    var score = calcMatchScore(owner, cu);
+    if (score < 1) return;
+    matches.push({ customer: cu, score: score });
+  });
+  matches.sort(function(a,b){ return b.score - a.score; });
+  if (!matches.length) {
+    openMatchDrawer('Matches for ' + escH(owner.name), '0 matches found', '<div style="text-align:center;padding:40px;color:#888;">No matching customers found.</div>');
+    return;
+  }
+  var cardsHtml = matches.map(function(m){
+    var cu = m.customer;
+    var phO = (owner.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var phC = (cu.phone||'').replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var oWa = phO ? 'https://wa.me/'+phO : '#';
+    var cWa = phC ? 'https://wa.me/'+phC : '#';
+    var sendMsg = 'Property: ' + typeNames[type] + '\nLocation: ' + (getLocationName(owner)||'-') + '\nPrice: ' + (owner.price||'-') + '\nArea: ' + (owner.area||'-') + (owner.rent ? '\nRent: ' + owner.rent : '') + '\nDetails: ' + (owner.details||'-');
+    var waSend = phC ? ('https://wa.me/'+phC+'?text='+encodeURIComponent(sendMsg)) : '#';
+    return '<div class="drawer-match-card">'
+      + '<div class="dm-top"><div><div class="dm-name">' + escH(cu.name) + '</div>'
+      + '<div class="dm-badge">' + escH(typeNames[type]) + '</div></div>'
+      + '<div class="dm-score ' + scoreClass(m.score) + '">' + m.score + '%</div></div>'
+      + '<div class="dm-info">'
+      + '<span><b>Location:</b> ' + escH(getLocationName(cu)||'-') + '</span>'
+      + '<span><b>Budget:</b> ' + escH(cu.budget||'-') + '</span>'
+      + '<span><b>Area:</b> ' + escH(cu.area||'-') + '</span>'
+      + (cu.need ? '<span style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:12px;color:#666;">' + escH(cu.need) + '</span>' : '')
+      + '<span style="margin-top:6px;font-size:12px;color:#444;background:#f0f4f8;padding:6px 10px;border-radius:6px;">&#128100; ' + escH(cu.name) + ' &nbsp;|&nbsp; &#128222; ' + escH(cu.phone||'-') + '</span>'
+      + '</div>'
+      + '<div class="dm-btns">'
+      + (phC ? '<a href="'+cWa+'" target="_blank" class="dm-whatsapp">&#128172; Client</a>' : '')
+      + (phC ? '<a href="'+waSend+'" target="_blank" class="dm-wa-send">&#128228; Send Details</a>' : '')
+      + (phO ? '<a href="'+oWa+'" target="_blank" class="dm-whatsapp">&#128172; Owner</a>' : '')
+      + '</div></div>';
+  }).join('');
+  openMatchDrawer('Matches for ' + escH(owner.name), matches.length + ' matching customer(s) - Highest First', cardsHtml);
+  } catch(e) { console.error('showOwnerMatches error:', e); }
+}
+
+function renderMatches() {
+  var container = document.getElementById('matches-results');
+  if (!container) return;
+  if (!window._MATCHES) window._MATCHES = {};
+  try { var saved = localStorage.getItem('_matches'); if (saved) window._MATCHES = JSON.parse(saved); } catch(e){}
+  var q = (document.getElementById('matchFilter').value||'').toLowerCase();
+  var all = [];
+  types.forEach(function(t){
+    (window._MATCHES[t]||[]).forEach(function(m){
+      if (m.hidden) return;
+      if (q) {
+        var ow = DATA[t].owners.find(function(x){ return x.id === m.ownerId; });
+        var cu = DATA[t].customers.find(function(x){ return x.id === m.customerId; });
+        if (!ow || !cu) return;
+        var txt = (ow.name+' '+ow.phone+' '+getLocationName(ow)+' '+cu.name+' '+cu.phone+' '+getLocationName(cu)).toLowerCase();
+        if (txt.indexOf(q) < 0) return;
+      }
+      all.push(m);
+    });
+  });
+  all.sort(function(a,b){ return b.score - a.score; });
+  if (!all.length) { container.innerHTML = '<div class="card" style="text-align:center;color:#888;">'+(q?'No matches match your search':'No matches yet. Click "Generate All Matches" to start.')+'</div>'; return; }
+  container.innerHTML = all.map(function(m, idx){
+    var ow = DATA[m.type].owners.find(function(x){ return x.id === m.ownerId; });
+    var cu = DATA[m.type].customers.find(function(x){ return x.id === m.customerId; });
+    if (!ow || !cu) return '';
+    var key = getMatchKey(m);
+    var isSent = m.sent;
+    var waO = 'https://wa.me/' + ow.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var waC = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'');
+    var sendMsg = 'عقار متاح: ' + typeNames[m.type] + '\nالموقع: ' + (getLocationName(ow)||'-') + '\nالسعر: ' + (ow.price||'-') + '\nالمساحة: ' + (ow.area||'-') + (ow.rent ? '\nالإيجار: ' + ow.rent : '') + '\nالتفاصيل: ' + (ow.details||'-');
+    var waSend = 'https://wa.me/' + cu.phone.replace(/^0/,'20').replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent(sendMsg);
+    return '<div class="match-card'+(isSent?' sent':'')+'" id="mc-'+key+'">'
+      + '<div class="header-match" style="margin-bottom:8px;"><div><span class="percent" style="font-size:18px;">'+m.score+'%</span> Match'+(isSent?'<span class="match-sent-dot"></span>':'')+'</div><button onclick="hideMatch(\''+key+'\')" style="background:none;border:none;color:#c0392b;font-size:20px;cursor:pointer;padding:0;line-height:1;">✕</button></div>'
+      + '<div style="margin:10px 0;border-top:2px solid #e0e0e0;"></div>'
+      + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🏢 Property Details</strong><br>'
+      + '<span class="match-badge">'+typeNames[m.type]+'</span>'
+      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(getLocationName(ow)||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Price:</span> <strong>'+(ow.price||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Area:</span> <strong>'+(ow.area||'-')+' m²</strong></div>'
+      + (ow.rent ? '<div><span style="color:#555;">Rent:</span> <strong>'+ow.rent+'</strong></div>' : '')
+      + (ow.details ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:13px;color:#666;">📋 '+ow.details+'</div>' : '')
+      + '</div>'
+      + '<div style="margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;">👤 <strong>'+ow.name+'</strong> &nbsp;|&nbsp; 📞 '+ow.phone+'</div>'
+      + '<div style="margin:12px 0;border-top:2px dashed #b0d4b8;"></div>'
+      + '<div style="margin:8px 0;line-height:1.7;"><strong style="color:#1a3a5c;font-size:14px;">🤝 Customer Request</strong><br>'
+      + '<span class="match-badge">'+typeNames[m.type]+'</span>'
+      + '<div style="margin-top:4px;"><span style="color:#555;">Location:</span> <strong>'+(getLocationName(cu)||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Budget:</span> <strong>'+(cu.budget||'-')+'</strong></div>'
+      + '<div><span style="color:#555;">Area:</span> <strong>'+(cu.area||'-')+' m²</strong></div>'
+      + (cu.need ? '<div style="margin-top:4px;padding:6px 10px;background:#f7f9fc;border-radius:6px;font-size:13px;color:#666;">📋 '+cu.need+'</div>' : '')
+      + '</div>'
+      + '<div style="margin:8px 0;line-height:1.6;font-size:13px;color:#444;background:#f0f4f8;padding:8px 12px;border-radius:6px;">👤 <strong>'+cu.name+'</strong> &nbsp;|&nbsp; 📞 '+cu.phone+'</div>'
+      + '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">'
+      + '<a href="'+waO+'" target="_blank" class="btn-sm whatsapp" style="padding:6px 14px;">💬 Contact Owner</a>'
+      + '<a href="'+waC+'" target="_blank" class="btn-sm whatsapp" style="padding:6px 14px;">💬 Contact Client</a>'
+      + '<a href="'+waSend+'" target="_blank" class="btn-sm whatsapp" style="background:#075E54;color:#fff;border-color:#075E54;padding:6px 14px;" onclick="markSent(\''+key+'\')">📤 Send Details to Client</a>'
+      + '<button onclick="hideMatch(\''+key+'\')" class="btn-sm" style="color:#888;padding:6px 14px;">Hide</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function hideMatch(key) {
+  var parts = key.split('-');
+  var type = parts[0];
+  var matches = window._MATCHES[type];
+  if (!matches) return;
+  for (var i = 0; i < matches.length; i++) {
+    if (getMatchKey(matches[i]) === key) { matches[i].hidden = true; break; }
+  }
+  try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
+  var el = document.getElementById('mc-'+key);
+  if (el) el.style.display = 'none';
+}
+
+function markSent(key) {
+  var parts = key.split('-');
+  var type = parts[0];
+  var matches = window._MATCHES[type];
+  if (!matches) return;
+  for (var i = 0; i < matches.length; i++) {
+    if (getMatchKey(matches[i]) === key) { matches[i].sent = true; break; }
+  }
+  try { localStorage.setItem('_matches', JSON.stringify(window._MATCHES)); } catch(e){}
+}
+
+// Auto-resize textarea
+document.addEventListener('input', function(e) {
+  if (e.target.tagName === 'TEXTAREA') {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeMatchDrawer();
+});
+
+// Load data from server on startup
+loadData();
+</script>
+</body>
+</html>
+`;
 
 export default {
   async fetch(request) {
